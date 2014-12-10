@@ -44,6 +44,11 @@ minetest.register_abm({
 			minetest.set_node(pos, {name="default:dirt"})
 		end
 
+		-- if map around soil not loaded then skip until loaded
+		if minetest.find_node_near(pos, 3, {"ignore"}) then
+			return
+		end
+
 		-- check if there is water nearby and change soil accordingly
 		if minetest.find_node_near(pos, 3, {"group:water"}) then
 			if node.name == "farming:soil" then

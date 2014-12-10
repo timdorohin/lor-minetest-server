@@ -11,7 +11,7 @@ This mod works by adding your new plant to the {growing=1} group and numbering t
 
 Changelog:
 
-1.10 - Added Blueberry Bush and Blueberry Muffins, also Pumpkin/Melon easier to pick up
+1.10 - Added Blueberry Bush and Blueberry Muffins, also Pumpkin/Melon easier to pick up, added check for unloaded map
 1.09 - Corn now uses single nodes instead of 1 ontop of the other, Ethanol recipe is more expensive (requires 5 corn) and some code cleanup.
 1.08 - Added Farming Plus compatibility, plus can be removed and no more missing nodes
 1.07 - Added Rhubarb and Rhubarb Pie
