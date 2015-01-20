@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.10 (10th December 2014)
+	Minetest Farming Redo Mod 1.11 (20th Jan 2015)
 	by TenPlus1
 ]]
 
@@ -78,11 +78,8 @@ minetest.register_abm({
 	action = function(pos, node)
 
 		-- get node type (e.g. farming:wheat_1)
-
-		local data = nil
-		data = string.split(node.name, '_', 2)
-		local plant = data[1].."_"
-		local numb = data[2]
+		local plant = node.name:split("_")[1].."_"
+		local numb = node.name:split("_")[2]
 
 		-- check if fully grown
 		if not minetest.registered_nodes[plant..(numb + 1)] then return end
