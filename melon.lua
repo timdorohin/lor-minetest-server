@@ -125,7 +125,7 @@ minetest.register_node("farming:melon_7", {
 -- Last stage of Melon growth doesnnot have growing=1 so abm never has to check these
 
 minetest.register_node("farming:melon_8", {
-	drawtype = "nodebox",
+	--drawtype = "nodebox",
 	description = "Melon",
 	tiles = {"farming_melon_top.png", "farming_melon_top.png", "farming_melon_side.png"},
 	paramtype = "light",
