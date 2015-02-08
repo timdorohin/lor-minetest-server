@@ -72,7 +72,7 @@ end
 minetest.register_abm({
 	nodenames = {"group:growing"},
 	neighbors = {"farming:soil_wet", "default:jungletree"},
-	interval = 60,
+	interval = 80,
 	chance = 2,
 
 	action = function(pos, node)
@@ -88,7 +88,7 @@ minetest.register_abm({
 		if plant == "farming:cocoa_"
 		and minetest.find_node_near(pos, 1, {"default:jungletree", "moretrees:jungletree_leaves_green"}) then
 
-			if minetest.get_node_light(pos) < 12 then return end
+			if minetest.get_node_light(pos) < 13 then return end
 
 		else
 		
