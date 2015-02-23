@@ -1,9 +1,9 @@
 -- Keep these for backwards compatibility
-function hud.save_hunger(player)
-	hud.set_hunger(player)
+function hunger.save_hunger(player)
+	hunger.set_hunger(player)
 end
-function hud.load_hunger(player)
-	hud.get_hunger(player)
+function hunger.load_hunger(player)
+	hunger.get_hunger(player)
 end
 
 -- Poison player
@@ -20,19 +20,19 @@ local function poisenp(tick, time, time_left, player)
 	
 end
 
-function hud.item_eat(hunger_change, replace_with_item, poisen, heal)
+function hunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 	return function(itemstack, user, pointed_thing)
 		if itemstack:take_item() ~= nil and user ~= nil then
 			local name = user:get_player_name()
-			local h = tonumber(hud.hunger[name])
+			local h = tonumber(hunger.hunger[name])
 			local hp = user:get_hp()
 
 			-- Saturation
 			if h < 30 and hunger_change then
 				h = h + hunger_change
 				if h > 30 then h = 30 end
-				hud.hunger[name] = h
-				hud.set_hunger(user)
+				hunger.hunger[name] = h
+				hunger.set_hunger(user)
 			end
 			-- Healing
 			if hp < 20 and heal then
@@ -56,7 +56,7 @@ end
 local function overwrite(name, hunger_change, replace_with_item, poisen, heal)
 	local tab = minetest.registered_items[name]
 	if tab == nil then return end
-	tab.on_use = hud.item_eat(hunger_change, replace_with_item, poisen, heal)
+	tab.on_use = hunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 	minetest.registered_items[name] = tab
 end
 
@@ -330,32 +330,32 @@ if minetest.get_modpath("cooking") ~= nil then
 end
 
 -- player-action based hunger changes
-function hud.handle_node_actions(pos, oldnode, player, ext)
+function hunger.handle_node_actions(pos, oldnode, player, ext)
 	if not player or not player:is_player() then
 		return
 	end
 	local name = player:get_player_name()
-	local exhaus = hud.exhaustion[name]
-	local new = HUD_HUNGER_EXHAUST_PLACE
+	local exhaus = hunger.exhaustion[name]
+	local new = HUNGER_EXHAUST_PLACE
 	-- placenode event
 	if not ext then
-		new = HUD_HUNGER_EXHAUST_DIG
+		new = HUNGER_EXHAUST_DIG
 	end
 	-- assume its send by main timer when movement detected
 	if not pos and not oldnode then
-		new = HUD_HUNGER_EXHAUST_MOVE
+		new = HUNGER_EXHAUST_MOVE
 	end
 	exhaus = exhaus + new
-	if exhaus > HUD_HUNGER_EXHAUST_LVL then
+	if exhaus > HUNGER_EXHAUST_LVL then
 		exhaus = 0
-		local h = tonumber(hud.hunger[name])
+		local h = tonumber(hunger.hunger[name])
 		h = h - 1
 		if h < 0 then h = 0 end
-		hud.hunger[name] = h
-		hud.set_hunger(player)
+		hunger.hunger[name] = h
+		hunger.set_hunger(player)
 	end
-	hud.exhaustion[name] = exhaus
+	hunger.exhaustion[name] = exhaus
 end
 
-minetest.register_on_placenode(hud.handle_node_actions)
-minetest.register_on_dignode(hud.handle_node_actions)
+minetest.register_on_placenode(hunger.handle_node_actions)
+minetest.register_on_dignode(hunger.handle_node_actions)
