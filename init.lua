@@ -29,14 +29,14 @@ end
 local function custom_hud(player)
  if minetest.setting_getbool("enable_damage") then
  --hunger
-	hb.init_hudbar(player, "saturation")
+	hb.init_hudbar(player, "saturation", hunger.get_hunger(player))
  end
 end
 
 dofile(minetest.get_modpath("hunger").."/hunger.lua")
 
 -- register saturation hudbar
-hb.register_hudbar("saturation", 0xFFFFFF, "Saturation", { icon = "hunger_icon.png", bar = "hunger_bar.png" }, 20, 20, false)
+hb.register_hudbar("saturation", 0xFFFFFF, "Saturation", { icon = "hunger_icon.png", bar = "hunger_bar.png" }, 20, 30, false)
 
 -- update hud elemtens if value has changed
 local function update_hud(player)
@@ -46,8 +46,6 @@ local function update_hud(player)
 	local h = tonumber(hunger.hunger[name])
 	if h_out ~= h then
 		hunger.hunger_out[name] = h
-		-- bar should not have more than 10 icons
-		if h>20 then h=20 end
 		hb.change_hudbar(player, "saturation", h)
 	end
 end
