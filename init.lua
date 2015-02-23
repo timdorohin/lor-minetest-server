@@ -97,23 +97,21 @@ end)
 local main_timer = 0
 local timer = 0
 local timer2 = 0
-minetest.after(2.5, function()
-	minetest.register_globalstep(function(dtime)
-	 main_timer = main_timer + dtime
-	 timer = timer + dtime
-	 timer2 = timer2 + dtime
-		if main_timer > HUNGER_HUD_TICK or timer > 4 or timer2 > HUNGER_HUNGER_TICK then
-		 if main_timer > HUNGER_HUD_TICK then main_timer = 0 end
-		 for _,player in ipairs(minetest.get_connected_players()) do
-			local name = player:get_player_name()
+minetest.register_globalstep(function(dtime)
+	main_timer = main_timer + dtime
+	timer = timer + dtime
+	timer2 = timer2 + dtime
+	if main_timer > HUNGER_HUD_TICK or timer > 4 or timer2 > HUNGER_HUNGER_TICK then
+		if main_timer > HUNGER_HUD_TICK then main_timer = 0 end
+		for _,player in ipairs(minetest.get_connected_players()) do
+		local name = player:get_player_name()
 
-			-- only proceed if damage is enabled
-			local h = tonumber(hunger.hunger[name])
-			local hp = player:get_hp()
-			if timer > 4 then
-				-- heal player by 1 hp if not dead and saturation is > 15 (of 30)
-				if h > 15 and hp > 0 and player:get_breath() > 0 then
-					player:set_hp(hp+1)
+		local h = tonumber(hunger.hunger[name])
+		local hp = player:get_hp()
+		if timer > 4 then
+			-- heal player by 1 hp if not dead and saturation is > 15 (of 30)
+			if h > 15 and hp > 0 and player:get_breath() > 0 then
+				player:set_hp(hp+1)
 				-- or damage player by 1 hp if saturation is < 2 (of 30)
 				elseif h <= 1 then
 					if hp-1 >= 0 then player:set_hp(hp-1) end
@@ -136,12 +134,10 @@ minetest.after(2.5, function()
 			if controls.up or controls.down or controls.left or controls.right then
 				hunger.handle_node_actions(nil, nil, player)
 			end
-		 end
-		
 		end
-		if timer > 4 then timer = 0 end
-		if timer2 > HUNGER_HUNGER_TICK then timer2 = 0 end
-	end)
+	end
+	if timer > 4 then timer = 0 end
+	if timer2 > HUNGER_HUNGER_TICK then timer2 = 0 end
 end)
 
 end
