@@ -18,9 +18,15 @@ You can create a "hunger.conf" file to customize the properties of hunger for yo
 
 About hunger
 ============
-This mod adds a hunger mechanic to the game. Player actions like digging, placing and walking causes exhausion,
-that lowers players saturation. Also every 800 seconds you lose 1 saturation point without doing anything.
+This mod adds a hunger mechanic to the game.
+A new player starts with 20 saturation points out of 30.
+Player actions like digging, placing and walking cause exhausion, which lower the player's
+saturation. Also every 800 seconds you lose 1 saturation point without doing anything.
 If you are hungry (0 saturation) you will suffer damage and die in case you don't eat something.
+If your saturation is greater than 15, you will slowly regenerate health points.
+Eating food will increase your saturation.
+Important: Eating food will not directly increase your health anymore, as long as the food item
+is supported by this mod (see below).
 
 
 Currently supported food:
@@ -50,12 +56,8 @@ Currently supported food:
 - Simple mobs
 
 Examples: 
-Eating an apple increases your saturation by 2,
-eating a bread (from the farming mod) increases your saturation by 4.
-
-Although it show 20 hunger points (10 breads) in hunger bar,
-you can fill it up to 30 points.(5 breads not shown then)
-
+Eating an apple (from the default Minetest game) increases your saturation by 2,
+eating a bread (from the default Minetest game) increases your saturation by 4.
 
 
 License of textures:
