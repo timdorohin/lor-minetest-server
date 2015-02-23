@@ -22,9 +22,9 @@ HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player saturation gets lowerd
 
 
 --load custom settings
-local set = io.open(minetest.get_modpath("hunger").."/hunger.conf", "r")
+local set = io.open(minetest.get_modpath("hbhunger").."/hbhunger.conf", "r")
 if set then 
-	dofile(minetest.get_modpath("hunger").."/hunger.conf")
+	dofile(minetest.get_modpath("hbhunger").."/hbhunger.conf")
 	set:close()
 end
 
@@ -32,10 +32,10 @@ local function custom_hud(player)
 	hb.init_hudbar(player, "saturation", hunger.get_hunger(player))
 end
 
-dofile(minetest.get_modpath("hunger").."/hunger.lua")
+dofile(minetest.get_modpath("hbhunger").."/hunger.lua")
 
 -- register saturation hudbar
-hb.register_hudbar("saturation", 0xFFFFFF, "Saturation", { icon = "hunger_icon.png", bar = "hunger_bar.png" }, 20, 30, false)
+hb.register_hudbar("saturation", 0xFFFFFF, "Saturation", { icon = "hbhunger_icon.png", bar = "hbhunger_bar.png" }, 20, 30, false)
 
 -- update hud elemtens if value has changed
 local function update_hud(player)

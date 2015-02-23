@@ -1,5 +1,5 @@
-Minetest mod: Hunger
-====================
+Minetest mod: Hunger [hbhunger]
+===============================
 Version: 0.1.0
 
 License of source code: WTFPL
