@@ -1,3 +1,5 @@
+if minetest.setting_getbool("enable_damage") then
+
 hunger = {}
 
 -- HUD statbar values
@@ -27,10 +29,7 @@ if set then
 end
 
 local function custom_hud(player)
- if minetest.setting_getbool("enable_damage") then
- --hunger
 	hb.init_hudbar(player, "saturation", hunger.get_hunger(player))
- end
 end
 
 dofile(minetest.get_modpath("hunger").."/hunger.lua")
@@ -109,35 +108,33 @@ minetest.after(2.5, function()
 			local name = player:get_player_name()
 
 			-- only proceed if damage is enabled
-			if minetest.setting_getbool("enable_damage") then
-			 local h = tonumber(hunger.hunger[name])
-			 local hp = player:get_hp()
-			 if timer > 4 then
+			local h = tonumber(hunger.hunger[name])
+			local hp = player:get_hp()
+			if timer > 4 then
 				-- heal player by 1 hp if not dead and saturation is > 15 (of 30)
 				if h > 15 and hp > 0 and player:get_breath() > 0 then
 					player:set_hp(hp+1)
 				-- or damage player by 1 hp if saturation is < 2 (of 30)
-				elseif h <= 1 and minetest.setting_getbool("enable_damage") then
+				elseif h <= 1 then
 					if hp-1 >= 0 then player:set_hp(hp-1) end
 				end
-			 end
-			 -- lower saturation by 1 point after xx seconds
-			 if timer2 > HUNGER_HUNGER_TICK then
+			end
+			-- lower saturation by 1 point after xx seconds
+			if timer2 > HUNGER_HUNGER_TICK then
 				if h > 0 then
 					h = h-1
 					hunger.hunger[name] = h
 					hunger.set_hunger(player)
 				end
-			 end
+			end
 
-			 -- update all hud elements
-			 update_hud(player)
+			-- update all hud elements
+			update_hud(player)
 			
 			local controls = player:get_player_control()
 			-- Determine if the player is walking
 			if controls.up or controls.down or controls.left or controls.right then
 				hunger.handle_node_actions(nil, nil, player)
-			end
 			end
 		 end
 		
@@ -146,3 +143,5 @@ minetest.after(2.5, function()
 		if timer2 > HUNGER_HUNGER_TICK then timer2 = 0 end
 	end)
 end)
+
+end
