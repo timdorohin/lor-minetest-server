@@ -18,11 +18,11 @@ if set then
 end
 
 local function custom_hud(player)
- local name = player:get_player_name()
+	local name = player:get_player_name()
 
- if minetest.setting_getbool("enable_damage") then
-	hb.init_hudbar(player, "armor")
- end
+	if minetest.setting_getbool("enable_damage") then
+		hb.init_hudbar(player, "armor")
+	end
 end
 
 --register and define armor HUD bar
@@ -70,23 +70,21 @@ local main_timer = 0
 local timer = 0
 minetest.after(2.5, function()
 	minetest.register_globalstep(function(dtime)
-	 main_timer = main_timer + dtime
-	 timer = timer + dtime
+	main_timer = main_timer + dtime
+	timer = timer + dtime
 		if main_timer > HUD_TICK or timer > 4 then
-		 if main_timer > HUD_TICK then main_timer = 0 end
-		 for _,player in ipairs(minetest.get_connected_players()) do
-			local name = player:get_player_name()
+			if main_timer > HUD_TICK then main_timer = 0 end
+			for _,player in ipairs(minetest.get_connected_players()) do
+				local name = player:get_player_name()
 
-			-- only proceed if damage is enabled
-			if minetest.setting_getbool("enable_damage") then
-			 hud.get_armor(player)
+				-- only proceed if damage is enabled
+				if minetest.setting_getbool("enable_damage") then
+					hud.get_armor(player)
 
-			 -- update all hud elements
-			 update_hud(player)
-			
+					-- update all hud elements
+					update_hud(player)
+				end
 			end
-		 end
-		
 		end
 		if timer > 4 then timer = 0 end
 	end)
