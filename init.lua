@@ -77,21 +77,16 @@ minetest.register_on_leaveplayer(function(player)
 	hud.player_active[name] = false
 end)
 
-minetest.register_on_respawnplayer(function(player)
-end)
-
 local main_timer = 0
 local timer = 0
 minetest.register_globalstep(function(dtime)
 	main_timer = main_timer + dtime
 	timer = timer + dtime
 	if main_timer > HUD_TICK or timer > 4 then
-		if main_timer > HUD_TICK then main_timer = 0 end
-		for _,player in ipairs(minetest.get_connected_players()) do
-			local name = player:get_player_name()
-
-			-- only proceed if damage is enabled
-			if minetest.setting_getbool("enable_damage") then
+		if minetest.setting_getbool("enable_damage") then
+			if main_timer > HUD_TICK then main_timer = 0 end
+			for _,player in ipairs(minetest.get_connected_players()) do
+				local name = player:get_player_name()
 				if hud.player_active[name] == true then
 					hud.get_armor(player)
 
