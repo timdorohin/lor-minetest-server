@@ -28,7 +28,7 @@ function hud.set_armor(player_name, ges_state, items)
 		lvl = 0
 	end
 
-	hud.armor[player_name] = lvl* (items * (20 / max_items))
+	hud.armor[player_name] = lvl* (items * (100 / max_items))
 
 
 end

@@ -26,7 +26,7 @@ local function custom_hud(player)
 end
 
 --register and define armor HUD bar
-hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 20, false, "%s: %d/%d")
+hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 100, true, "%s: %d%%")
 
 --needs to be defined for older version of 3darmor
 function hud.set_armor()
@@ -45,7 +45,8 @@ local function update_hud(player)
 	if not arm then arm = 0 end
 	if arm_out ~= arm then
 		hud.armor_out[name] = arm
-		hb.change_hudbar(player, "armor", arm)
+		local arm_displayed = math.ceil(math.floor(arm+0.5))
+		hb.change_hudbar(player, "armor", arm_displayed)
 		-- hide armor bar completely when there is none
 		if (not armor.def[name].count or armor.def[name].count == 0) and arm == 0 then
 			hb.hide_hudbar(player, "armor")
