@@ -33,7 +33,7 @@ local function custom_hud(player)
 		local arm = tonumber(hud.armor[name])
 		if not arm then arm = 0 end
 		local hide = must_hide(name, arm)
-		hb.init_hudbar(player, "armor", arm_printable(arm), nil, nil, hide)
+		hb.init_hudbar(player, "armor", arm_printable(arm), nil, hide)
 	end
 end
 
