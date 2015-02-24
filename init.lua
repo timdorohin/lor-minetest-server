@@ -2,11 +2,9 @@ hud = {}
 
 -- HUD statbar values
 hud.armor = {}
-hud.armor_out = {}
 
 -- HUD item ids
 local armor_hud = {}
-local armor_hud_bg = {}
 
 HUD_TICK = 0.1
 
@@ -50,26 +48,20 @@ dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 local function update_hud(player)
 	local name = player:get_player_name()
  --armor
-	local arm_out = tonumber(hud.armor_out[name])
-	if not arm_out then arm_out = 0 end
 	local arm = tonumber(hud.armor[name])
 	if not arm then arm = 0 end
-	if arm_out ~= arm then
-		hud.armor_out[name] = arm
-		-- hide armor bar completely when there is none
-		if must_hide(name, arm) then
-			hb.hide_hudbar(player, "armor")
-		else
-			hb.unhide_hudbar(player, "armor")
-		end
-		hb.change_hudbar(player, "armor", arm_printable(arm))
+	-- hide armor bar completely when there is none
+	if must_hide(name, arm) then
+		hb.hide_hudbar(player, "armor")
+	else
+		hb.unhide_hudbar(player, "armor")
 	end
+	hb.change_hudbar(player, "armor", arm_printable(arm))
 end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	hud.armor[name] = 0
-	hud.armor_out[name] = 0
 	custom_hud(player)
 end)
 
