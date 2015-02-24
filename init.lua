@@ -61,7 +61,7 @@ local function update_hud(player)
 		arm = 0
 		hbarmor.armor[name] = 0
 	end
-	if hb.autohide then
+	if hbarmor.autohide then
 		-- hide armor bar completely when there is none
 		if must_hide(name, arm) then
 			hb.hide_hudbar(player, "armor")
