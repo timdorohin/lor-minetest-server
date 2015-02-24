@@ -11,6 +11,10 @@ local armor_hud = {}
 
 hbarmor.tick = 0.1
 
+-- If true, the armor bar is hidden when the player does not wear any armor
+-- FIXME: Currently hiding does not work, so it is turned off by default.
+hbarmor.autohide = false
+
 --load custom settings
 local set = io.open(minetest.get_modpath("hbarmor").."/hbarmor.conf", "r")
 if set then 
@@ -32,13 +36,18 @@ local function custom_hud(player)
 	if minetest.setting_getbool("enable_damage") then
 		local arm = tonumber(hbarmor.armor[name])
 		if not arm then arm = 0 end
-		local hide = must_hide(name, arm)
+		local hide
+		if hbarmor.autohide then
+			hide = must_hide(name, arm)
+		else
+			hide = false
+		end
 		hb.init_hudbar(player, "armor", arm_printable(arm), nil, hide)
 	end
 end
 
 --register and define armor HUD bar
-hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 100, true, "%s: %d%%")
+hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 100, hbarmor.autohide, "%s: %d%%")
 
 dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 
@@ -52,12 +61,16 @@ local function update_hud(player)
 		arm = 0
 		hbarmor.armor[name] = 0
 	end
-	-- hide armor bar completely when there is none
-	if must_hide(name, arm) then
-		hb.hide_hudbar(player, "armor")
+	if hb.autohide then
+		-- hide armor bar completely when there is none
+		if must_hide(name, arm) then
+			hb.hide_hudbar(player, "armor")
+		else
+			hb.change_hudbar(player, "armor", arm_printable(arm))
+			hb.unhide_hudbar(player, "armor")
+		end
 	else
 		hb.change_hudbar(player, "armor", arm_printable(arm))
-		hb.unhide_hudbar(player, "armor")
 	end
 end
 
