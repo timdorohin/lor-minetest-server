@@ -21,26 +21,12 @@ local function custom_hud(player)
  local name = player:get_player_name()
 
  if minetest.setting_getbool("enable_damage") then
-       armor_hud_bg[name] = player:hud_add({
-		hud_elem_type = "statbar",
-		position = HUD_ARMOR_POS,
-		size = HUD_SIZE,
-		text = "hud_armor_bg.png",
-		number = 0,
-		alignment = {x=-1,y=-1},
-		offset = HUD_ARMOR_OFFSET,
-	})
-	armor_hud[name] = player:hud_add({
-		hud_elem_type = "statbar",
-		position = HUD_ARMOR_POS,
-		size = HUD_SIZE,
-		text = "hud_armor_fg.png",
-		number = 0,
-		alignment = {x=-1,y=-1},
-		offset = HUD_ARMOR_OFFSET,
-	})
+	hb.init_hudbar(player, "armor")
  end
 end
+
+--register and define armor HUD bar
+hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 20, false, "%s: %d/%d")
 
 --needs to be defined for older version of 3darmor
 function hud.set_armor()
@@ -59,12 +45,12 @@ local function update_hud(player)
 	if not arm then arm = 0 end
 	if arm_out ~= arm then
 		hud.armor_out[name] = arm
-		player:hud_change(armor_hud[name], "number", arm)
+		hb.change_hudbar(player, "armor", arm)
 		-- hide armor bar completely when there is none
 		if (not armor.def[name].count or armor.def[name].count == 0) and arm == 0 then
-		 player:hud_change(armor_hud_bg[name], "number", 0)
+			hb.hide_hudbar(player, "armor")
 		else
-		 player:hud_change(armor_hud_bg[name], "number", 20)
+			hb.unhide_hudbar(player, "armor")
 		end
 	end
 end
