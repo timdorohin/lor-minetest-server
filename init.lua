@@ -17,11 +17,22 @@ if set then
 	set:close()
 end
 
+local must_hide = function(playername, arm)
+	return ((not armor.def[playername].count or armor.def[playername].count == 0) and arm == 0)
+end
+
+local arm_printable = function(arm)
+	return math.ceil(math.floor(arm+0.5))
+end
+
 local function custom_hud(player)
 	local name = player:get_player_name()
 
 	if minetest.setting_getbool("enable_damage") then
-		hb.init_hudbar(player, "armor")
+		local arm = tonumber(hud.armor[name])
+		if not arm then arm = 0 end
+		local hide = must_hide(name, arm)
+		hb.init_hudbar(player, "armor", arm_printable(arm), nil, nil, hide)
 	end
 end
 
@@ -32,8 +43,8 @@ hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar 
 function hud.set_armor()
 end
 
-
 dofile(minetest.get_modpath("hbarmor").."/armor.lua")
+
 
 -- update hud elemtens if value has changed
 local function update_hud(player)
@@ -45,14 +56,13 @@ local function update_hud(player)
 	if not arm then arm = 0 end
 	if arm_out ~= arm then
 		hud.armor_out[name] = arm
-		local arm_displayed = math.ceil(math.floor(arm+0.5))
-		hb.change_hudbar(player, "armor", arm_displayed)
 		-- hide armor bar completely when there is none
-		if (not armor.def[name].count or armor.def[name].count == 0) and arm == 0 then
+		if must_hide(name, arm) then
 			hb.hide_hudbar(player, "armor")
 		else
 			hb.unhide_hudbar(player, "armor")
 		end
+		hb.change_hudbar(player, "armor", arm_printable(arm))
 	end
 end
 
@@ -68,24 +78,22 @@ end)
 
 local main_timer = 0
 local timer = 0
-minetest.after(2.5, function()
-	minetest.register_globalstep(function(dtime)
+minetest.register_globalstep(function(dtime)
 	main_timer = main_timer + dtime
 	timer = timer + dtime
-		if main_timer > HUD_TICK or timer > 4 then
-			if main_timer > HUD_TICK then main_timer = 0 end
-			for _,player in ipairs(minetest.get_connected_players()) do
-				local name = player:get_player_name()
+	if main_timer > HUD_TICK or timer > 4 then
+		if main_timer > HUD_TICK then main_timer = 0 end
+		for _,player in ipairs(minetest.get_connected_players()) do
+			local name = player:get_player_name()
 
-				-- only proceed if damage is enabled
-				if minetest.setting_getbool("enable_damage") then
-					hud.get_armor(player)
+			-- only proceed if damage is enabled
+			if minetest.setting_getbool("enable_damage") then
+				hud.get_armor(player)
 
-					-- update all hud elements
-					update_hud(player)
-				end
+				-- update all hud elements
+				update_hud(player)
 			end
 		end
-		if timer > 4 then timer = 0 end
-	end)
+	end
+	if timer > 4 then timer = 0 end
 end)
