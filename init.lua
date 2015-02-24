@@ -34,7 +34,10 @@ local function custom_hud(player)
 	local name = player:get_player_name()
 
 	if minetest.setting_getbool("enable_damage") then
-		hbarmor.get_armor(player)
+		local ret = hbarmor.get_armor(player)
+		if ret == false then
+			minetest.log("error", "[hbarmor] Call to hbarmor.get_armor in custom_hud returned with false!")
+		end
 		local arm = tonumber(hbarmor.armor[name])
 		if not arm then arm = 0 end
 		local hide
@@ -97,8 +100,10 @@ minetest.register_globalstep(function(dtime)
 			for _,player in ipairs(minetest.get_connected_players()) do
 				local name = player:get_player_name()
 				if hbarmor.player_active[name] == true then
-					hbarmor.get_armor(player)
-
+					local ret = hbarmor.get_armor(player)
+					if ret == false then
+						minetest.log("error", "[hbarmor] Call to hbarmor.get_armor in globalstep returned with false!")
+					end
 					-- update all hud elements
 					update_hud(player)
 				end

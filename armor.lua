@@ -7,13 +7,16 @@ end)
 
 function hbarmor.get_armor(player)
 	if not player or not armor.def then
-		return
+		return false
 	end
 	local name = player:get_player_name()
 	local def = armor.def[name] or nil
 	if def and def.state and def.count then
 		hbarmor.set_armor(name, def.state, def.count)
+	else
+		return false
 	end
+	return true
 end
 
 function hbarmor.set_armor(player_name, ges_state, items)
