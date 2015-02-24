@@ -34,6 +34,7 @@ local function custom_hud(player)
 	local name = player:get_player_name()
 
 	if minetest.setting_getbool("enable_damage") then
+		hbarmor.get_armor(player)
 		local arm = tonumber(hbarmor.armor[name])
 		if not arm then arm = 0 end
 		local hide
@@ -76,7 +77,6 @@ end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	hbarmor.armor[name] = 0
 	custom_hud(player)
 	hbarmor.player_active[name] = true
 end)
