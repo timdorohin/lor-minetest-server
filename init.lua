@@ -12,8 +12,7 @@ local armor_hud = {}
 hbarmor.tick = 0.1
 
 -- If true, the armor bar is hidden when the player does not wear any armor
--- FIXME: Currently hiding does not work, so it is turned off by default.
-hbarmor.autohide = false
+hbarmor.autohide = true
 
 --load custom settings
 local set = io.open(minetest.get_modpath("hbarmor").."/hbarmor.conf", "r")
