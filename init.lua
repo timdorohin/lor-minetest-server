@@ -3,6 +3,9 @@ hud = {}
 -- HUD statbar values
 hud.armor = {}
 
+-- Stores if player's HUD bar has been initialized so far.
+hud.player_active = {}
+
 -- HUD item ids
 local armor_hud = {}
 
@@ -49,20 +52,29 @@ local function update_hud(player)
 	local name = player:get_player_name()
  --armor
 	local arm = tonumber(hud.armor[name])
-	if not arm then arm = 0 end
+	if not arm then
+		arm = 0
+		hud.armor[name] = 0
+	end
 	-- hide armor bar completely when there is none
 	if must_hide(name, arm) then
 		hb.hide_hudbar(player, "armor")
 	else
+		hb.change_hudbar(player, "armor", arm_printable(arm))
 		hb.unhide_hudbar(player, "armor")
 	end
-	hb.change_hudbar(player, "armor", arm_printable(arm))
 end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	hud.armor[name] = 0
 	custom_hud(player)
+	hud.player_active[name] = true
+end)
+
+minetest.register_on_leaveplayer(function(player)
+	local name = player:get_player_name()
+	hud.player_active[name] = false
 end)
 
 minetest.register_on_respawnplayer(function(player)
@@ -80,10 +92,12 @@ minetest.register_globalstep(function(dtime)
 
 			-- only proceed if damage is enabled
 			if minetest.setting_getbool("enable_damage") then
-				hud.get_armor(player)
+				if hud.player_active[name] == true then
+					hud.get_armor(player)
 
-				-- update all hud elements
-				update_hud(player)
+					-- update all hud elements
+					update_hud(player)
+				end
 			end
 		end
 	end
