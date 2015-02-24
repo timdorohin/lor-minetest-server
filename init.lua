@@ -1,20 +1,20 @@
-hud = {}
+hbarmor = {}
 
 -- HUD statbar values
-hud.armor = {}
+hbarmor.armor = {}
 
 -- Stores if player's HUD bar has been initialized so far.
-hud.player_active = {}
+hbarmor.player_active = {}
 
 -- HUD item ids
 local armor_hud = {}
 
-HUD_TICK = 0.1
+hbarmor.tick = 0.1
 
 --load custom settings
-local set = io.open(minetest.get_modpath("hbarmor").."/hud.conf", "r")
+local set = io.open(minetest.get_modpath("hbarmor").."/hbarmor.conf", "r")
 if set then 
-	dofile(minetest.get_modpath("hbarmor").."/hud.conf")
+	dofile(minetest.get_modpath("hbarmor").."/hbarmor.conf")
 	set:close()
 end
 
@@ -30,7 +30,7 @@ local function custom_hud(player)
 	local name = player:get_player_name()
 
 	if minetest.setting_getbool("enable_damage") then
-		local arm = tonumber(hud.armor[name])
+		local arm = tonumber(hbarmor.armor[name])
 		if not arm then arm = 0 end
 		local hide = must_hide(name, arm)
 		hb.init_hudbar(player, "armor", arm_printable(arm), nil, hide)
@@ -40,10 +40,6 @@ end
 --register and define armor HUD bar
 hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 100, true, "%s: %d%%")
 
---needs to be defined for older version of 3darmor
-function hud.set_armor()
-end
-
 dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 
 
@@ -51,10 +47,10 @@ dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 local function update_hud(player)
 	local name = player:get_player_name()
  --armor
-	local arm = tonumber(hud.armor[name])
+	local arm = tonumber(hbarmor.armor[name])
 	if not arm then
 		arm = 0
-		hud.armor[name] = 0
+		hbarmor.armor[name] = 0
 	end
 	-- hide armor bar completely when there is none
 	if must_hide(name, arm) then
@@ -67,14 +63,14 @@ end
 
 minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
-	hud.armor[name] = 0
+	hbarmor.armor[name] = 0
 	custom_hud(player)
-	hud.player_active[name] = true
+	hbarmor.player_active[name] = true
 end)
 
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
-	hud.player_active[name] = false
+	hbarmor.player_active[name] = false
 end)
 
 local main_timer = 0
@@ -82,13 +78,13 @@ local timer = 0
 minetest.register_globalstep(function(dtime)
 	main_timer = main_timer + dtime
 	timer = timer + dtime
-	if main_timer > HUD_TICK or timer > 4 then
+	if main_timer > hbarmor.tick or timer > 4 then
 		if minetest.setting_getbool("enable_damage") then
-			if main_timer > HUD_TICK then main_timer = 0 end
+			if main_timer > hbarmor.tick then main_timer = 0 end
 			for _,player in ipairs(minetest.get_connected_players()) do
 				local name = player:get_player_name()
-				if hud.player_active[name] == true then
-					hud.get_armor(player)
+				if hbarmor.player_active[name] == true then
+					hbarmor.get_armor(player)
 
 					-- update all hud elements
 					update_hud(player)
