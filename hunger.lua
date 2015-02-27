@@ -68,9 +68,25 @@ if minetest.get_modpath("farming") ~= nil then
 end
 
 if minetest.get_modpath("mobs") ~= nil then
-	overwrite("mobs:meat", 6)
-	overwrite("mobs:meat_raw", 3)
-	overwrite("mobs:rat_cooked", 5)
+	if mobs.mod ~= nil and mobs.mod == "redo" then
+		overwrite("mobs:cheese", 4)
+		overwrite("mobs:meat", 8)
+		overwrite("mobs:meat_raw", 4)
+		overwrite("mobs:rat_cooked", 4)
+		overwrite("mobs:honey", 2)
+		overwrite("mobs:pork_raw", 3, "", 3)
+		overwrite("mobs:pork_cooked", 8)
+		overwrite("mobs:chicken_cooked", 6)
+		overwrite("mobs:chicken_raw", 2, "", 3)
+		overwrite("mobs:chicken_egg_fried", 2)
+		if minetest.get_modpath("bucket") then 
+			overwrite("mobs:bucket_milk", 3, "bucket:bucket_empty")
+		end
+	else
+		overwrite("mobs:meat", 6)
+		overwrite("mobs:meat_raw", 3)
+		overwrite("mobs:rat_cooked", 5)
+	end
 end
 
 if minetest.get_modpath("moretrees") ~= nil then
@@ -150,6 +166,11 @@ end
 if minetest.get_modpath("mushroom") ~= nil then
 	overwrite("mushroom:brown", 1)
 	overwrite("mushroom:red", 1, "", 3)
+	-- mushroom potions: red = strong poison, brown = light restorative
+	if minetest.get_modpath("vessels") then
+		overwrite("mushroom:brown_essence", 1, "vessels:glass_bottle", nil, 4)
+		overwrite("mushroom:poison", 1, "vessels:glass_bottle", 10)
+	end
 end
 
 if minetest.get_modpath("docfarming") ~= nil then
@@ -286,6 +307,8 @@ if minetest.get_modpath("farming") and farming.mod == "redo" then
    overwrite("farming:donut_chocolate", 6)
    overwrite("farming:donut_apple", 6)
    overwrite("farming:raspberries", 1)
+   overwrite("farming:blueberries", 1)
+   overwrite("farming:muffin_blueberry", 4)
    if minetest.get_modpath("vessels") then
 	overwrite("farming:smoothie_raspberry", 2, "vessels:drinking_glass")
    end
@@ -329,6 +352,14 @@ if minetest.get_modpath("cooking") ~= nil then
 	overwrite("cooking:meat_toxic_cooked", -3)
 	overwrite("cooking:meat_venison_cooked", 3)
 	overwrite("cooking:meat_undead_cooked", 1)
+end
+
+-- ferns mod of plantlife_modpack
+if minetest.get_modpath("ferns") ~= nil then
+	overwrite("ferns:fiddlehead", 1, "", 1)
+	overwrite("ferns:fiddlehead_roasted", 3)
+	overwrite("ferns:ferntuber_roasted", 3)
+	overwrite("ferns:horsetail_01", 1)
 end
 
 -- player-action based hunger changes

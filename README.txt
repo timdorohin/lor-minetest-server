@@ -66,7 +66,7 @@ hunger_icon.png - PilzAdam (WTFPL), modified by BlockMen
 hunger_bar.png - Wuzzy (WTFPL)
 
 everything else is WTFPL:
-(c) Copyright BlockMen (2013-2014)
+(c) Copyright BlockMen (2013-2015)
 
 This program is free software. It comes without any warranty, to
 the extent permitted by applicable law. You can redistribute it
