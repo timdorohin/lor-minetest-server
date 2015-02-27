@@ -1,9 +1,9 @@
 -- Keep these for backwards compatibility
-function hunger.save_hunger(player)
-	hunger.set_hunger(player)
+function hbhunger.save_hunger(player)
+	hbhunger.set_hunger(player)
 end
-function hunger.load_hunger(player)
-	hunger.get_hunger(player)
+function hbhunger.load_hunger(player)
+	hbhunger.get_hunger(player)
 end
 
 -- Poison player
@@ -20,19 +20,19 @@ local function poisenp(tick, time, time_left, player)
 	
 end
 
-function hunger.item_eat(hunger_change, replace_with_item, poisen, heal)
+function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 	return function(itemstack, user, pointed_thing)
 		if itemstack:take_item() ~= nil and user ~= nil then
 			local name = user:get_player_name()
-			local h = tonumber(hunger.hunger[name])
+			local h = tonumber(hbhunger.hunger[name])
 			local hp = user:get_hp()
 
 			-- Saturation
 			if h < 30 and hunger_change then
 				h = h + hunger_change
 				if h > 30 then h = 30 end
-				hunger.hunger[name] = h
-				hunger.set_hunger(user)
+				hbhunger.hunger[name] = h
+				hbhunger.set_hunger(user)
 			end
 			-- Healing
 			if hp < 20 and heal then
@@ -56,7 +56,7 @@ end
 local function overwrite(name, hunger_change, replace_with_item, poisen, heal)
 	local tab = minetest.registered_items[name]
 	if tab == nil then return end
-	tab.on_use = hunger.item_eat(hunger_change, replace_with_item, poisen, heal)
+	tab.on_use = hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 	minetest.registered_items[name] = tab
 end
 
@@ -363,12 +363,12 @@ if minetest.get_modpath("ferns") ~= nil then
 end
 
 -- player-action based hunger changes
-function hunger.handle_node_actions(pos, oldnode, player, ext)
+function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	if not player or not player:is_player() then
 		return
 	end
 	local name = player:get_player_name()
-	local exhaus = hunger.exhaustion[name]
+	local exhaus = hbhunger.exhaustion[name]
 	local new = HUNGER_EXHAUST_PLACE
 	-- placenode event
 	if not ext then
@@ -381,14 +381,14 @@ function hunger.handle_node_actions(pos, oldnode, player, ext)
 	exhaus = exhaus + new
 	if exhaus > HUNGER_EXHAUST_LVL then
 		exhaus = 0
-		local h = tonumber(hunger.hunger[name])
+		local h = tonumber(hbhunger.hunger[name])
 		h = h - 1
 		if h < 0 then h = 0 end
-		hunger.hunger[name] = h
-		hunger.set_hunger(player)
+		hbhunger.hunger[name] = h
+		hbhunger.set_hunger(player)
 	end
-	hunger.exhaustion[name] = exhaus
+	hbhunger.exhaustion[name] = exhaus
 end
 
-minetest.register_on_placenode(hunger.handle_node_actions)
-minetest.register_on_dignode(hunger.handle_node_actions)
+minetest.register_on_placenode(hbhunger.handle_node_actions)
+minetest.register_on_dignode(hbhunger.handle_node_actions)
