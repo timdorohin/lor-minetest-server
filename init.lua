@@ -18,7 +18,7 @@ HUNGER_HUNGER_TICK = 800 -- time in seconds after that 1 hunger point is taken
 HUNGER_EXHAUST_DIG = 3  -- exhaustion increased this value after digged node
 HUNGER_EXHAUST_PLACE = 1 -- exhaustion increased this value after placed
 HUNGER_EXHAUST_MOVE = 0.3 -- exhaustion increased this value if player movement detected
-HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player saturation gets lowerd
+HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player satiation gets lowerd
 
 
 --load custom settings
@@ -29,13 +29,13 @@ if set then
 end
 
 local function custom_hud(player)
-	hb.init_hudbar(player, "saturation", hbhunger.get_hunger(player))
+	hb.init_hudbar(player, "satiation", hbhunger.get_hunger(player))
 end
 
 dofile(minetest.get_modpath("hbhunger").."/hunger.lua")
 
--- register saturation hudbar
-hb.register_hudbar("saturation", 0xFFFFFF, "Saturation", { icon = "hbhunger_icon.png", bar = "hbhunger_bar.png" }, 20, 30, false)
+-- register satiation hudbar
+hb.register_hudbar("satiation", 0xFFFFFF, "Satiation", { icon = "hbhunger_icon.png", bar = "hbhunger_bar.png" }, 20, 30, false)
 
 -- update hud elemtens if value has changed
 local function update_hud(player)
@@ -45,7 +45,7 @@ local function update_hud(player)
 	local h = tonumber(hbhunger.hunger[name])
 	if h_out ~= h then
 		hbhunger.hunger_out[name] = h
-		hb.change_hudbar(player, "saturation", h)
+		hb.change_hudbar(player, "satiation", h)
 	end
 end
 
@@ -109,15 +109,15 @@ minetest.register_globalstep(function(dtime)
 		local h = tonumber(hbhunger.hunger[name])
 		local hp = player:get_hp()
 		if timer > 4 then
-			-- heal player by 1 hp if not dead and saturation is > 15 (of 30)
+			-- heal player by 1 hp if not dead and satiation is > 15 (of 30)
 			if h > 15 and hp > 0 and player:get_breath() > 0 then
 				player:set_hp(hp+1)
-				-- or damage player by 1 hp if saturation is < 2 (of 30)
+				-- or damage player by 1 hp if satiation is < 2 (of 30)
 				elseif h <= 1 then
 					if hp-1 >= 0 then player:set_hp(hp-1) end
 				end
 			end
-			-- lower saturation by 1 point after xx seconds
+			-- lower satiation by 1 point after xx seconds
 			if timer2 > HUNGER_HUNGER_TICK then
 				if h > 0 then
 					h = h-1
