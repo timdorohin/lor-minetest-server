@@ -55,7 +55,8 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 	-- can I replace above node, and am I pointing at soil
 	if not minetest.registered_nodes[above.name].buildable_to
-	or minetest.get_item_group(under.name, "soil") < 2 then
+	or minetest.get_item_group(under.name, "soil") < 2 
+	or minetest.get_item_group(above.name, "plant") ~= 0 then -- ADDED this line for multiple seed placement bug
 		return
 	end
 
