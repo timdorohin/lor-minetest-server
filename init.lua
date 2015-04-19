@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.13 (19th April 2015)
+	Minetest Farming Redo Mod 1.14 (19th April 2015)
 	by TenPlus1
 ]]
 
