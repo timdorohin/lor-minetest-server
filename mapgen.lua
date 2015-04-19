@@ -35,6 +35,7 @@ function farming.register_mgv6_decorations()
 	register_plant("raspberry_4", 3, 10, "", -1)
 	register_plant("rhubarb_3", 3, 15, "group:tree", 1)
 	register_plant("blueberry_4", 3, 10, "", -1)
+	register_plant("beanbush", 18, 35, "", -1)
 end
 
 -- enable in mapgen v6 only

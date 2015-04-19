@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.12 (9th April 2015)
+	Minetest Farming Redo Mod 1.13 (19th April 2015)
 	by TenPlus1
 ]]
 
@@ -25,7 +25,8 @@ dofile(minetest.get_modpath("farming").."/cocoa.lua")
 dofile(minetest.get_modpath("farming").."/raspberry.lua")
 dofile(minetest.get_modpath("farming").."/blueberry.lua")
 dofile(minetest.get_modpath("farming").."/rhubarb.lua")
-dofile(minetest.get_modpath("farming").."/donut.lua") -- sweet treat
+dofile(minetest.get_modpath("farming").."/beanpole.lua")
+dofile(minetest.get_modpath("farming").."/donut.lua")
 dofile(minetest.get_modpath("farming").."/mapgen.lua")
 dofile(minetest.get_modpath("farming").."/compatibility.lua") -- Farming Plus compatibility
 
