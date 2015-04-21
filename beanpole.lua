@@ -25,6 +25,7 @@ minetest.register_craftitem("farming:beans", {
 -- Beanpole
 
 minetest.register_node("farming:beanpole", {
+	description = "Bean Pole (place on soil before planting beans)",
 	drawtype = "plantlike",
 	tiles = {"farming_beanpole.png"},
 	inventory_image = "farming_beanpole.png",
