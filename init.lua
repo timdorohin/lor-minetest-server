@@ -50,7 +50,7 @@ local function custom_hud(player)
 end
 
 --register and define armor HUD bar
-hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bar = "hbarmor_bar.png" }, 0, 100, hbarmor.autohide, "%s: %d%%")
+hb.register_hudbar("armor", 0xFFFFFF, "Armor", { icon = "hbarmor_icon.png", bgicon = "hbarmor_bgicon.png", bar = "hbarmor_bar.png" }, 0, 100, hbarmor.autohide, "%s: %d%%")
 
 dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 

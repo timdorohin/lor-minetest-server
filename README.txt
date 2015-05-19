@@ -35,6 +35,7 @@ Dependencies:
 License of textures:
 --------------------
 hbarmor_icon.png - Stu (CC BY-SA 3.0), modified by BlockMen
+hbarmor_bgicon.png - Stu (CC BY-SA 3.0), modified by BlockMen
 hbarmor_bar.png - Wuzzy (WTFPL)
 
 
