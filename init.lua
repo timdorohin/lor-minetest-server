@@ -35,7 +35,7 @@ end
 dofile(minetest.get_modpath("hbhunger").."/hunger.lua")
 
 -- register satiation hudbar
-hb.register_hudbar("satiation", 0xFFFFFF, "Satiation", { icon = "hbhunger_icon.png", bar = "hbhunger_bar.png" }, 20, 30, false)
+hb.register_hudbar("satiation", 0xFFFFFF, "Satiation", { icon = "hbhunger_icon.png", bgicon = "hbhunger_bgicon.png",  bar = "hbhunger_bar.png" }, 20, 30, false)
 
 -- update hud elemtens if value has changed
 local function update_hud(player)

@@ -63,6 +63,7 @@ eating a bread (from the default Minetest game) increases your satiation by 4.
 License of textures:
 --------------------
 hunger_icon.png - PilzAdam (WTFPL), modified by BlockMen
+hunger_bgicon.png - PilzAdam (WTFPL), modified by BlockMen
 hunger_bar.png - Wuzzy (WTFPL)
 
 everything else is WTFPL:
