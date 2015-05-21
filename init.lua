@@ -338,12 +338,12 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	local lambda = elapsed / STAGE_LENGTH_AVG
 	if lambda < 0.1 then return true end
 	if max_growth == 1 or lambda < 2.0 then
-		local light = minetest.get_node_light(light_pos)
+		local light = (minetest.get_node_light(light_pos) or 0) -- CHANGED
 		if not in_range(light, MIN_LIGHT, MAX_LIGHT) then return true end
 		growth = 1
 	else
-		local night_light  = minetest.get_node_light(light_pos, 0)
-		local day_light    = minetest.get_node_light(light_pos, 0.5)
+		local night_light  = (minetest.get_node_light(light_pos, 0) or 0) -- CHANGED
+		local day_light    = (minetest.get_node_light(light_pos, 0.5) or 0) -- ChANGED
 		local night_growth = in_range(night_light, MIN_LIGHT, MAX_LIGHT)
 		local day_growth   = in_range(day_light,   MIN_LIGHT, MAX_LIGHT)
 
