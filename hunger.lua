@@ -285,6 +285,7 @@ if minetest.get_modpath("ethereal") then
    overwrite("ethereal:seaweed", 1)
    overwrite("ethereal:yellowleaves", 1, "", nil, 1)
    overwrite("ethereal:sashimi", 4)
+   overwrite("ethereal:orange", 2)
 end
 
 if minetest.get_modpath("farming") and farming.mod == "redo" then
