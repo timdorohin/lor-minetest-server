@@ -11,3 +11,8 @@ Initial release
 0.3.0
 -----
 - Play simple eating sound when something is eaten
+
+0.3.1
+-----
+- Add Ethereal orange
+- Fix exhaus variable

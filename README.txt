@@ -1,6 +1,6 @@
 Minetest mod: Hunger [hbhunger]
 ===============================
-Version: 0.3.0
+Version: 0.3.1
 
 License of source code: WTFPL
 -----------------------------
