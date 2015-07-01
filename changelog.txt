@@ -16,3 +16,7 @@ Initial release
 -----
 - Add Ethereal orange
 - Fix exhaus variable
+
+0.3.2
+-----
+- Fix another crash
