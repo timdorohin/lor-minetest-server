@@ -371,6 +371,7 @@ function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	end
 	local name = player:get_player_name()
 	local exhaus = hbhunger.exhaustion[name]
+	if exhaus == nil then return end
 	local new = HUNGER_EXHAUST_PLACE
 	-- placenode event
 	if not ext then
@@ -380,7 +381,7 @@ function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	if not pos and not oldnode then
 		new = HUNGER_EXHAUST_MOVE
 	end
-	exhaus = (exhaus or 0) + new
+	exhaus = exhaus + new
 	if exhaus > HUNGER_EXHAUST_LVL then
 		exhaus = 0
 		local h = tonumber(hbhunger.hunger[name])
