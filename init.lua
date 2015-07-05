@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.20 (20th May 2015)
+	Minetest Farming Redo Mod 1.20 (5th July 2015)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 ]]
@@ -8,6 +8,10 @@ farming = {}
 farming.mod = "redo"
 farming.path = minetest.get_modpath("farming")
 farming.hoe_on_use = default.hoe_on_use
+farming.select = {
+	type = "fixed",
+	fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
+}
 
 farming.DEBUG = false
 -- farming.DEBUG = {}  -- Uncomment to turn on profiling code/functions
@@ -38,7 +42,6 @@ if farming.DEBUG then
 		      timer_avg.."µs/run")
 		print("Total farming time: "..dt.."µs")
 	end
-else
 end
 
 local statistics = dofile(farming.path.."/statistics.lua")
@@ -68,7 +71,7 @@ dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
 -- Utility Functions
 
 local time_speed = tonumber(minetest.setting_get("time_speed")) or 72
-local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60/time_speed) or nil
+local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or nil
 
 local function clamp(x, min, max)
 	return (x < min and min) or (x > max and max) or x
@@ -214,7 +217,12 @@ local function reg_plant_stages(plant_name, stage, force_last)
 		local ns = reg_plant_stages(plant_name, stage + 1, true)
 
 		local stages_left = (ns and { ns.name, unpack(ns.stages_left) }) or {}
-		stages = { plant_name = plant_name, name = node_name, stage = stage, stages_left = stages_left }
+		stages = {
+			plant_name = plant_name,
+			name = node_name,
+			stage = stage,
+			stages_left = stages_left
+		}
 
 		if #stages_left > 0 then
 			local old_constr = node_def.on_construct
@@ -237,7 +245,12 @@ local function reg_plant_stages(plant_name, stage, force_last)
 				})
 		end
 	elseif force_last then
-		stages = { plant_name = plant_name, name = node_name, stage = stage, stages_left = {} }
+		stages = {
+			plant_name = plant_name,
+			name = node_name,
+			stage = stage,
+			stages_left = {}
+		}
 	else
 		return nil
 	end
@@ -378,7 +391,6 @@ if farming.DEBUG then
 	end
 end
 
-
 -- Place Seeds on Soil
 
 function farming.place_seed(itemstack, placer, pointed_thing, plantname)
@@ -393,7 +405,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	local above = minetest.get_node(pt.above)
 
 	-- check if pointing at the top of the node
-	if pt.above.y ~= pt.under.y+1 then
+	if pt.above.y ~= pt.under.y + 1 then
 		return
 	end
 
@@ -419,7 +431,6 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 		return itemstack
 	end
 end
-
 
 -- Function to register plants (for compatibility)
 
@@ -450,7 +461,7 @@ farming.register_plant = function(name, def)
 		paramtype2 = "wallmounted",
 		walkable = false,
 		sunlight_propagates = true,
-		selection_box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},},
+		selection_box = farming.select,
 		on_place = function(itemstack, placer, pointed_thing)
 			return farming.place_seed(itemstack, placer, pointed_thing, mname .. ":"..pname.."_1")
 		end
@@ -489,7 +500,7 @@ farming.register_plant = function(name, def)
 			buildable_to = true,
 			is_ground_content = true,
 			drop = drop,
-			selection_box = {type = "fixed", fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5},},
+			selection_box = farming.select,
 			groups = g,
 			sounds = default.node_sound_leaves_defaults(),
 		})
@@ -503,8 +514,7 @@ end
 
 --[[ Cotton (example, is already registered in cotton.lua)
 farming.register_plant("farming:cotton", {
-	description = "Cotton seed",
+	description = "Cotton2 seed",
 	inventory_image = "farming_cotton_seed.png",
 	steps = 8,
-})
---]]
+})]]

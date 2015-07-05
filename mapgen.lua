@@ -9,7 +9,7 @@ local function register_plant(name, min, max, spawnby, num)
 		noise_params = {
 			offset = 0,
 			scale = 0.006,
-			spread = {x=100, y=100, z=100},
+			spread = {x = 100, y = 100, z = 100},
 			seed = 329,
 			octaves = 3,
 			persist = 0.6
@@ -38,9 +38,8 @@ function farming.register_mgv6_decorations()
 	register_plant("beanbush", 18, 35, "", -1)
 end
 
--- enable in mapgen v6 only
+-- enable in v6 mapgen only
 
-local mg_params = minetest.get_mapgen_params()
-if mg_params.mgname == "v6" then
+if minetest.get_mapgen_params().mgname == "v6" then
 	farming.register_mgv6_decorations()
 end
