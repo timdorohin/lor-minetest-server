@@ -94,7 +94,7 @@ minetest.register_node("farming:cocoa_1", {
 	},
 	groups = {
 		snappy = 3, flammable = 2, plant = 1, growing = 1,
-		not_in_creative_inventory=1
+		not_in_creative_inventory=1, leafdecay = 1, leafdecay_drop = 1
 	},
 	sounds = default.node_sound_leaves_defaults(),
 })
@@ -115,7 +115,7 @@ minetest.register_node("farming:cocoa_2", {
 	},
 	groups = {
 		snappy = 3, flammable = 2, plant = 1, growing = 1,
-		not_in_creative_inventory=1
+		not_in_creative_inventory=1, leafdecay = 1, leafdecay_drop = 1
 	},
 	sounds = default.node_sound_leaves_defaults(),
 })
@@ -139,7 +139,7 @@ minetest.register_node("farming:cocoa_3", {
 	},
 	groups = {
 		snappy = 3, flammable = 2, plant = 1,
-		not_in_creative_inventory = 1
+		not_in_creative_inventory = 1, leafdecay = 1, leafdecay_drop = 1
 	},
 	sounds = default.node_sound_leaves_defaults(),
 })
