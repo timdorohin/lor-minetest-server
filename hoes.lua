@@ -32,10 +32,21 @@ farming.register_hoe = function(name, def)
 		end
 	})
 	-- Register its recipe
-	minetest.register_craft({
-		output = name:gsub(":", "", 1),
-		recipe = def.recipe
-	})
+	if def.material == nil then
+		minetest.register_craft({
+			output = name:sub(2),
+			recipe = def.recipe
+		})
+	else
+		minetest.register_craft({
+			output = name:sub(2),
+			recipe = {
+				{def.material, def.material, ""},
+				{"", "group:stick", ""},
+				{"", "group:stick", ""}
+			}
+		})
+	end
 end
 
 -- Turns dirt with group soil=1 into soil
@@ -77,7 +88,9 @@ function farming.hoe_on_use(itemstack, user, pointed_thing, uses)
 	-- turn the node into soil, wear out item and play sound
 	minetest.set_node(pt.under, {name = "farming:soil"})
 	minetest.sound_play("default_dig_crumbly", {pos = pt.under, gain = 0.5})
-	itemstack:add_wear(65535/(uses - 1))
+	if not minetest.setting_getbool("creative_mode") then
+		itemstack:add_wear(65535/(uses-1))
+	end
 	return itemstack
 end
 
@@ -87,64 +100,40 @@ farming.register_hoe(":farming:hoe_wood", {
 	description = "Wooden Hoe",
 	inventory_image = "farming_tool_woodhoe.png",
 	max_uses = 30,
-	recipe = {
-		{"group:wood", "group:wood"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "group:wood"
 })
 
 farming.register_hoe(":farming:hoe_stone", {
 	description = "Stone Hoe",
 	inventory_image = "farming_tool_stonehoe.png",
 	max_uses = 90,
-	recipe = {
-		{"group:stone", "group:stone"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "group:stone"
 })
 
 farming.register_hoe(":farming:hoe_steel", {
 	description = "Steel Hoe",
 	inventory_image = "farming_tool_steelhoe.png",
 	max_uses = 200,
-	recipe = {
-		{"default:steel_ingot", "default:steel_ingot"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "default:steel_ingot"
 })
 
 farming.register_hoe(":farming:hoe_bronze", {
 	description = "Bronze Hoe",
 	inventory_image = "farming_tool_bronzehoe.png",
 	max_uses = 220,
-	recipe = {
-		{"default:bronze_ingot", "default:bronze_ingot"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "default:bronze_ingot"
 })
 
 farming.register_hoe(":farming:hoe_mese", {
 	description = "Mese Hoe",
 	inventory_image = "farming_tool_mesehoe.png",
 	max_uses = 350,
-	recipe = {
-		{"default:mese_crystal", "default:mese_crystal"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "default:mese_crystal"
 })
 
 farming.register_hoe(":farming:hoe_diamond", {
 	description = "Diamond Hoe",
 	inventory_image = "farming_tool_diamondhoe.png",
 	max_uses = 500,
-	recipe = {
-		{"default:diamond", "default:diamond"},
-		{"", "group:stick"},
-		{"", "group:stick"},
-	}
+	material = "default:diamond"
 })

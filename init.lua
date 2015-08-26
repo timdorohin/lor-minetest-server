@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.20 (5th July 2015)
+	Minetest Farming Redo Mod 1.20b (26th August 2015)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 ]]
@@ -397,7 +397,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	local pt = pointed_thing
 
 	-- check if pointing at a node
-	if not pt and pt.type ~= "node" then
+	if not pt or pt.type ~= "node" then
 		return
 	end
 
@@ -418,13 +418,14 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	-- can I replace above node, and am I pointing at soil
 	if not minetest.registered_nodes[above.name].buildable_to
 	or minetest.get_item_group(under.name, "soil") < 2 
-	or minetest.get_item_group(above.name, "plant") ~= 0 then -- ADDED this line for multiple seed placement bug
+	-- avoid multiple seed placement bug
+	or minetest.get_item_group(above.name, "plant") ~= 0 then
 		return
 	end
 
-	-- add the node and remove 1 item from the itemstack
+	-- if not protected then add node and remove 1 item from the itemstack
 	if not minetest.is_protected(pt.above, placer:get_player_name()) then
-		minetest.add_node(pt.above, {name=plantname})
+		minetest.add_node(pt.above, {name = plantname, param2 = 1})
 		if not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
 		end
@@ -474,7 +475,7 @@ farming.register_plant = function(name, def)
 	})
 
 	-- Register growing steps
-	for i=1,def.steps do
+	for i = 1, def.steps do
 		local drop = {
 			items = {
 				{items = {mname .. ":" .. pname}, rarity = 9 - i},
@@ -498,7 +499,6 @@ farming.register_plant = function(name, def)
 			paramtype = "light",
 			walkable = false,
 			buildable_to = true,
-			is_ground_content = true,
 			drop = drop,
 			selection_box = farming.select,
 			groups = g,
