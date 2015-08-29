@@ -1,7 +1,8 @@
 --[[
-	Minetest Farming Redo Mod 1.20b (26th August 2015)
+	Minetest Farming Redo Mod 1.21 (29th August 2015)
 	by TenPlus1
 	NEW growing routine by prestidigitator
+	auto-refill by crabman77
 ]]
 
 farming = {}
@@ -71,7 +72,7 @@ dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
 -- Utility Functions
 
 local time_speed = tonumber(minetest.setting_get("time_speed")) or 72
-local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or nil
+local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or 0 --nil
 
 local function clamp(x, min, max)
 	return (x < min and min) or (x > max and max) or x
@@ -391,6 +392,38 @@ if farming.DEBUG then
 	end
 end
 
+-- refill placed plant by crabman (26/08/2015)
+local can_refill_plant = {
+	["farming:blueberry_1"] =  "farming:blueberries",
+	["farming:carrot_1"] =  "farming:carrot",
+	["farming:coffee_1"] =  "farming:coffee_beans",
+	["farming:corn_1"] =  "farming:corn",
+	["farming:cotton_1"] =  "farming:seed_cotton",
+	["farming:cucumber_1"] =  "farming:cucumber",
+	["farming:melon_1"] =  "farming:melon_slice",
+	["farming:potato_1"] =  "farming:potato",
+	["farming:pumpkin_1"] =  "farming:pumpkin_slice",
+	["farming:raspberry_1"] =  "farming:raspberries",
+	["farming:rhubarb_1"] =  "farming:rhubarb",
+	["farming:tomato_1"] =  "farming:tomato",
+	["farming:wheat_1"] =  "farming:seed_wheat"
+}
+
+function farming.refill_plant(player, plantname, index)
+	local inv = player:get_inventory()
+	local old_stack = inv:get_stack("main", index)
+	if old_stack:get_name() ~= "" then return end
+	for i,stack in ipairs(inv:get_list("main")) do
+		if stack:get_name() == plantname and i ~= index then
+			inv:set_stack("main", index, stack)
+			stack:clear()
+			inv:set_stack("main", i, stack)
+			--minetest.log("action", "farming: refilled stack("..plantname..") of "  .. player:get_player_name()  )
+			return
+		end
+	end
+end -- END refill
+
 -- Place Seeds on Soil
 
 function farming.place_seed(itemstack, placer, pointed_thing, plantname)
@@ -428,6 +461,16 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 		minetest.add_node(pt.above, {name = plantname, param2 = 1})
 		if not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
+			-- check for refill
+			if itemstack:get_count() == 0
+			and can_refill_plant[plantname] then
+				minetest.after(0.10,
+					farming.refill_plant,
+					placer,
+					can_refill_plant[plantname],
+					placer:get_wield_index()
+				)
+			end -- END refill
 		end
 		return itemstack
 	end
