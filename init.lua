@@ -458,7 +458,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 	-- if not protected then add node and remove 1 item from the itemstack
 	if not minetest.is_protected(pt.above, placer:get_player_name()) then
-		minetest.add_node(pt.above, {name = plantname, param2 = 1})
+		minetest.set_node(pt.above, {name = plantname, param2 = 1})
 		if not minetest.setting_getbool("creative_mode") then
 			itemstack:take_item()
 			-- check for refill

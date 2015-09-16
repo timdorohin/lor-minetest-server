@@ -22,7 +22,7 @@ function place_cocoa(itemstack, placer, pointed_thing, plantname)
 	end
 	
 	-- add the node and remove 1 item from the itemstack
-	minetest.add_node(pt.above, {name = plantname})
+	minetest.set_node(pt.above, {name = plantname})
 	if not minetest.setting_getbool("creative_mode") then
 		itemstack:take_item()
 		-- check for refill
