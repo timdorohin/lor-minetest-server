@@ -91,6 +91,12 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craft({
+	type = "fuel",
+	recipe = "farming:beanpole",
+	burntime = 10,
+})
+
 -- Define Green Bean growth stages
 
 minetest.register_node("farming:beanpole_1", {

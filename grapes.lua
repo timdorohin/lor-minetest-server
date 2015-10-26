@@ -87,6 +87,12 @@ minetest.register_craft({
 	}
 })
 
+minetest.register_craft({
+	type = "fuel",
+	recipe = "farming:trellis",
+	burntime = 15,
+})
+
 -- Define Grapes growth stages
 
 minetest.register_node("farming:grapes_1", {
