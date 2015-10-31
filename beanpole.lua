@@ -9,6 +9,9 @@ minetest.register_craftitem("farming:beans", {
 	inventory_image = "farming_beans.png",
 	on_use = minetest.item_eat(1),
 	on_place = function(itemstack, placer, pointed_thing)
+		if minetest.is_protected(pointed_thing.under, placer:get_player_name()) then
+			return
+		end
 		local nod = minetest.get_node_or_nil(pointed_thing.under)
 		if nod and nod.name == "farming:beanpole" then
 			minetest.set_node(pointed_thing.under, {name="farming:beanpole_1"})
@@ -63,6 +66,9 @@ minetest.register_node("farming:beanpole", {
 	},
 	sounds = default.node_sound_leaves_defaults(),
 	on_place = function(itemstack, placer, pointed_thing)
+		if minetest.is_protected(pointed_thing.under, placer:get_player_name()) then
+			return
+		end
 		local nod = minetest.get_node_or_nil(pointed_thing.under)
 		if nod and minetest.get_item_group(nod.name, "soil") < 2 then
 			return
