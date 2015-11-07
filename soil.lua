@@ -25,6 +25,7 @@ minetest.register_abm({
 	nodenames = {"farming:soil", "farming:soil_wet"},
 	interval = 15,
 	chance = 4,
+	catch_up = false,
 	action = function(pos, node)
 
 		pos.y = pos.y + 1
