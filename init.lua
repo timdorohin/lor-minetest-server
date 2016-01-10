@@ -481,7 +481,7 @@ function farming.refill_plant(player, plantname, index)
 
 	if old_stack:get_name() ~= "" then return end
 
-	for i, stack in ipairs(inv:get_list("main")) do
+	for i, stack in pairs(inv:get_list("main")) do
 
 		if stack:get_name() == plantname and i ~= index then
 
