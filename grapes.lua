@@ -56,10 +56,7 @@ minetest.register_node("farming:trellis", {
 		}
 	},
 	selection_box = farming.select,
-	groups = {
-		snappy = 3, flammable = 2, attached_node = 1,
-		not_in_creative_inventory = 1
-	},
+	groups = {snappy = 3, flammable = 2, attached_node = 1},
 	sounds = default.node_sound_leaves_defaults(),
 	on_place = function(itemstack, placer, pointed_thing)
 		if minetest.is_protected(pointed_thing.under, placer:get_player_name()) then
