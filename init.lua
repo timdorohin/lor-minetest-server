@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.22 (8th December 2015)
+	Minetest Farming Redo Mod 1.22 (10th March 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -69,6 +69,7 @@ dofile(farming.path.."/blueberry.lua")
 dofile(farming.path.."/rhubarb.lua")
 dofile(farming.path.."/beanpole.lua")
 dofile(farming.path.."/grapes.lua")
+dofile(farming.path.."/barley.lua")
 dofile(farming.path.."/donut.lua")
 dofile(farming.path.."/mapgen.lua")
 dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
@@ -76,7 +77,7 @@ dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
 -- Utility Functions
 
 local time_speed = tonumber(minetest.setting_get("time_speed")) or 72
-local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or 0 --nil
+local SECS_PER_CYCLE = (time_speed > 0 and 24 * 60 * 60 / time_speed) or 0
 
 local function clamp(x, min, max)
 	return (x < min and min) or (x > max and max) or x
@@ -180,7 +181,7 @@ local function plant_name_stage(node)
 	if type(node) == 'table' then
 
 		if node.name then
-		   name = node.name
+			name = node.name
 		elseif node.x and node.y and node.z then
 			node = minetest.get_node_or_nil(node)
 			name = node and node.name
@@ -189,7 +190,9 @@ local function plant_name_stage(node)
 		name = tostring(node)
 	end
 
-	if not name or name == "ignore" then return nil end
+	if not name or name == "ignore" then
+		return nil
+	end
 
 	local sep_pos = name:find("_[^_]+$")
 
@@ -205,8 +208,9 @@ local function plant_name_stage(node)
 	return name, 0
 end
 
---- Map from node name to
- -- { plant_name = ..., name = ..., stage = n, stages_left = { node_name, ... } }
+-- Map from node name to
+-- { plant_name = ..., name = ..., stage = n, stages_left = { node_name, ... } }
+
 local plant_stages = {}
 
 farming.plant_stages = plant_stages
@@ -227,11 +231,15 @@ local function reg_plant_stages(plant_name, stage, force_last)
 	local node_name = plant_name and plant_name .. "_" .. stage
 	local node_def = node_name and minetest.registered_nodes[node_name]
 
-	if not node_def then return nil end
+	if not node_def then
+		return nil
+	end
 
 	local stages = plant_stages[node_name]
 
-	if stages then return stages end
+	if stages then
+		return stages
+	end
 
 	if minetest.get_item_group(node_name, "growing") > 0 then
 
@@ -253,13 +261,21 @@ local function reg_plant_stages(plant_name, stage, force_last)
 			minetest.override_item(node_name,
 				{
 					on_construct = function(pos)
-						if old_constr then old_constr(pos) end
+
+						if old_constr then
+							old_constr(pos)
+						end
+
 						farming.handle_growth(pos)
 					end,
 
 					on_destruct = function(pos)
+
 						minetest.get_node_timer(pos):stop()
-						if old_destr then old_destr(pos) end
+
+						if old_destr then
+							old_destr(pos)
+						end
 					end,
 
 					on_timer = function(pos, elapsed)
@@ -290,6 +306,7 @@ register_plant_node = function(node)
 	local plant_name, stage = plant_name_stage(node)
 
 	if plant_name then
+
 		local stages = reg_plant_stages(plant_name, stage, false)
 		return stages and #stages.stages_left
 	else
@@ -299,7 +316,9 @@ end
 
 local function set_growing(pos, stages_left)
 
-	if not stages_left then return end
+	if not stages_left then
+		return
+	end
 
 	local timer = minetest.get_node_timer(pos)
 
@@ -319,28 +338,33 @@ local function set_growing(pos, stages_left)
 	end
 end
 
---- Detects a plant type node at the given position, starting or stopping the plant growth timer as appopriate
- --
- -- @param pos
- --    The node's position.
- -- @param node
- --    The cached node table if available, or nil.
+-- Detects a plant type node at the given position, starting
+-- or stopping the plant growth timer as appopriate
+
+-- @param pos
+--    The node's position.
+-- @param node
+--    The cached node table if available, or nil.
 
 function farming.handle_growth(pos, node)
 
-	if not pos then return end
+	if not pos then
+		return
+	end
 
 	local stages_left = register_plant_node(node or pos)
 
-	if stages_left then set_growing(pos, stages_left) end
+	if stages_left then
+		set_growing(pos, stages_left)
+	end
 end
 
-minetest.after(0,
-	function()
-		for _, node_def in pairs(minetest.registered_nodes) do
-			register_plant_node(node_def)
-		end
-	end)
+minetest.after(0, function()
+
+	for _, node_def in pairs(minetest.registered_nodes) do
+		register_plant_node(node_def)
+	end
+end)
 
 local abm_func = farming.handle_growth
 
@@ -349,6 +373,7 @@ if farming.DEBUG then
 	local normal_abm_func = abm_func
 
 	abm_func = function(...)
+
 		local t0 = minetest.get_us_time()
 		local r = { normal_abm_func(...) }
 		local t1 = minetest.get_us_time()
@@ -362,73 +387,92 @@ end
 
 -- Just in case a growing type or added node is missed (also catches existing
 -- nodes added to map before timers were incorporated).
-minetest.register_abm({
 
+minetest.register_abm({
 	nodenames = { "group:growing" },
 	interval = 300,
 	chance = 1,
 	action = abm_func
 })
 
---- Plant timer function.
- --
- -- Grows plants under the right conditions.
+-- Plant timer function.
+-- Grows plants under the right conditions.
 
 function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	local stages = plant_stages[node_name]
 
-	if not stages then return false end
+	if not stages then
+		return false
+	end
 
 	local max_growth = #stages.stages_left
 
-	if max_growth <= 0 then return false end
+	if max_growth <= 0 then
+		return false
+	end
 
 	if stages.plant_name == "farming:cocoa" then
 
-		if not minetest.find_node_near(pos, 1, { "default:jungletree", "moretrees:jungletree_leaves_green" }) then
+		if not minetest.find_node_near(pos, 1,
+			{"default:jungletree", "moretrees:jungletree_leaves_green"}) then
+
 			return true
 		end
 	else
 		local under = minetest.get_node_or_nil({ x = pos.x, y = pos.y - 1, z = pos.z })
 
-		if not under or under.name ~= "farming:soil_wet" then return true end
+		if not under or under.name ~= "farming:soil_wet" then
+			return true
+		end
 	end
 
 	local growth
-	local light_pos = { x = pos.x, y = pos.y, z = pos.z }
+	local light_pos = {x = pos.x, y = pos.y, z = pos.z}
 	local lambda = elapsed / STAGE_LENGTH_AVG
 
-	if lambda < 0.1 then return true end
+	if lambda < 0.1 then
+		return true
+	end
 
 	if max_growth == 1 or lambda < 2.0 then
 
-		local light = (minetest.get_node_light(light_pos) or 0) -- CHANGED
+		local light = (minetest.get_node_light(light_pos) or 0)
 		--print ("light level:", light)
 
-		if not in_range(light, MIN_LIGHT, MAX_LIGHT) then return true end
+		if not in_range(light, MIN_LIGHT, MAX_LIGHT) then
+			return true
+		end
 
 		growth = 1
 	else
-		local night_light  = (minetest.get_node_light(light_pos, 0) or 0) -- CHANGED
-		local day_light    = (minetest.get_node_light(light_pos, 0.5) or 0) -- ChANGED
+		local night_light  = (minetest.get_node_light(light_pos, 0) or 0)
+		local day_light    = (minetest.get_node_light(light_pos, 0.5) or 0)
 		local night_growth = in_range(night_light, MIN_LIGHT, MAX_LIGHT)
 		local day_growth   = in_range(day_light,   MIN_LIGHT, MAX_LIGHT)
 
 		if not night_growth then
-			if not day_growth then return true end
+
+			if not day_growth then
+				return true
+			end
+
 			lambda = day_time(elapsed) / STAGE_LENGTH_AVG
+
 		elseif not day_growth then
+
 			lambda = night_time(elapsed) / STAGE_LENGTH_AVG
 		end
 
 		growth = statistics.poisson(lambda, max_growth)
 
-		if growth < 1 then return true end
+		if growth < 1 then
+			return true
+		end
 	end
 
 	if minetest.registered_nodes[stages.stages_left[growth]] then
-		minetest.swap_node(pos, { name = stages.stages_left[growth] })
+		minetest.swap_node(pos, {name = stages.stages_left[growth]})
 	else
 		return true
 	end
@@ -479,7 +523,9 @@ function farming.refill_plant(player, plantname, index)
 	local inv = player:get_inventory()
 	local old_stack = inv:get_stack("main", index)
 
-	if old_stack:get_name() ~= "" then return end
+	if old_stack:get_name() ~= "" then
+		return
+	end
 
 	for i, stack in pairs(inv:get_list("main")) do
 
@@ -492,7 +538,7 @@ function farming.refill_plant(player, plantname, index)
 			return
 		end
 	end
-end -- END refill
+end
 
 -- Place Seeds on Soil
 
