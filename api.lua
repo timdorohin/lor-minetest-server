@@ -2812,3 +2812,25 @@ minetest.override_item("default:chest", {
 	end,
 
 })
+
+-- compatibility function for old entities to new modpack entities
+function mobs:alias_mob(old_name, new_name)
+
+	-- spawn egg
+	minetest.register_alias(old_name, new_name)
+
+	-- entity
+	minetest.register_entity(":" .. old_name, {
+
+		physical = false,
+
+		on_step = function(self)
+
+			local pos = self.object:getpos()
+
+			minetest.add_entity(pos, new_name)
+
+			self.object:remove()
+		end
+	})
+end
