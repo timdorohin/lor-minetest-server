@@ -1,5 +1,5 @@
 
--- nametag
+-- name tag
 minetest.register_craftitem("mobs:nametag", {
 	description = "Nametag",
 	inventory_image = "mobs_nametag.png",

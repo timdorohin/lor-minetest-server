@@ -1,3 +1,4 @@
+
 -- mob spawner
 
 local spawner_default = "mobs:pumba 10 15 0 0"
