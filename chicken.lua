@@ -80,7 +80,8 @@ mobs:register_spawn("mobs_animal:chicken",
 
 mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_inv.png", 0)
 
-minetest.register_alias("mobs:chicken", "mobs_animal:chicken")
+-- compatibility
+mobs:alias_mob("mobs:chicken", "mobs_animal:chicken")
 
 -- egg entity
 

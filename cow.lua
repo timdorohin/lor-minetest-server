@@ -98,7 +98,8 @@ mobs:register_spawn("mobs_animal:cow",
 
 mobs:register_egg("mobs_animal:cow", "Cow", "default_grass.png", 1)
 
-minetest.register_alias("mobs:cow", "mobs_animal:cow")
+-- compatibility
+mobs:alias_mob("mobs:cow", "mobs_animal:cow")
 
 -- bucket of milk
 minetest.register_craftitem(":mobs:bucket_milk", {

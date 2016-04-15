@@ -170,25 +170,14 @@ for _, col in pairs(all_colours) do
 
 	mobs:register_egg("mobs_animal:sheep_"..col[1], col[2] .. " Sheep", "wool_"..col[1]..".png", 1)
 
-	minetest.register_alias("mobs:sheep_"..col[1], "mobs_animal:sheep_"..col[1])
+	-- compatibility
+	mobs:alias_mob("mobs:sheep_" .. col[1], "mobs_animal:sheep_" .. col[1])
 
 end
 
 mobs:register_spawn("mobs_animal:sheep_white",
 	{"default:dirt_with_grass", "ethereal:green_dirt"}, 20, 10, 15000, 1, 31000, true)
 
--- compatibility (item and entity)
-minetest.register_alias("mobs:sheep", "mobs:sheep_white")
 
---[[
--- replace old sheep entity with new white sheep
-minetest.register_entity("mobs:sheep", {
-
-	on_activate = function(self, staticdata, dtime_s)
-
-		self.object:remove()
-
-		minetest.add_entity(self.object:getpos(), "mobs_animal:sheep_white")
-	end
-})
-]]
+-- compatibility
+mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white")

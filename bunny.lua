@@ -83,4 +83,5 @@ mobs:register_spawn("mobs_animal:bunny",
 
 mobs:register_egg("mobs_animal:bunny", "Bunny", "mobs_bunny_inv.png", 0)
 
-minetest.register_alias("mobs:bunny", "mobs_animal:bunny")
+-- compatibility
+mobs:alias_mob("mobs:bunny", "mobs_animal:bunny")

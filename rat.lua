@@ -41,7 +41,8 @@ mobs:register_spawn("mobs_animal:rat", {"default:stone"}, 20, 5, 15000, 2, 0)
 
 mobs:register_egg("mobs_animal:rat", "Rat", "mobs_rat_inventory.png", 0)
 
-minetest.register_alias("mobs:rat", "mobs_animal:rat")
+-- compatibility
+mobs:alias_mob("mobs:rat", "mobs_animal:rat")
 
 -- cooked rat, yummy!
 minetest.register_craftitem(":mobs:rat_cooked", {

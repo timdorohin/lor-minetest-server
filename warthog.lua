@@ -58,7 +58,8 @@ mobs:register_spawn("mobs_animal:pumba",
 
 mobs:register_egg("mobs_animal:pumba", "Warthog", "wool_pink.png", 1)
 
-minetest.register_alias("mobs:pumba", "mobs_animal:pumba")
+-- compatibility
+mobs:alias_mob("mobs:pumba", "mobs_animal:pumba")
 
 -- raw porkchop
 minetest.register_craftitem(":mobs:pork_raw", {

@@ -43,7 +43,8 @@ mobs:register_spawn("mobs_animal:bee", {"group:flower"}, 20, 10, 9000, 1, 31000,
 
 mobs:register_egg("mobs_animal:bee", "Bee", "mobs_bee_inv.png", 0)
 
-minetest.register_alias("mobs:bee", "mobs_animal:bee")
+-- compatibility
+mobs:alias_mob("mobs:bee", "mobs_animal:bee")
 
 -- honey
 minetest.register_craftitem(":mobs:honey", {
