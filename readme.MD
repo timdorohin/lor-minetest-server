@@ -7,6 +7,9 @@ Built from PilzAdam's original Simple Mobs with additional mobs by KrupnoPavel, 
 This mod contains the API only for adding your own mobs into the world, so please use the additional modpacks to add animals, monsters etc.
 
 
+https://forum.minetest.net/viewtopic.php?f=11&t=9917
+
+
 Changelog:
 
 - 1.29- Split original Mobs Redo into a modpack to make it easier to disable mob sets (animal, monster, npc) or simply use the Api itself for your own mod
