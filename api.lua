@@ -1965,6 +1965,116 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	update_tag(self)
 end
 
+local mob_step = function(self, dtime)
+
+	local pos = self.object:getpos()
+	local yaw = self.object:getyaw() or 0
+
+	-- when lifetimer expires remove mob (except npc and tamed)
+	if self.type ~= "npc"
+	and not self.tamed
+	and self.state ~= "attack" then
+
+		self.lifetimer = self.lifetimer - dtime
+
+		if self.lifetimer <= 0 then
+
+			-- only despawn away from player
+			local objs = minetest.get_objects_inside_radius(pos, 10)
+
+			for _,oir in pairs(objs) do
+
+				if oir:is_player() then
+
+					self.lifetimer = 20
+
+					return
+				end
+			end
+
+			minetest.log("action",
+				"lifetimer expired, removed " .. self.name)
+
+			effect(pos, 15, "tnt_smoke.png")
+
+			self.object:remove()
+
+			return
+		end
+	end
+
+	falling(self, pos)
+
+	-- knockback timer
+	if self.pause_timer > 0 then
+
+		self.pause_timer = self.pause_timer - dtime
+
+		if self.pause_timer < 1 then
+			self.pause_timer = 0
+		end
+
+		return
+	end
+
+	-- attack timer
+	self.timer = self.timer + dtime
+
+	if self.state ~= "attack" then
+
+		if self.timer < 1 then
+			return
+		end
+
+		self.timer = 0
+	end
+
+	-- never go over 100
+	if self.timer > 100 then
+		self.timer = 1
+	end
+
+	-- node replace check (cow eats grass etc.)
+	replace(self, pos)
+
+	-- mob plays random sound at times
+	if self.sounds.random
+	and math.random(1, 100) == 1 then
+
+		minetest.sound_play(self.sounds.random, {
+			object = self.object,
+			max_hear_distance = self.sounds.distance
+		})
+	end
+
+	-- environmental damage timer (every 1 second)
+	self.env_damage_timer = self.env_damage_timer + dtime
+
+	if (self.state == "attack" and self.env_damage_timer > 1)
+	or self.state ~= "attack" then
+
+		self.env_damage_timer = 0
+
+		do_env_damage(self)
+
+		-- custom function (defined in mob lua file)
+		if self.do_custom then
+			self.do_custom(self)
+		end
+	end
+
+	monster_attack(self)
+
+	npc_attack(self)
+
+	breed(self)
+
+	follow_flop(self)
+
+	do_states(self, dtime)
+
+end
+
 mobs.spawning_mobs = {}
 
 -- register mob function
@@ -2051,115 +2161,7 @@ minetest.register_entity(name, {
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
 
-	on_step = function(self, dtime)
-
-		local pos = self.object:getpos()
-		local yaw = self.object:getyaw() or 0
-
-		-- when lifetimer expires remove mob (except npc and tamed)
-		if self.type ~= "npc"
-		and not self.tamed
-		and self.state ~= "attack" then
-
-			self.lifetimer = self.lifetimer - dtime
-
-			if self.lifetimer <= 0 then
-
-				-- only despawn away from player
-				local objs = minetest.get_objects_inside_radius(pos, 10)
-
-				for _,oir in pairs(objs) do
-
-					if oir:is_player() then
-
-						self.lifetimer = 20
-
-						return
-					end
-				end
-
-				minetest.log("action",
-					"lifetimer expired, removed " .. self.name)
-
-				effect(pos, 15, "tnt_smoke.png")
-
-				self.object:remove()
-
-				return
-			end
-		end
-
-		falling(self, pos)
-
-		-- knockback timer
-		if self.pause_timer > 0 then
-
-			self.pause_timer = self.pause_timer - dtime
-
-			if self.pause_timer < 1 then
-				self.pause_timer = 0
-			end
-
-			return
-		end
-
-		-- attack timer
-		self.timer = self.timer + dtime
-
-		if self.state ~= "attack" then
-
-			if self.timer < 1 then
-				return
-			end
-
-			self.timer = 0
-		end
-
-		-- never go over 100
-		if self.timer > 100 then
-			self.timer = 1
-		end
-
-		-- node replace check (cow eats grass etc.)
-		replace(self, pos)
-
-		-- mob plays random sound at times
-		if self.sounds.random
-		and math.random(1, 100) == 1 then
-
-			minetest.sound_play(self.sounds.random, {
-				object = self.object,
-				max_hear_distance = self.sounds.distance
-			})
-		end
-
-		-- environmental damage timer (every 1 second)
-		self.env_damage_timer = self.env_damage_timer + dtime
-
-		if (self.state == "attack" and self.env_damage_timer > 1)
-		or self.state ~= "attack" then
-
-			self.env_damage_timer = 0
-
-			do_env_damage(self)
-
-			-- custom function (defined in mob lua file)
-			if self.do_custom then
-				self.do_custom(self)
-			end
-		end
-
-		monster_attack(self)
-
-		npc_attack(self)
-
-		breed(self)
-
-		follow_flop(self)
-
-		do_states(self, dtime)
-
-	end,
+	on_step = mob_step,
 
 	on_punch = mob_punch,
 
