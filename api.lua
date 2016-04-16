@@ -1,5 +1,5 @@
 
--- Mobs Api (15th April 2016)
+-- Mobs Api (16th April 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -416,7 +416,7 @@ do_env_damage = function(self)
 	check_for_death(self)
 end
 
--- jump if facing a solid node (not fences)
+-- jump if facing a solid node (not fences or gates)
 do_jump = function(self)
 
 	if self.fly
@@ -549,6 +549,7 @@ function follow_holding(self, clicker)
 	return false
 end
 
+-- find two animals of same type and breed if nearby and horny
 local function breed(self)
 
 	-- child take 240 seconds before growing into adult
@@ -682,6 +683,7 @@ local function breed(self)
 	end
 end
 
+-- find and replace what mob is looking for (grass, wheat etc.)
 function replace(self, pos)
 
 	if self.replace_rate
@@ -1702,7 +1704,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		tflp = 0.2
 	end
 
-	for group,_ in pairs(tool_capabilities.damage_groups) do
+	for group,_ in pairs( (tool_capabilities.damage_groups or {}) ) do
 
 		tmp = tflp / (tool_capabilities.full_punch_interval or 1.4)
 
