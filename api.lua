@@ -1206,7 +1206,7 @@ local do_states = function(self, dtime)
 		-- otherwise randomly turn
 		elseif math.random(1, 100) <= 30 then
 
-			yaw = (math.random(0, 360) - 180) / 180 * pi
+			local yaw = (math.random(0, 360) - 180) / 180 * pi
 
 			self.object:setyaw(yaw)
 		end
