@@ -1115,6 +1115,8 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
+	local yaw = 0
+
 	if self.state == "stand" then
 
 		if math.random(1, 4) == 1 then
