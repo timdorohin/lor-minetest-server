@@ -1,5 +1,5 @@
 
--- Mobs Api (16th April 2016)
+-- Mobs Api (25th April 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1977,14 +1977,15 @@ local mob_step = function(self, dtime)
 	-- when lifetimer expires remove mob (except npc and tamed)
 	if self.type ~= "npc"
 	and not self.tamed
-	and self.state ~= "attack" then
+	and self.state ~= "attack"
+	and remove_far ~= true then
 
 		self.lifetimer = self.lifetimer - dtime
 
 		if self.lifetimer <= 0 then
 
 			-- only despawn away from player
-			local objs = minetest.get_objects_inside_radius(pos, 10)
+			local objs = minetest.get_objects_inside_radius(pos, 15)
 
 			for _,oir in pairs(objs) do
 
