@@ -17,7 +17,8 @@ function place_cocoa(itemstack, placer, pointed_thing, plantname)
 	end
 
 	-- check if pointing at jungletree
-	if under.name ~= "default:jungletree" then
+	if under.name ~= "default:jungletree"
+	or minetest.get_node(pt.above).name ~= "air" then
 		return
 	end
 
