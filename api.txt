@@ -79,6 +79,7 @@ This functions registers a new mob as a Minetest entity.
             'shoot' shoots defined arrows when player is within range
             'explode' follows player in range and will flash and explode when in reach
             'dogshoot' shoots arrows when in range and one on one attack when in reach
+        'custom_attack' is a function that is called when mob is in range to attack player, parameters are (self, to_attack)
         'explosion_radius' radius of explosion attack (defaults to 1)
         'arrow' if the attack_type is "shoot" or "dogshoot" then the entity name of the arrow is required
         'shoot_interval' the minimum shoot interval

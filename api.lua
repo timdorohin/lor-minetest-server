@@ -1,5 +1,5 @@
 
--- Mobs Api (25th April 2016)
+-- Mobs Api (28th April 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1529,33 +1529,44 @@ local do_states = function(self, dtime)
 				set_velocity(self, 0)
 				set_animation(self, "punch")
 
-				if self.timer > 1 then
+				if not self.custom_attack then
 
-					self.timer = 0
+					if self.timer > 1 then
 
-					local p2 = p
-					local s2 = s
+						self.timer = 0
 
-					p2.y = p2.y + 1.5
-					s2.y = s2.y + 1.5
+						local p2 = p
+						local s2 = s
 
-					--if minetest.line_of_sight(p2, s2) == true then
-					if line_of_sight_water(self, p2, s2) == true then
+						p2.y = p2.y + 1.5
+						s2.y = s2.y + 1.5
 
-						-- play attack sound
-						if self.sounds.attack then
+						--if minetest.line_of_sight(p2, s2) == true then
+						if line_of_sight_water(self, p2, s2) == true then
 
-							minetest.sound_play(self.sounds.attack, {
-								object = self.object,
-								max_hear_distance = self.sounds.distance
-							})
+							-- play attack sound
+							if self.sounds.attack then
+
+								minetest.sound_play(self.sounds.attack, {
+									object = self.object,
+									max_hear_distance = self.sounds.distance
+								})
+							end
+
+							-- punch player
+							self.attack:punch(self.object, 1.0, {
+								full_punch_interval = 1.0,
+								damage_groups = {fleshy = self.damage}
+							}, nil)
 						end
+					end
+				else	-- call custom attack every second
+					if self.custom_attack
+					and self.timer > 1 then
 
-						-- punch player
-						self.attack:punch(self.object, 1.0, {
-							full_punch_interval = 1.0,
-							damage_groups = {fleshy = self.damage}
-						}, nil)
+						self.timer = 0
+
+						self.custom_attack(self, p)
 					end
 				end
 			end
@@ -2165,6 +2176,7 @@ minetest.register_entity(name, {
 	pathfinding = def.pathfinding,
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
+	custom_attack = def.custom_attack,
 
 	on_step = mob_step,
 
