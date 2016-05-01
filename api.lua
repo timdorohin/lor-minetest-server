@@ -1,5 +1,5 @@
 
--- Mobs Api (28th April 2016)
+-- Mobs Api (1st May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2177,6 +2177,7 @@ minetest.register_entity(name, {
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
 	custom_attack = def.custom_attack,
+	on_blast = def.on_blast,
 
 	on_step = mob_step,
 
