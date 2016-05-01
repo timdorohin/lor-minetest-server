@@ -34,13 +34,15 @@ mobs:register_mob("mobs_animal:rat", {
 		local pos = self.object:getpos()
 		print("rat pos", pos.x, pos.y, pos.z)
 	end,
-
+]]
+--[[
 	on_blast = function(obj, damage)
 		print ("--- damage is", damage)
+		print ("---    mob is", obj.object:get_luaentity().name)
 		-- return's do_damage, do_knockback and drops
-		return true, true, {"default:mese"}
+		return false, true, {"default:mese"}
 	end,
---]]
+]]
 })
 
 mobs:register_spawn("mobs_animal:rat", {"default:stone"}, 20, 5, 15000, 2, 0)
