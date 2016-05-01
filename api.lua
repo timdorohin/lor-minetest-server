@@ -2091,6 +2091,19 @@ local mob_step = function(self, dtime)
 
 end
 
+-- default function when mobs are blown up with TNT
+local do_tnt = function(obj, damage)
+
+	--print ("----- Damage", damage)
+
+	obj.object:punch(obj.object, 1.0, {
+		full_punch_interval = 1.0,
+		damage_groups = {fleshy = damage},
+	}, nil)
+
+	return false, true, {}
+end
+
 mobs.spawning_mobs = {}
 
 -- register mob function
@@ -2177,7 +2190,8 @@ minetest.register_entity(name, {
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
 	custom_attack = def.custom_attack,
-	on_blast = def.on_blast,
+
+	on_blast = def.on_blast or do_tnt,
 
 	on_step = mob_step,
 
@@ -2250,7 +2264,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 
 		chance = new_chance
 
-		print ("[Mobs Redo] Chance setting for " .. name .. " is now " .. chance)
+		print ("[Mobs Redo] Chance setting for " .. name .. " changed to " .. chance)
 
 	end
 
@@ -2826,44 +2840,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
 	end
 end)
-
--- used to drop items inside a chest or container
-local drop_items = function(pos, invstring)
-
-	local meta = minetest.get_meta(pos)
-	local inv  = meta:get_inventory()
-
-	for i = 1, inv:get_size(invstring) do
-
-		local m_stack = inv:get_stack(invstring, i)
-		local obj = minetest.add_item(pos, m_stack)
-
-		if obj then
-
-			obj:setvelocity({
-				x = math.random(-10, 10) / 9,
-				y = 3,
-				z = math.random(-10, 10) / 9
-			})
-		end
-	end
-
-end
-
--- override chest node so it drops items on explode
-minetest.override_item("default:chest", {
-
-	on_blast = function(p)
-
-		minetest.after(0, function()
-
-			drop_items(p, "main")
-
-			minetest.remove_node(p)
-		end)
-	end,
-
-})
 
 -- compatibility function for old entities to new modpack entities
 function mobs:alias_mob(old_name, new_name)
