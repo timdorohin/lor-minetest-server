@@ -34,6 +34,12 @@ mobs:register_mob("mobs_animal:rat", {
 		local pos = self.object:getpos()
 		print("rat pos", pos.x, pos.y, pos.z)
 	end,
+
+	on_blast = function(obj, damage)
+		print ("--- damage is", damage)
+		-- return's do_damage, do_knockback and drops
+		return true, true, {"default:mese"}
+	end,
 --]]
 })
 
