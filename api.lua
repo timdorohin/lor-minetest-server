@@ -1,5 +1,5 @@
 
--- Mobs Api (1st May 2016)
+-- Mobs Api (2nd May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2274,6 +2274,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		neighbors = neighbors,
 		interval = interval,
 		chance = chance,
+		catch_up = false,
 
 		action = function(pos, node, aoc, active_object_count_wider)
 
