@@ -30,9 +30,17 @@ mobs:register_mob("mobs_animal:rat", {
 		mobs:capture_mob(self, clicker, 25, 80, 0, true, nil)
 	end,
 --[[
-	do_custom = function(self)
+	do_custom = function(self, dtime)
+
+		self.rat_timer = (self.rat_timer or 0) + dtime
+
+		if self.rat_timer < 1 then return end -- every 1 second
+
+		self.rat_timer = 0
+
 		local pos = self.object:getpos()
-		print("rat pos", pos.x, pos.y, pos.z)
+
+		print("rat pos", pos.x, pos.y, pos.z, dtime)
 	end,
 ]]
 --[[
