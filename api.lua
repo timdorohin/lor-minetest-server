@@ -1,5 +1,5 @@
 
--- Mobs Api (2nd May 2016)
+-- Mobs Api (6th May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2033,6 +2033,11 @@ local mob_step = function(self, dtime)
 		return
 	end
 
+	-- run custom function (defined in mob lua file)
+	if self.do_custom then
+		self.do_custom(self, dtime)
+	end
+
 	-- attack timer
 	self.timer = self.timer + dtime
 
@@ -2072,11 +2077,6 @@ local mob_step = function(self, dtime)
 		self.env_damage_timer = 0
 
 		do_env_damage(self)
-
-		-- custom function (defined in mob lua file)
-		if self.do_custom then
-			self.do_custom(self)
-		end
 	end
 
 	monster_attack(self)
@@ -2471,6 +2471,7 @@ function mobs:register_arrow(name, def)
 		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 		timer = 0,
 		switch = 0,
+		arrow = true,
 
 		on_step = function(self, dtime)
 
