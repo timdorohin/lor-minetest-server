@@ -2473,7 +2473,7 @@ function mobs:register_arrow(name, def)
 		switch = 0,
 		arrow = true,
 
-		on_step = function(self, dtime)
+		on_step = def.on_step or function(self, dtime)
 
 			self.timer = self.timer + 1
 

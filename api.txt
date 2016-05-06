@@ -170,6 +170,7 @@ This function registers a arrow for mobs with the attack type shoot.
             the parameters are (self, pos, node)
         'tail' when set to 1 adds a trail or tail to mob arrows
         'tail_texture' texture string used for above effect
+    'on_step' is a custom function when arrow is active, nil for default.
 
 
 mobs:register_egg(name, description, background, addegg)
