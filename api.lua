@@ -85,13 +85,12 @@ set_animation = function(self, type)
 	and self.animation.current ~= "stand" then
 
 		if self.animation.stand_start
-		and self.animation.stand_end
-		and self.animation.speed_normal then
+		and self.animation.stand_end then
 
 			self.object:set_animation({
 				x = self.animation.stand_start,
 				y = self.animation.stand_end},
-				self.animation.speed_normal, 0)
+				(self.animation.speed_stand or self.animation.speed_normal), 0)
 
 			self.animation.current = "stand"
 		end
@@ -100,13 +99,12 @@ set_animation = function(self, type)
 	and self.animation.current ~= "walk" then
 
 		if self.animation.walk_start
-		and self.animation.walk_end
-		and self.animation.speed_normal then
+		and self.animation.walk_end then
 
 			self.object:set_animation({
 				x = self.animation.walk_start,
 				y = self.animation.walk_end},
-				self.animation.speed_normal, 0)
+				(self.animation.speed_walk or self.animation.speed_normal), 0)
 
 			self.animation.current = "walk"
 		end
@@ -115,8 +113,7 @@ set_animation = function(self, type)
 	and self.animation.current ~= "run" then
 
 		if self.animation.run_start
-		and self.animation.run_end
-		and self.animation.speed_run then
+		and self.animation.run_end then
 
 			self.object:set_animation({
 				x = self.animation.run_start,
@@ -130,8 +127,7 @@ set_animation = function(self, type)
 	and self.animation.current ~= "punch" then
 
 		if self.animation.punch_start
-		and self.animation.punch_end
-		and self.animation.speed_normal then
+		and self.animation.punch_end then
 
 			self.object:set_animation({
 				x = self.animation.punch_start,
@@ -139,6 +135,32 @@ set_animation = function(self, type)
 				(self.animation.speed_punch or self.animation.speed_normal), 0)
 
 			self.animation.current = "punch"
+		end
+	elseif type == "punch2"
+	and self.animation.current ~= "punch2" then
+
+		if self.animation.punch2_start
+		and self.animation.punch2_end then
+
+			self.object:set_animation({
+				x = self.animation.punch2_start,
+				y = self.animation.punch2_end},
+				(self.animation.speed_punch2 or self.animation.speed_normal), 0)
+
+			self.animation.current = "punch2"
+		end
+	elseif type == "shoot"
+	and self.animation.current ~= "shoot" then
+
+		if self.animation.shoot_start
+		and self.animation.shoot_end then
+
+			self.object:set_animation({
+				x = self.animation.shoot_start,
+				y = self.animation.shoot_end},
+				(self.animation.speed_shoot or self.animation.speed_normal), 0)
+
+			self.animation.current = "shoot"
 		end
 	end
 end
@@ -1333,6 +1355,8 @@ local do_states = function(self, dtime)
 				set_animation(self, "run")
 			else
 				set_velocity(self, 0)
+				set_animation(self, "punch")
+
 				self.timer = self.timer + dtime
 				self.blinktimer = (self.blinktimer or 0) + dtime
 
@@ -1535,6 +1559,13 @@ local do_states = function(self, dtime)
 
 						self.timer = 0
 
+						if self.double_melee_attack
+						and math.random(1, 2) == 1 then
+							set_animation(self, "punch")
+						else
+							set_animation(self, "punch2")
+						end
+
 						local p2 = p
 						local s2 = s
 
@@ -1603,7 +1634,7 @@ local do_states = function(self, dtime)
 			and math.random(1, 100) <= 60 then
 
 				self.timer = 0
-				set_animation(self, "punch")
+				set_animation(self, "shoot")
 
 				-- play shoot attack sound
 				if self.sounds.shoot_attack then
@@ -2189,6 +2220,7 @@ minetest.register_entity(name, {
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
 	custom_attack = def.custom_attack,
+	double_melee_attack = def.double_melee_attack,
 
 	on_blast = def.on_blast or do_tnt,
 
