@@ -1,5 +1,5 @@
 
--- Mobs Api (6th May 2016)
+-- Mobs Api (8th May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1636,7 +1636,7 @@ local do_states = function(self, dtime)
 	end
 end
 
--- falling and fall damag
+-- falling and fall damage
 local falling = function(self, pos)
 
 	if self.fly then
@@ -1657,7 +1657,7 @@ local falling = function(self, pos)
 	end
 
 	-- in water then float up
-	if minetest.registered_nodes[node_ok(pos).name].groups.liquid then -- water then
+	if minetest.registered_nodes[node_ok(pos).name].groups.liquid then
 
 		if self.floats == 1 then
 
@@ -1683,7 +1683,6 @@ local falling = function(self, pos)
 
 			if d > 5 then
 
-				--self.object:set_hp(self.object:get_hp() - math.floor(d - 5))
 				self.health = self.health - math.floor(d - 5)
 
 				effect(pos, 5, "tnt_smoke.png")
@@ -2471,7 +2470,6 @@ function mobs:register_arrow(name, def)
 		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 		timer = 0,
 		switch = 0,
-		arrow = true,
 
 		on_step = def.on_step or function(self, dtime)
 
