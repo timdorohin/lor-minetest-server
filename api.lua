@@ -1551,7 +1551,6 @@ local do_states = function(self, dtime)
 				self.path.following = false -- not stuck anymore
 
 				set_velocity(self, 0)
-				set_animation(self, "punch")
 
 				if not self.custom_attack then
 
