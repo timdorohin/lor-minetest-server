@@ -1,5 +1,5 @@
 
--- Mobs Api (8th May 2016)
+-- Mobs Api (12th May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1134,6 +1134,31 @@ local follow_flop = function(self)
 	end
 end
 
+-- dogshoot attack switch and counter function
+local dogswitch = function(self, dtime)
+
+	-- switch mode not activated
+	if not self.dogshoot_switch
+	or not dtime then
+		return 0
+	end
+
+	self.dogshoot_count = self.dogshoot_count + dtime
+
+	if self.dogshoot_count > self.dogshoot_count_max then
+
+		self.dogshoot_count = 0
+
+		if self.dogshoot_switch == 1 then
+			self.dogshoot_switch = 2
+		else
+			self.dogshoot_switch = 1
+		end
+	end
+
+	return self.dogshoot_switch
+end
+
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
@@ -1412,7 +1437,8 @@ local do_states = function(self, dtime)
 			end
 
 		elseif self.attack_type == "dogfight"
-		or (self.attack_type == "dogshoot" and dist <= self.reach) then
+		or (self.attack_type == "dogshoot" and dogswitch(self, dtime) == 2)
+		or (self.attack_type == "dogshoot" and dist <= self.reach and dogswitch(self) == 0) then
 
 			if self.fly
 			and dist > self.reach then
@@ -1602,7 +1628,8 @@ local do_states = function(self, dtime)
 			end
 
 		elseif self.attack_type == "shoot"
-		or (self.attack_type == "dogshoot" and dist > self.reach) then
+		or (self.attack_type == "dogshoot" and dogswitch(self, dtime) == 1)
+		or (self.attack_type == "dogshoot" and dist > self.reach and dogswitch(self) == 0) then
 
 			p.y = p.y - .5
 			s.y = s.y + .5
@@ -2220,6 +2247,9 @@ minetest.register_entity(name, {
 	explosion_radius = def.explosion_radius,
 	custom_attack = def.custom_attack,
 	double_melee_attack = def.double_melee_attack,
+	dogshoot_switch = def.dogshoot_switch,
+	dogshoot_count = 0,
+	dogshoot_count_max = def.dogshoot_count_max or 5,
 
 	on_blast = def.on_blast or do_tnt,
 
