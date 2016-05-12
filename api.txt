@@ -79,6 +79,8 @@ This functions registers a new mob as a Minetest entity.
             'shoot' shoots defined arrows when player is within range
             'explode' follows player in range and will flash and explode when in reach
             'dogshoot' shoots arrows when in range and one on one attack when in reach
+	'dogshoot_switch' allows switching between shoot and dogfight modes inside dogshoot using timer (1 = shoot, 2 = dogfight)
+	'dogshoot_count_max' number of seconds before switching above modes.
         'custom_attack' is a function that is called when mob is in range to attack player, parameters are (self, to_attack)
         'double_melee_attack' if false then api will choose randomly between 'punch' and 'punch2' attack animations
         'on_blast' is called when TNT explodes near mob, function uses (object, damage) and returns (do_damage, do_knockback, drops)
