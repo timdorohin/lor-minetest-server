@@ -1586,9 +1586,9 @@ local do_states = function(self, dtime)
 
 						if self.double_melee_attack
 						and math.random(1, 2) == 1 then
-							set_animation(self, "punch")
-						else
 							set_animation(self, "punch2")
+						else
+							set_animation(self, "punch")
 						end
 
 						local p2 = p
