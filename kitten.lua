@@ -38,7 +38,7 @@ mobs:register_mob("mobs_animal:kitten", {
 		walk_start = 0,
 		walk_end = 96,
 	},
-	follow = {"mobs:rat", "ethereal:fish_raw", "mobs_fish:clownfish", "mobs_fish:tropical"},
+	follow = {"mobs_animal:rat", "ethereal:fish_raw", "mobs_fish:clownfish", "mobs_fish:tropical"},
 	view_range = 8,
 	on_rightclick = function(self, clicker)
 
