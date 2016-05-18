@@ -60,7 +60,7 @@ mobs:register_mob("mobs_animal:chicken", {
 	do_custom = function(self)
 
 		if self.child
-		or math.random(1, 2000) > 1 then
+		or math.random(1, 5000) > 1 then
 			return
 		end
 
