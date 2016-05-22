@@ -516,6 +516,7 @@ local can_refill_plant = {
 	["farming:beans_1"] = "farming:beans",
 	["farming:rhubarb_1"] = "farming:rhubarb",
 	["farming:cocoa_1"] = "farming:cocoa_beans",
+	["farming:barley_1"] = "farming:seed_barley",
 }
 
 function farming.refill_plant(player, plantname, index)
