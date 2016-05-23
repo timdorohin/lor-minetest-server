@@ -1,5 +1,5 @@
 
--- Mobs Api (12th May 2016)
+-- Mobs Api (23rd May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1755,6 +1755,12 @@ local falling = function(self, pos)
 end
 
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
+
+	-- error checking when mod profiling is enabled
+	if not tool_capabilities then
+		print ("[MOBS] mod profiling enabled, damage not enabled")
+		return
+	end
 
 	-- direction error check
 	dir = dir or {x = 0, y = 0, z = 0}
