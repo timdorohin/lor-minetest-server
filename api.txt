@@ -1,5 +1,5 @@
 
-MOB API
+MOB API (23rd May 2016)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
