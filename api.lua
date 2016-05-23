@@ -14,7 +14,6 @@ local remove_far = minetest.setting_getbool("remove_far_mobs")
 
 -- pathfinding settings
 local enable_pathfinding = true
-local enable_pathfind_digging = false
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
@@ -811,10 +810,9 @@ function smart_mobs(self, s, p, dist, dtime)
 		if not self.path.way then
 
 			self.path.following = false
---			self.path.stuck = true
 
 			 -- lets make way by digging/building if not accessible
-			if enable_pathfind_digging then
+			if self.pathfinding == 2 then
 
 				 -- add block and remove one block above so
 				 -- there is room to jump if needed
