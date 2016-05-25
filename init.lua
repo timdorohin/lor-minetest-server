@@ -422,7 +422,7 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	else
 		local under = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
 
-		if minetest.get_item_group(under.name, "soil") < 2 then
+		if minetest.get_item_group(under.name, "soil") < 3 then
 			return true
 		end
 	end
