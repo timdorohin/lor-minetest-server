@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.22 (24th May 2016)
+	Minetest Farming Redo Mod 1.22 (26th May 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -428,7 +428,7 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	end
 
 	local growth
-	local light_pos = {x = pos.x, y = pos.y, z = pos.z}
+	local light_pos = {x = pos.x, y = pos.y + 1, z = pos.z}
 	local lambda = elapsed / STAGE_LENGTH_AVG
 
 	if lambda < 0.1 then
