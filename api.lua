@@ -1,5 +1,5 @@
 
--- Mobs Api (23rd May 2016)
+-- Mobs Api (29th May 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2049,7 +2049,8 @@ local mob_step = function(self, dtime)
 	if self.type ~= "npc"
 	and not self.tamed
 	and self.state ~= "attack"
-	and remove_far ~= true then
+	and remove_far ~= true
+	and self.lifetimer < 20000 then
 
 		self.lifetimer = self.lifetimer - dtime
 
