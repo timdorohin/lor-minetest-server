@@ -1,4 +1,6 @@
 
+local S = farming.intllib
+
 -- place cocoa
 function place_cocoa(itemstack, placer, pointed_thing, plantname)
 
@@ -48,7 +50,7 @@ end
 
 -- cocoa beans
 minetest.register_craftitem("farming:cocoa_beans", {
-	description = "Cocoa Beans",
+	description = S("Cocoa Beans"),
 	inventory_image = "farming_cocoa_beans.png",
 	on_place = function(itemstack, placer, pointed_thing)
 		return place_cocoa(itemstack, placer, pointed_thing, "farming:cocoa_1")
@@ -64,7 +66,7 @@ minetest.register_craft( {
 
 -- chocolate cookie
 minetest.register_craftitem("farming:cookie", {
-	description = "Cookie",
+	description = S("Cookie"),
 	inventory_image = "farming_cookie.png",
 	on_use = minetest.item_eat(2),
 })
@@ -78,7 +80,7 @@ minetest.register_craft( {
 
 -- bar of dark chocolate (thanks to Ice Pandora for her deviantart.com chocolate tutorial)
 minetest.register_craftitem("farming:chocolate_dark", {
-	description = "Bar of Dark Chocolate",
+	description = S("Bar of Dark Chocolate"),
 	inventory_image = "farming_chocolate_dark.png",
 	on_use = minetest.item_eat(3),
 })

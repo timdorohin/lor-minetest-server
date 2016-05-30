@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.22 (26th May 2016)
+	Minetest Farming Redo Mod 1.22 (30th May 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -48,6 +48,15 @@ if farming.DEBUG then
 end
 
 local statistics = dofile(farming.path.."/statistics.lua")
+
+-- Intllib
+local S
+if minetest.get_modpath("intllib") then
+	S = intllib.Getter()
+else
+	S = function(s) return s end
+end
+farming.intllib = S
 
 dofile(farming.path.."/soil.lua")
 dofile(farming.path.."/hoes.lua")
@@ -611,7 +620,7 @@ farming.register_plant = function(name, def)
 
 	-- Check def table
 	if not def.description then
-		def.description = "Seed"
+		def.description = S("Seed")
 	end
 
 	if not def.inventory_image then
