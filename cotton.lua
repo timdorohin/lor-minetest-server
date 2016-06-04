@@ -114,3 +114,10 @@ crop_def.drop = {
 	}
 }
 minetest.register_node("farming:cotton_8", table.copy(crop_def))
+
+--[[ Cotton (example, is already registered in cotton.lua)
+farming.register_plant("farming:cotton", {
+	description = "Cotton seed",
+	inventory_image = "farming_cotton_seed.png",
+	steps = 8,
+})]]

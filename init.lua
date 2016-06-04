@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.22 (30th May 2016)
+	Minetest Farming Redo Mod 1.22 (4th June 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -50,6 +50,7 @@ end
 local statistics = dofile(farming.path.."/statistics.lua")
 
 -- Intllib
+
 local S
 if minetest.get_modpath("intllib") then
 	S = intllib.Getter()
@@ -57,31 +58,6 @@ else
 	S = function(s) return s end
 end
 farming.intllib = S
-
-dofile(farming.path.."/soil.lua")
-dofile(farming.path.."/hoes.lua")
-dofile(farming.path.."/grass.lua")
-dofile(farming.path.."/wheat.lua")
-dofile(farming.path.."/cotton.lua")
-dofile(farming.path.."/carrot.lua")
-dofile(farming.path.."/potato.lua")
-dofile(farming.path.."/tomato.lua")
-dofile(farming.path.."/cucumber.lua")
-dofile(farming.path.."/corn.lua")
-dofile(farming.path.."/coffee.lua")
-dofile(farming.path.."/melon.lua")
-dofile(farming.path.."/sugar.lua")
-dofile(farming.path.."/pumpkin.lua")
-dofile(farming.path.."/cocoa.lua")
-dofile(farming.path.."/raspberry.lua")
-dofile(farming.path.."/blueberry.lua")
-dofile(farming.path.."/rhubarb.lua")
-dofile(farming.path.."/beanpole.lua")
-dofile(farming.path.."/grapes.lua")
-dofile(farming.path.."/barley.lua")
-dofile(farming.path.."/donut.lua")
-dofile(farming.path.."/mapgen.lua")
-dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
 
 -- Utility Functions
 
@@ -673,7 +649,7 @@ farming.register_plant = function(name, def)
 
 		-- Last step doesn't need growing=1 so Abm never has to check these
 		if i == def.steps then
-			g = {snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1}
+			g.growing = 0
 		end
 
 		local node_name = mname .. ":" .. pname .. "_" .. i
@@ -691,7 +667,7 @@ farming.register_plant = function(name, def)
 			sounds = default.node_sound_leaves_defaults(),
 		})
 
-		register_plant_node(node_name)
+--		register_plant_node(node_name)
 	end
 
 	-- Return info
@@ -699,9 +675,29 @@ farming.register_plant = function(name, def)
 	return r
 end
 
---[[ Cotton (example, is already registered in cotton.lua)
-farming.register_plant("farming:cotton", {
-	description = "Cotton2 seed",
-	inventory_image = "farming_cotton_seed.png",
-	steps = 8,
-})]]
+-- load crops
+
+dofile(farming.path.."/soil.lua")
+dofile(farming.path.."/hoes.lua")
+dofile(farming.path.."/grass.lua")
+dofile(farming.path.."/wheat.lua")
+dofile(farming.path.."/cotton.lua")
+dofile(farming.path.."/carrot.lua")
+dofile(farming.path.."/potato.lua")
+dofile(farming.path.."/tomato.lua")
+dofile(farming.path.."/cucumber.lua")
+dofile(farming.path.."/corn.lua")
+dofile(farming.path.."/coffee.lua")
+dofile(farming.path.."/melon.lua")
+dofile(farming.path.."/sugar.lua")
+dofile(farming.path.."/pumpkin.lua")
+dofile(farming.path.."/cocoa.lua")
+dofile(farming.path.."/raspberry.lua")
+dofile(farming.path.."/blueberry.lua")
+dofile(farming.path.."/rhubarb.lua")
+dofile(farming.path.."/beanpole.lua")
+dofile(farming.path.."/grapes.lua")
+dofile(farming.path.."/barley.lua")
+dofile(farming.path.."/donut.lua")
+dofile(farming.path.."/mapgen.lua")
+dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
