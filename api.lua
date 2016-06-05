@@ -1,5 +1,5 @@
 
--- Mobs Api (29th May 2016)
+-- Mobs Api (5th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -275,20 +275,20 @@ function check_for_death(self)
 	local obj
 	local pos = self.object:getpos()
 
-	for _,drop in pairs(self.drops) do
+	for n = 1, #self.drops do
 
-		if math.random(1, drop.chance) == 1 then
+		if math.random(1, self.drops[n].chance) == 1 then
 
 			obj = minetest.add_item(pos,
-				ItemStack(drop.name .. " "
-					.. math.random(drop.min, drop.max)))
+				ItemStack(self.drops[n].name .. " "
+					.. math.random(self.drops[n].min, self.drops[n].max)))
 
 			if obj then
 
 				obj:setvelocity({
-					x = math.random(-1, 1),
-					y = 6,
-					z = math.random(-1, 1)
+					x = math.random(-10, 10) / 9,
+					y = 5,
+					z = math.random(-10, 10) / 9,
 				})
 			end
 		end
@@ -522,21 +522,21 @@ function entity_physics(pos, radius)
 	local objs = minetest.get_objects_inside_radius(pos, radius)
 	local obj_pos, dist
 
-	for _, obj in pairs(objs) do
+	for n = 1, #objs do
 
-		obj_pos = obj:getpos()
+		obj_pos = objs[n]:getpos()
 
 		dist = math.max(1, get_distance(pos, obj_pos))
 
 		local damage = math.floor((4 / dist) * radius)
-		local ent = obj:get_luaentity()
+		local ent = objs[n]:get_luaentity()
 
-		if obj:is_player() then
-			obj:set_hp(obj:get_hp() - damage)
+		if objs[n]:is_player() then
+			objs[n]:set_hp(objs[n]:get_hp() - damage)
 
 		else --if ent.health then
 
-			obj:punch(obj, 1.0, {
+			objs[n]:punch(objs[n], 1.0, {
 				full_punch_interval = 1.0,
 				damage_groups = {fleshy = damage},
 			}, nil)
@@ -622,13 +622,13 @@ local function breed(self)
 
 		effect({x = pos.x, y = pos.y + 1, z = pos.z}, 4, "heart.png")
 
-		local ents = minetest.get_objects_inside_radius(pos, 3)
+		local objs = minetest.get_objects_inside_radius(pos, 3)
 		local num = 0
 		local ent = nil
 
-		for i, obj in pairs(ents) do
+		for n = 1, #objs do
 
-			ent = obj:get_luaentity()
+			ent = objs[n]:get_luaentity()
 
 			-- check for same animal with different colour
 			local canmate = false
@@ -918,15 +918,16 @@ local monster_attack = function(self)
 	local p, sp, dist
 	local player, type, obj, min_player = nil, nil, nil, nil
 	local min_dist = self.view_range + 1
+	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
-	for _,oir in pairs(minetest.get_objects_inside_radius(s, self.view_range)) do
+	for n = 1, #objs do
 
-		if oir:is_player() then
+		if objs[n]:is_player() then
 
-			player = oir
+			player = objs[n]
 			type = "player"
 		else
-			obj = oir:get_luaentity()
+			obj = objs[n]:get_luaentity()
 
 			if obj then
 				player = obj.object
@@ -979,10 +980,11 @@ local npc_attack = function(self)
 	local s = self.object:getpos()
 	local min_dist = self.view_range + 1
 	local obj, min_player = nil, nil
+	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
-	for _, oir in pairs(minetest.get_objects_inside_radius(s, self.view_range)) do
+	for n = 1, #objs do
 
-		obj = oir:get_luaentity()
+		obj = objs[n]:get_luaentity()
 
 		if obj
 		and obj.type == "monster" then
@@ -1013,16 +1015,13 @@ local follow_flop = function(self)
 	and self.state ~= "attack"
 	and self.state ~= "runaway" then
 
-		local s, p, dist
+		local s = self.object:getpos()
+		local players = minetest.get_connected_players()
 
-		for _,player in pairs(minetest.get_connected_players()) do
+		for n = 1, #players do
 
-			s = self.object:getpos()
-			p = player:getpos()
-			dist = get_distance(p, s)
-
-			if dist < self.view_range then
-				self.following = player
+			if get_distance(players[n]:getpos(), s) < self.view_range then
+				self.following = players[n]
 				break
 			end
 		end
@@ -1171,12 +1170,12 @@ local do_states = function(self, dtime)
 
 			if self.type == "npc" then
 
-				local o = minetest.get_objects_inside_radius(self.object:getpos(), 3)
+				local objs = minetest.get_objects_inside_radius(s, 3)
 
-				for _,o in pairs(o) do
+				for n = 1, #objs do
 
-					if o:is_player() then
-						lp = o:getpos()
+					if objs[n]:is_player() then
+						lp = objs[n]:getpos()
 						break
 					end
 				end
@@ -1792,12 +1791,11 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	end
 
 	-- check for tool immunity or special damage
-	for _, no in pairs(self.immune_to) do
+	for n = 1, #self.immune_to do
 
-		if no[1] == weapon:get_name() then
+		if self.immune_to[n][1] == weapon:get_name() then
 
-			damage = no[2] or 0
-
+			damage = self.immune_to[n][2] or 0
 			break
 		end
 	end
@@ -1924,11 +1922,12 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		do_attack(self, hitter)
 
 		-- alert others to the attack
+		local objs = minetest.get_objects_inside_radius(hitter:getpos(), self.view_range)
 		local obj = nil
 
-		for _, oir in pairs(minetest.get_objects_inside_radius(hitter:getpos(), 5)) do
+		for n = 1, #objs do
 
-			obj = oir:get_luaentity()
+			obj = objs[n]:get_luaentity()
 
 			if obj then
 
@@ -2059,9 +2058,9 @@ local mob_step = function(self, dtime)
 			-- only despawn away from player
 			local objs = minetest.get_objects_inside_radius(pos, 15)
 
-			for _,oir in pairs(objs) do
+			for n = 1, #objs do
 
-				if oir:is_player() then
+				if objs[n]:is_player() then
 
 					self.lifetimer = 20
 
@@ -2373,9 +2372,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			-- only spawn away from player
 			local objs = minetest.get_objects_inside_radius(pos, 10)
 
-			for _,oir in pairs(objs) do
+			for n = 1, #objs do
 
-				if oir:is_player() then
+				if objs[n]:is_player() then
 					return
 				end
 			end
