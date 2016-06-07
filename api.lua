@@ -1,5 +1,5 @@
 
--- Mobs Api (5th June 2016)
+-- Mobs Api (7th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -17,18 +17,23 @@ local enable_pathfinding = true
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
--- internal functions
-
+-- localize functions
 local pi = math.pi
 local square = math.sqrt
+local sin = math.sin
+local cos = math.cos
+local abs = math.abs
+local atann = math.atan
+local random = math.random
+local floor = math.floor
 local atan = function(x)
 
 	if x ~= x then
 		--error("atan bassed NaN")
-		print ("atan based NaN")
+		--print ("atan based NaN")
 		return 0
 	else
-		return math.atan(x)
+		return atann(x)
 	end
 end
 
@@ -36,7 +41,7 @@ do_attack = function(self, player)
 
 	if self.state ~= "attack" then
 
-		if math.random(0,100) < 90
+		if random(0,100) < 90
 		and self.sounds.war_cry then
 
 			minetest.sound_play(self.sounds.war_cry,{
@@ -57,9 +62,9 @@ set_velocity = function(self, v)
 	local yaw = (self.object:getyaw() + self.rotate) or 0
 
 	self.object:setvelocity({
-		x = math.sin(yaw) * -v,
+		x = sin(yaw) * -v,
 		y = self.object:getvelocity().y,
-		z = math.cos(yaw) * v
+		z = cos(yaw) * v
 	})
 end
 
@@ -220,15 +225,15 @@ function update_tag(self)
 	local col = "#00FF00"
 	local qua = self.hp_max / 4
 
-	if self.health <= math.floor(qua * 3) then
+	if self.health <= floor(qua * 3) then
 		col = "#FFFF00"
 	end
 
-	if self.health <= math.floor(qua * 2) then
+	if self.health <= floor(qua * 2) then
 		col = "#FF6600"
 	end
 
-	if self.health <= math.floor(qua) then
+	if self.health <= floor(qua) then
 		col = "#FF0000"
 	end
 
@@ -277,18 +282,18 @@ function check_for_death(self)
 
 	for n = 1, #self.drops do
 
-		if math.random(1, self.drops[n].chance) == 1 then
+		if random(1, self.drops[n].chance) == 1 then
 
 			obj = minetest.add_item(pos,
 				ItemStack(self.drops[n].name .. " "
-					.. math.random(self.drops[n].min, self.drops[n].max)))
+					.. random(self.drops[n].min, self.drops[n].max)))
 
 			if obj then
 
 				obj:setvelocity({
-					x = math.random(-10, 10) / 9,
+					x = random(-10, 10) / 9,
 					y = 5,
-					z = math.random(-10, 10) / 9,
+					z = random(-10, 10) / 9,
 				})
 			end
 		end
@@ -337,8 +342,8 @@ local function is_at_cliff(self)
 	end
 
 	local yaw = self.object:getyaw()
-	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:getpos()
 	local ypos = pos.y + self.collisionbox[2] -- just above floor
 
@@ -460,8 +465,8 @@ do_jump = function(self)
 
 	-- where is front
 	local yaw = self.object:getyaw()
-	local dir_x = -math.sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = math.cos(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
 
 	-- what is in front of mob?
 	local nod = node_ok({
@@ -526,9 +531,10 @@ function entity_physics(pos, radius)
 
 		obj_pos = objs[n]:getpos()
 
-		dist = math.max(1, get_distance(pos, obj_pos))
+		dist = get_distance(pos, obj_pos)
+		if dist < 1 then dist = 1 end
 
-		local damage = math.floor((4 / dist) * radius)
+		local damage = floor((4 / dist) * radius)
 		local ent = objs[n]:get_luaentity()
 
 		if objs[n]:is_player() then
@@ -679,16 +685,16 @@ local function breed(self)
 					mob:set_properties({
 						textures = textures,
 						visual_size = {
-							x = self.base_size.x / 2,
-							y = self.base_size.y / 2
+							x = self.base_size.x * .5,
+							y = self.base_size.y * .5,
 						},
 						collisionbox = {
-							self.base_colbox[1] / 2,
-							self.base_colbox[2] / 2,
-							self.base_colbox[3] / 2,
-							self.base_colbox[4] / 2,
-							self.base_colbox[5] / 2,
-							self.base_colbox[6] / 2
+							self.base_colbox[1] * .5,
+							self.base_colbox[2] * .5,
+							self.base_colbox[3] * .5,
+							self.base_colbox[4] * .5,
+							self.base_colbox[5] * .5,
+							self.base_colbox[6] * .5,
 						},
 					})
 					ent2.child = true
@@ -709,7 +715,7 @@ function replace(self, pos)
 
 	if self.replace_rate
 	and self.child == false
-	and math.random(1, self.replace_rate) == 1 then
+	and random(1, self.replace_rate) == 1 then
 
 		local pos = self.object:getpos()
 
@@ -754,7 +760,7 @@ function smart_mobs(self, s, p, dist, dtime)
 	local s1 = self.path.lastpos
 
 	-- is it becoming stuck?
-	if math.abs(s1.x - s.x) + math.abs(s1.z - s.z) < 1.5 then
+	if abs(s1.x - s.x) + abs(s1.z - s.z) < 1.5 then
 		self.path.stuck_timer = self.path.stuck_timer + dtime
 	else
 		self.path.stuck_timer = 0
@@ -775,9 +781,9 @@ function smart_mobs(self, s, p, dist, dtime)
 
 		-- round position to center of node to avoid stuck in walls
 		-- also adjust height for player models!
-		s.x = math.floor(s.x + 0.5)
-		s.y = math.floor(s.y + 0.5) - sheight
-		s.z = math.floor(s.z + 0.5)
+		s.x = floor(s.x + 0.5)
+		s.y = floor(s.y + 0.5) - sheight
+		s.z = floor(s.z + 0.5)
 
 		local ssight, sground
 		ssight, sground = minetest.line_of_sight(s, {
@@ -790,17 +796,17 @@ function smart_mobs(self, s, p, dist, dtime)
 
 		local p1 = self.attack:getpos()
 
-		p1.x = math.floor(p1.x + 0.5)
-		p1.y = math.floor(p1.y + 0.5)
-		p1.z = math.floor(p1.z + 0.5)
+		p1.x = floor(p1.x + 0.5)
+		p1.y = floor(p1.y + 0.5)
+		p1.z = floor(p1.z + 0.5)
 
 		self.path.way = minetest.find_path(s, p1, 16, 2, 6, "Dijkstra") --"A*_noprefetch")
 
 		-- attempt to unstick mob that is "daydreaming"
 		self.object:setpos({
-			x = s.x + 0.1 * (math.random() * 2 - 1),
+			x = s.x + 0.1 * (random() * 2 - 1),
 			y = s.y + 1,
-			z = s.z + 0.1 * (math.random() * 2 - 1)
+			z = s.z + 0.1 * (random() * 2 - 1)
 		})
 
 		self.state = ""
@@ -846,9 +852,9 @@ function smart_mobs(self, s, p, dist, dtime)
 					local yaw1 = self.object:getyaw() + pi / 2
 
 					local p1 = {
-						x = s.x + math.cos(yaw1),
+						x = s.x + cos(yaw1),
 						y = s.y,
-						z = s.z + math.sin(yaw1)
+						z = s.z + sin(yaw1)
 					}
 
 					if not minetest.is_protected(p1, "") then
@@ -1077,8 +1083,8 @@ local follow_flop = function(self)
 					z = p.z - s.z
 				}
 
-				if vec.x ~= 0
-				and vec.z ~= 0 then
+--				if vec.x ~= 0
+--				and vec.z ~= 0 then
 
 					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
@@ -1087,7 +1093,7 @@ local follow_flop = function(self)
 					end
 
 					self.object:setyaw(yaw)
-				end
+--				end
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
@@ -1163,7 +1169,7 @@ local do_states = function(self, dtime)
 
 	if self.state == "stand" then
 
-		if math.random(1, 4) == 1 then
+		if random(1, 4) == 1 then
 
 			local lp = nil
 			local s = self.object:getpos()
@@ -1190,17 +1196,17 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
-				if vec.x ~= 0
-				and vec.z ~= 0 then
+--				if vec.x ~= 0
+--				and vec.z ~= 0 then
 
 					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 					if lp.x > s.x then
 						yaw = yaw + pi
 					end
-				end
+--				end
 			else
-				yaw = (math.random(0, 360) - 180) / 180 * pi
+				yaw = (random(0, 360) - 180) / 180 * pi
 			end
 
 			self.object:setyaw(yaw)
@@ -1214,7 +1220,7 @@ local do_states = function(self, dtime)
 		or self.order ~= "stand" then
 
 			if self.walk_chance ~= 0
-			and math.random(1, 100) <= self.walk_chance
+			and random(1, 100) <= self.walk_chance
 			and is_at_cliff(self) == false then
 
 				set_velocity(self, self.walk_velocity)
@@ -1237,8 +1243,8 @@ local do_states = function(self, dtime)
 				z = lp.z - s.z
 			}
 
-			if vec.x ~= 0
-			and vec.z ~= 0 then
+--			if vec.x ~= 0
+--			and vec.z ~= 0 then
 
 				yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
 
@@ -1247,12 +1253,12 @@ local do_states = function(self, dtime)
 				end
 
 				self.object:setyaw(yaw)
-			end
+--			end
 
 		-- otherwise randomly turn
-		elseif math.random(1, 100) <= 30 then
+		elseif random(1, 100) <= 30 then
 
-			local yaw = (math.random(0, 360) - 180) / 180 * pi
+			local yaw = (random(0, 360) - 180) / 180 * pi
 
 			self.object:setyaw(yaw)
 		end
@@ -1270,7 +1276,7 @@ local do_states = function(self, dtime)
 		end
 
 		if temp_is_cliff
-		or math.random(1, 100) <= 30 then
+		or random(1, 100) <= 30 then
 
 			set_velocity(self, 0)
 			self.state = "stand"
@@ -1339,8 +1345,8 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			if vec.x ~= 0
-			and vec.z ~= 0 then
+--			if vec.x ~= 0
+--			and vec.z ~= 0 then
 
 				yaw = atan(vec.z / vec.x) + pi / 2 - self.rotate
 
@@ -1349,7 +1355,7 @@ local do_states = function(self, dtime)
 				end
 
 				self.object:setyaw(yaw)
-			end
+--			end
 
 			if dist > self.reach then
 
@@ -1390,6 +1396,7 @@ local do_states = function(self, dtime)
 						self.object:settexturemod("")
 					else
 						self.object:settexturemod("^[brighten")
+						--self.object:settexturemod("^[colorize:#ff880070")
 					end
 
 					self.blinkstatus = not self.blinkstatus
@@ -1442,9 +1449,9 @@ local do_states = function(self, dtime)
 
 				local nod = node_ok(s)
 				local p1 = s
-				local me_y = math.floor(p1.y)
+				local me_y = floor(p1.y)
 				local p2 = p
-				local p_y = math.floor(p2.y + 1)
+				local p_y = floor(p2.y + 1)
 				local v = self.object:getvelocity()
 
 				if nod.name == self.fly_in then
@@ -1505,7 +1512,7 @@ local do_states = function(self, dtime)
 					return
 				end
 
-				if math.abs(p1.x-s.x) + math.abs(p1.z - s.z) < 0.6 then
+				if abs(p1.x-s.x) + abs(p1.z - s.z) < 0.6 then
 					-- reached waypoint, remove it from queue
 					table.remove(self.path.way, 1)
 				end
@@ -1520,8 +1527,8 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			if vec.x ~= 0
-			and vec.z ~= 0 then
+--			if vec.x ~= 0
+--			and vec.z ~= 0 then
 
 				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
@@ -1530,7 +1537,7 @@ local do_states = function(self, dtime)
 				end
 
 				self.object:setyaw(yaw)
-			end
+--			end
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1582,7 +1589,7 @@ local do_states = function(self, dtime)
 						self.timer = 0
 
 						if self.double_melee_attack
-						and math.random(1, 2) == 1 then
+						and random(1, 2) == 1 then
 							set_animation(self, "punch2")
 						else
 							set_animation(self, "punch")
@@ -1638,8 +1645,8 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			if vec.x ~= 0
-			and vec.z ~= 0 then
+--			if vec.x ~= 0
+--			and vec.z ~= 0 then
 
 				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
@@ -1648,13 +1655,13 @@ local do_states = function(self, dtime)
 				end
 
 				self.object:setyaw(yaw)
-			end
+--			end
 
 			set_velocity(self, 0)
 
 			if self.shoot_interval
 			and self.timer > self.shoot_interval
-			and math.random(1, 100) <= 60 then
+			and random(1, 100) <= 60 then
 
 				self.timer = 0
 				set_animation(self, "shoot")
@@ -1737,7 +1744,7 @@ local falling = function(self, pos)
 
 			if d > 5 then
 
-				self.health = self.health - math.floor(d - 5)
+				self.health = self.health - floor(d - 5)
 
 				effect(pos, 5, "tnt_smoke.png")
 
@@ -1810,14 +1817,14 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	if weapon:get_definition()
 	and weapon:get_definition().tool_capabilities then
 
-		weapon:add_wear(math.floor((punch_interval / 75) * 9000))
+		weapon:add_wear(floor((punch_interval / 75) * 9000))
 		hitter:set_wielded_item(weapon)
 	end
 
 	-- weapon sounds
 	if weapon:get_definition().sounds ~= nil then
 
-		local s = math.random(0, #weapon:get_definition().sounds)
+		local s = random(0, #weapon:get_definition().sounds)
 
 		minetest.sound_play(weapon:get_definition().sounds[s], {
 			object = hitter,
@@ -1831,7 +1838,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	end
 
 	-- do damage
-	self.health = self.health - math.floor(damage)
+	self.health = self.health - floor(damage)
 
 	-- exit here if dead
 	if check_for_death(self) then
@@ -1894,8 +1901,8 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			z = lp.z - s.z
 		}
 
-		if vec.x ~= 0
-		and vec.z ~= 0 then
+--		if vec.x ~= 0
+--		and vec.z ~= 0 then
 
 			local yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
 
@@ -1904,7 +1911,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			end
 
 			self.object:setyaw(yaw)
-		end
+--		end
 
 		self.state = "runaway"
 		self.runaway_timer = 0
@@ -1964,7 +1971,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	-- select random texture, set model and size
 	if not self.base_texture then
 
-		self.base_texture = def.textures[math.random(1, #def.textures)]
+		self.base_texture = def.textures[random(1, #def.textures)]
 		self.base_mesh = def.mesh
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
@@ -1992,8 +1999,8 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	if self.child == true then
 
 		vis_size = {
-			x = self.base_size.x / 2,
-			y = self.base_size.y / 2
+			x = self.base_size.x * .5,
+			y = self.base_size.y * .5,
 		}
 
 		if def.child_texture then
@@ -2001,17 +2008,17 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 		end
 
 		colbox = {
-			self.base_colbox[1] / 2,
-			self.base_colbox[2] / 2,
-			self.base_colbox[3] / 2,
-			self.base_colbox[4] / 2,
-			self.base_colbox[5] / 2,
-			self.base_colbox[6] / 2
+			self.base_colbox[1] * .5,
+			self.base_colbox[2] * .5,
+			self.base_colbox[3] * .5,
+			self.base_colbox[4] * .5,
+			self.base_colbox[5] * .5,
+			self.base_colbox[6] * .5
 		}
 	end
 
 	if self.health == 0 then
-		self.health = math.random (self.hp_min, self.hp_max)
+		self.health = random (self.hp_min, self.hp_max)
 	end
 
 	-- rnd: pathfinding init
@@ -2026,7 +2033,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	self.object:set_armor_groups({immortal = 1, fleshy = self.armor})
 	self.old_y = self.object:getpos().y
 	self.old_health = self.health
-	self.object:setyaw((math.random(0, 360) - 180) / 180 * pi)
+	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
 	self.sounds.distance = self.sounds.distance or 10
 	self.textures = textures
 	self.mesh = mesh
@@ -2120,7 +2127,7 @@ local mob_step = function(self, dtime)
 
 	-- mob plays random sound at times
 	if self.sounds.random
-	and math.random(1, 100) == 1 then
+	and random(1, 100) == 1 then
 
 		minetest.sound_play(self.sounds.random, {
 			object = self.object,
@@ -2496,7 +2503,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 				-- after effects
 				if fire > 0
 				and (minetest.registered_nodes[n].groups.flammable
-				or math.random(1, 100) <= 30) then
+				or random(1, 100) <= 30) then
 
 					minetest.set_node(p, {name = "fire:basic_flame"})
 				else
@@ -2741,7 +2748,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 			if chance == 0 then return end
 
 			-- calculate chance.. add to inventory if successful?
-			if math.random(1, 100) <= chance then
+			if random(1, 100) <= chance then
 
 				clicker:get_inventory():add_item("main", mobname)
 
@@ -2859,12 +2866,12 @@ function mobs:feed_tame(self, clicker, feed_count, breed, tame)
 
 		local tag = self.nametag or ""
 
-		local formspec = "size[8,4]"
+		minetest.show_formspec(name, "mobs_nametag", "size[8,4]"
 			.. default.gui_bg
 			.. default.gui_bg_img
 			.. "field[0.5,1;7.5,0;name;Enter name:;" .. tag .. "]"
-			.. "button_exit[2.5,3.5;3,1;mob_rename;Rename]"
-			minetest.show_formspec(name, "mobs_nametag", formspec)
+			.. "button_exit[2.5,3.5;3,1;mob_rename;Rename]")
+
 	end
 
 	return false
