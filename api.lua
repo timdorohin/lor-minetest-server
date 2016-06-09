@@ -1,8 +1,12 @@
 
--- Mobs Api (7th June 2016)
+-- Mobs Api (9th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
+
+-- Invisibility mod
+
+local invisibility = invisibility or {}
 
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
@@ -554,6 +558,10 @@ end
 -- should mob follow what I'm holding ?
 function follow_holding(self, clicker)
 
+	if invisibility[clicker:get_player_name()] then
+		return false
+	end
+
 	local item = clicker:get_wielded_item()
 	local t = type(self.follow)
 
@@ -930,8 +938,13 @@ local monster_attack = function(self)
 
 		if objs[n]:is_player() then
 
-			player = objs[n]
-			type = "player"
+			if invisibility[ objs[n]:get_player_name() ] then
+
+				type = ""
+			else
+				player = objs[n]
+				type = "player"
+			end
 		else
 			obj = objs[n]:get_luaentity()
 
@@ -1026,8 +1039,11 @@ local follow_flop = function(self)
 
 		for n = 1, #players do
 
-			if get_distance(players[n]:getpos(), s) < self.view_range then
+			if get_distance(players[n]:getpos(), s) < self.view_range
+			and not invisibility[ players[n]:get_player_name() ] then
+
 				self.following = players[n]
+
 				break
 			end
 		end
@@ -1083,17 +1099,13 @@ local follow_flop = function(self)
 					z = p.z - s.z
 				}
 
---				if vec.x ~= 0
---				and vec.z ~= 0 then
+				local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
-					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+				if p.x > s.x then
+					yaw = yaw + pi
+				end
 
-					if p.x > s.x then
-						yaw = yaw + pi
-					end
-
-					self.object:setyaw(yaw)
---				end
+				self.object:setyaw(yaw)
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
@@ -1196,15 +1208,11 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
---				if vec.x ~= 0
---				and vec.z ~= 0 then
+				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
-					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
-
-					if lp.x > s.x then
-						yaw = yaw + pi
-					end
---				end
+				if lp.x > s.x then
+					yaw = yaw + pi
+				end
 			else
 				yaw = (random(0, 360) - 180) / 180 * pi
 			end
@@ -1232,9 +1240,24 @@ local do_states = function(self, dtime)
 	elseif self.state == "walk" then
 
 		local s = self.object:getpos()
-		local lp = minetest.find_node_near(s, 1, {"group:water"})
+		local lp = nil
 
-		-- if water nearby then turn away
+		-- is there something I need to avoid?
+		if self.water_damage > 0
+		and self.lava_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:water", "group:lava"})
+
+		elseif self.water_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:water"})
+
+		elseif self.lava_damage > 0 then
+
+			lp = minetest.find_node_near(s, 1, {"group:lava"})
+		end
+
+		-- if something then avoid
 		if lp then
 
 			local vec = {
@@ -1243,17 +1266,13 @@ local do_states = function(self, dtime)
 				z = lp.z - s.z
 			}
 
---			if vec.x ~= 0
---			and vec.z ~= 0 then
+			yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
 
-				yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
+			if lp.x > s.x then
+				yaw = yaw + pi
+			end
 
-				if lp.x > s.x then
-					yaw = yaw + pi
-				end
-
-				self.object:setyaw(yaw)
---			end
+			self.object:setyaw(yaw)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
@@ -1345,17 +1364,13 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			if vec.x ~= 0
---			and vec.z ~= 0 then
+			yaw = atan(vec.z / vec.x) + pi / 2 - self.rotate
 
-				yaw = atan(vec.z / vec.x) + pi / 2 - self.rotate
+			if p.x > s.x then
+				yaw = yaw + pi
+			end
 
-				if p.x > s.x then
-					yaw = yaw + pi
-				end
-
-				self.object:setyaw(yaw)
---			end
+			self.object:setyaw(yaw)
 
 			if dist > self.reach then
 
@@ -1396,7 +1411,6 @@ local do_states = function(self, dtime)
 						self.object:settexturemod("")
 					else
 						self.object:settexturemod("^[brighten")
-						--self.object:settexturemod("^[colorize:#ff880070")
 					end
 
 					self.blinkstatus = not self.blinkstatus
@@ -1527,17 +1541,13 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			if vec.x ~= 0
---			and vec.z ~= 0 then
+			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
-				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+			if p.x > s.x then
+				yaw = yaw + pi
+			end
 
-				if p.x > s.x then
-					yaw = yaw + pi
-				end
-
-				self.object:setyaw(yaw)
---			end
+			self.object:setyaw(yaw)
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1645,17 +1655,13 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			if vec.x ~= 0
---			and vec.z ~= 0 then
+			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
-				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
+			if p.x > s.x then
+				yaw = yaw + pi
+			end
 
-				if p.x > s.x then
-					yaw = yaw + pi
-				end
-
-				self.object:setyaw(yaw)
---			end
+			self.object:setyaw(yaw)
 
 			set_velocity(self, 0)
 
@@ -1901,18 +1907,13 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			z = lp.z - s.z
 		}
 
---		if vec.x ~= 0
---		and vec.z ~= 0 then
+		local yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
 
-			local yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
+		if lp.x > s.x then
+			yaw = yaw + pi
+		end
 
-			if lp.x > s.x then
-				yaw = yaw + pi
-			end
-
-			self.object:setyaw(yaw)
---		end
-
+		self.object:setyaw(yaw)
 		self.state = "runaway"
 		self.runaway_timer = 0
 		self.following = nil
@@ -1922,7 +1923,8 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	if self.passive == false
 	and self.state ~= "flop"
 	and self.child == false
-	and hitter:get_player_name() ~= self.owner then
+	and hitter:get_player_name() ~= self.owner
+	and not invisibility[ hitter:get_player_name() ] then
 
 		-- attack whoever punched mob
 		self.state = ""
