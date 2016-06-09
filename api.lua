@@ -1342,7 +1342,8 @@ local do_states = function(self, dtime)
 		if dist > self.view_range
 		or not self.attack
 		or not self.attack:getpos()
-		or self.attack:get_hp() <= 0 then
+		or self.attack:get_hp() <= 0
+		or (self.attack:is_player() and invisibility[ self.attack:get_player_name() ]) then
 
 			--print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
