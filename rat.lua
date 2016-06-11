@@ -41,6 +41,8 @@ mobs:register_mob("mobs_animal:rat", {
 		local pos = self.object:getpos()
 
 		print("rat pos", pos.x, pos.y, pos.z, dtime)
+
+		return false -- return but skip doing rest of API
 	end,
 ]]
 --[[
