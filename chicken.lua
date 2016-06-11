@@ -1,4 +1,6 @@
 
+local S = mobs.intllib
+
 -- Chicken by JK Murray
 
 mobs:register_mob("mobs_animal:chicken", {
@@ -79,7 +81,7 @@ mobs:register_mob("mobs_animal:chicken", {
 mobs:register_spawn("mobs_animal:chicken",
 	{"default:dirt_with_grass", "ethereal:bamboo_dirt"}, 20, 10, 15000, 1, 31000, true)
 
-mobs:register_egg("mobs_animal:chicken", "Chicken", "mobs_chicken_inv.png", 0)
+mobs:register_egg("mobs_animal:chicken", S("Chicken"), "mobs_chicken_inv.png", 0)
 
 -- compatibility
 mobs:alias_mob("mobs:chicken", "mobs_animal:chicken")
@@ -199,7 +201,7 @@ end
 
 -- egg
 minetest.register_node(":mobs:egg", {
-	description = "Chicken Egg",
+	description = S("Chicken Egg"),
 	tiles = {"mobs_chicken_egg.png"},
 	inventory_image  = "mobs_chicken_egg.png",
 	visual_scale = 0.7,
@@ -224,7 +226,7 @@ minetest.register_node(":mobs:egg", {
 
 -- fried egg
 minetest.register_craftitem(":mobs:chicken_egg_fried", {
-description = "Fried Egg",
+description = S("Fried Egg"),
 	inventory_image = "mobs_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
 })
@@ -237,14 +239,14 @@ minetest.register_craft({
 
 -- raw chicken
 minetest.register_craftitem(":mobs:chicken_raw", {
-description = "Raw Chicken",
+description = S("Raw Chicken"),
 	inventory_image = "mobs_chicken_raw.png",
 	on_use = minetest.item_eat(2),
 })
 
 -- cooked chicken
 minetest.register_craftitem(":mobs:chicken_cooked", {
-description = "Cooked Chicken",
+description = S("Cooked Chicken"),
 	inventory_image = "mobs_chicken_cooked.png",
 	on_use = minetest.item_eat(6),
 })

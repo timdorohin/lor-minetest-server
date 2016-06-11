@@ -1,6 +1,15 @@
 
 local path = minetest.get_modpath("mobs_animal")
 
+-- Intllib
+local S
+if minetest.get_modpath("intllib") then
+	S = intllib.Getter()
+else
+	S = function(s) return s end
+end
+mobs.intllib = S
+
 -- Animals
 
 dofile(path .. "/chicken.lua") -- JKmurray
@@ -12,4 +21,4 @@ dofile(path .. "/bee.lua") -- KrupnoPavel
 dofile(path .. "/bunny.lua") -- ExeterDad
 dofile(path .. "/kitten.lua") -- Jordach/BFD
 
-print ("[MOD] Mobs Redo 'Animals' loaded")
+print (S("[MOD] Mobs Redo 'Animals' loaded"))
