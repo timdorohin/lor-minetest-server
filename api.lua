@@ -1,5 +1,5 @@
 
--- Mobs Api (9th June 2016)
+-- Mobs Api (11th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2105,7 +2105,11 @@ local mob_step = function(self, dtime)
 
 	-- run custom function (defined in mob lua file)
 	if self.do_custom then
-		self.do_custom(self, dtime)
+
+		-- when false skip going any further
+		if self.do_custom(self, dtime) == false then
+			return
+		end
 	end
 
 	-- attack timer
