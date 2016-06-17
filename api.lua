@@ -1,5 +1,5 @@
 
--- Mobs Api (11th June 2016)
+-- Mobs Api (17th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -214,6 +214,17 @@ function line_of_sight_water(self, pos1, pos2, stepsize)
 		if nod == "default:water_source"
 		or nod == "default:water_flowing" then
 
+			return true
+		end
+
+	-- just incase we have a special node for flying/swimming mobs
+	elseif s == false
+	and self.fly
+	and self.fly_in then
+
+		local nod = minetest.get_node(pos_w).name
+
+		if nod == self.fly_in then
 			return true
 		end
 	end
