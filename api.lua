@@ -1,5 +1,5 @@
 
--- Mobs Api (17th June 2016)
+-- Mobs Api (18th June 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -307,6 +307,14 @@ function check_for_death(self)
 			self.health = self.hp_max
 		end
 
+		-- backup nametag so we can show health stats
+		if not self.nametag2 then
+			self.nametag2 = self.nametag or ""
+			self.htimer = 5
+		end
+
+		self.nametag = "health: " .. self.health .. " of " .. self.hp_max
+
 		update_tag(self)
 
 		return false
@@ -418,6 +426,12 @@ do_env_damage = function(self)
 	-- feed/tame text timer (so mob 'full' messages dont spam chat)
 	if self.htimer > 0 then
 		self.htimer = self.htimer - 1
+	end
+
+	-- reset nametag after showing health stats
+	if self.htimer < 1 and self.nametag2 then
+		self.nametag = self.nametag2
+		update_tag(self)
 	end
 
 	local pos = self.object:getpos()
