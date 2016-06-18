@@ -310,8 +310,9 @@ function check_for_death(self)
 		-- backup nametag so we can show health stats
 		if not self.nametag2 then
 			self.nametag2 = self.nametag or ""
-			self.htimer = 5
 		end
+
+		self.htimer = 2
 
 		self.nametag = "health: " .. self.health .. " of " .. self.hp_max
 
@@ -430,7 +431,10 @@ do_env_damage = function(self)
 
 	-- reset nametag after showing health stats
 	if self.htimer < 1 and self.nametag2 then
+
 		self.nametag = self.nametag2
+		self.nametag2 = nil
+
 		update_tag(self)
 	end
 
