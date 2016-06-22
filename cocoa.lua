@@ -137,38 +137,46 @@ crop_def.drop = {
 }
 minetest.register_node("farming:cocoa_3", table.copy(crop_def))
 
--- add random cocoa pods to jungle tree trunks
-minetest.register_abm({
-	nodenames = {"default:jungletree"},
-	neighbors = {"default:jungleleaves", "moretrees:jungletree_leaves_green"},
-	interval = 8,
-	chance = 80,
-	catch_up = false,
-	action = function(pos, node)
+-- add random cocoa pods to jungle tree's
+minetest.register_on_generated(function(minp, maxp)
 
-		local dir = math.random(1, 50)
+	if maxp.y < 0 then
+		return
+	end
 
-		if dir == 1 then
-			pos.x = pos.x + 1
-		elseif dir == 2 then
-			pos.x = pos.x - 1
-		elseif dir == 3 then
-			pos.z = pos.z + 1
-		elseif dir == 4 then
-			pos.z = pos.z -1
-		else return
+	local pos, dir
+	local cocoa = minetest.find_nodes_in_area(minp, maxp, "default:jungletree")
+
+	for n = 1, #cocoa do
+
+		pos = cocoa[n]
+
+		if minetest.find_node_near(pos, 1,
+			{"default:jungleleaves", "moretrees:jungletree_leaves_green"}) then
+
+			dir = math.random(1, 80)
+
+			if dir == 1 then
+				pos.x = pos.x + 1
+			elseif dir == 2 then
+				pos.x = pos.x - 1
+			elseif dir == 3 then
+				pos.z = pos.z + 1
+			elseif dir == 4 then
+				pos.z = pos.z -1
+			end
+
+			if dir < 5
+			and minetest.get_node(pos).name == "air"
+			and minetest.get_node_light(pos) > 12 then
+
+				--print ("Cocoa Pod added at " .. minetest.pos_to_string(pos))
+
+				minetest.swap_node(pos, {
+					name = "farming:cocoa_" .. tostring(math.random(1, 3))
+				})
+			end
+
 		end
-
-		local nodename = minetest.get_node(pos).name
-
-		if nodename == "air"
-		and minetest.get_node_light(pos) > 12 then
-
-		--print ("Cocoa Pod added at " .. minetest.pos_to_string(pos))
-
-			minetest.set_node(pos, {
-				name = "farming:cocoa_" .. tostring(math.random(1, 3))
-			})
-		end
-	end,
-})
+	end
+end)
