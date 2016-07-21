@@ -359,6 +359,8 @@ function check_for_death(self)
 
 	self.object:remove()
 
+	effect(pos, 20, "tnt_smoke.png")
+
 	return true
 end
 
