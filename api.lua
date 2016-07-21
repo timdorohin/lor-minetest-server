@@ -1,5 +1,5 @@
 
--- Mobs Api (18th June 2016)
+-- Mobs Api (21st July 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -82,9 +82,7 @@ end
 
 set_velocity = function(self, v)
 
-	v = v or 0
-
-	local yaw = (self.object:getyaw() + self.rotate) or 0
+	local yaw = self.object:getyaw() + self.rotate or 0
 
 	self.object:setvelocity({
 		x = sin(yaw) * -v,
@@ -382,7 +380,7 @@ end
 -- is mob facing a cliff
 local function is_at_cliff(self)
 
-	if self.fear_height == 0 then -- if 0, no falling protection!
+	if self.fear_height == 0 then -- 0 for no falling protection!
 		return false
 	end
 
@@ -544,8 +542,6 @@ do_jump = function(self)
 		local v = self.object:getvelocity()
 
 		v.y = self.jump_height + 1
-		v.x = v.x * 2.2
-		v.z = v.z * 2.2
 
 		self.object:setvelocity(v)
 
@@ -1021,7 +1017,6 @@ local monster_attack = function(self)
 			-- field of view check goes here
 
 				-- choose closest player to attack
-				--if minetest.line_of_sight(sp, p, 2) == true
 				if line_of_sight_water(self, sp, p, 2) == true
 				and dist < min_dist then
 					min_dist = dist
@@ -1662,7 +1657,6 @@ local do_states = function(self, dtime)
 						p2.y = p2.y + 1.5
 						s2.y = s2.y + 1.5
 
-						--if minetest.line_of_sight(p2, s2) == true then
 						if line_of_sight_water(self, p2, s2) == true then
 
 							-- play attack sound
@@ -2270,7 +2264,7 @@ minetest.register_entity(name, {
 	fall_damage = def.fall_damage or 1,
 	fall_speed = def.fall_speed or -10, -- must be lower than -2 (default: -10)
 	drops = def.drops or {},
-	armor = def.armor,
+	armor = def.armor or 100,
 	on_rightclick = def.on_rightclick,
 	arrow = def.arrow,
 	shoot_interval = def.shoot_interval,
@@ -2402,7 +2396,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		neighbors = neighbors,
 		interval = interval,
 		chance = chance,
-		catch_up = false,
+		catch_up = true,
 
 		action = function(pos, node, aoc, active_object_count_wider)
 
