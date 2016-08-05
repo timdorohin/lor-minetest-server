@@ -1,10 +1,10 @@
 Minetest mod: Hunger [hbhunger]
 ===============================
-Version: 0.3.3
+Version: 0.4.0
 
 License of source code: LGPL v2.1
 ---------------------------------
-by Wuzzy (2015)
+by Wuzzy (2015-2016)
 
 Forked from the “Better HUD (and hunger)” mod by BlockMen (2013-2015),
 most code comes from this mod.

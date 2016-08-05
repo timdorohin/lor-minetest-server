@@ -21,3 +21,12 @@ Initial release
 -----
 - Fix another crash
 
+0.4.0
+-----
+- Generic eating functionality, items using the minetest.item_eat are automatically supported
+- Change health bar and icon when poisoned
+- Special support for red and brown mushroom from Minetest Game [flowers]
+- Special support for [pizza]
+- Special support for beans from Farming Redo [farming]
+- Fix crash when poisoned player leaves server
+- Changed license to LGPL v2.1
