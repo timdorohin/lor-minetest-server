@@ -29,6 +29,16 @@ Eating food will increase your satiation.
 Important: Eating food will not directly increase your health anymore, as long as the food item
 is supported by this mod (see below).
 
+Statbar mode
+============
+If you use the statbar mode of the HUD Bars mod, these things are important to know:
+As with all mods using HUD Bars, the bread statbar symbols represent the rough percentage
+out of 30 satiation points, in steps of 5%, so the sybols give you an estimate of your
+satiation. This is different from the hunger mod by BlockMen.
+
+You gain health at 5.5 symbols or more, as 5.5 symbols correspond to 16 satiation points.
+You MAY lose health at exactly 0.5 symbols, as 0.5 symbols correspond to 1-2 satiation points.
+
 
 Currently supported food:
 -------------------------
