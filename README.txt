@@ -1,6 +1,6 @@
 Minetest mod: Hunger [hbhunger]
 ===============================
-Version: 0.3.2
+Version: 0.3.3
 
 License of source code: WTFPL
 -----------------------------
@@ -32,6 +32,7 @@ is supported by this mod (see below).
 Currently supported food:
 -------------------------
 - Apples (default)
+- red/brown mushroom (flowers)
 - Animalmaterials (mobf modpack)
 - Bread (default)
 - Bushes
@@ -54,6 +55,7 @@ Currently supported food:
 - mush45
 - Seaplants (sea)
 - Simple mobs
+- Pizza
 
 Examples: 
 Eating an apple (from the default Minetest game) increases your satiation by 2,

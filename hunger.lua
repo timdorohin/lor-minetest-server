@@ -64,6 +64,10 @@ end
 if minetest.get_modpath("default") ~= nil then
 	overwrite("default:apple", 2)
 end
+if minetest.get_modpath("flowers") ~= nil then
+	overwrite("flowers:mushroom_brown", 1)
+	overwrite("flowers:mushroom_red", 1, "", 3)
+end
 if minetest.get_modpath("farming") ~= nil then
 	overwrite("farming:bread", 4)
 end
@@ -316,6 +320,7 @@ if minetest.get_modpath("farming") and farming.mod == "redo" then
    end
    overwrite("farming:rhubarb", 1)
    overwrite("farming:rhubarb_pie", 6)
+   overwrite("farming:beans", 1)
 end
 
 if minetest.get_modpath("kpgmobs") ~= nil then
@@ -362,6 +367,11 @@ if minetest.get_modpath("ferns") ~= nil then
 	overwrite("ferns:fiddlehead_roasted", 3)
 	overwrite("ferns:ferntuber_roasted", 3)
 	overwrite("ferns:horsetail_01", 1)
+end
+
+if minetest.get_modpath("pizza") ~= nil then
+	overwrite("pizza:pizza", 30, "", nil, 30)
+	overwrite("pizza:pizzaslice", 5, "", nil, 5)
 end
 
 -- player-action based hunger changes
