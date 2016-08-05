@@ -20,3 +20,4 @@ Initial release
 0.3.2
 -----
 - Fix another crash
+

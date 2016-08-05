@@ -1,6 +1,7 @@
 if minetest.setting_getbool("enable_damage") then
 
 hbhunger = {}
+hbhunger.food = {}
 
 -- HUD statbar values
 hbhunger.hunger = {}
