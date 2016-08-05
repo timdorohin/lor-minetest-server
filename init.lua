@@ -7,6 +7,9 @@ hbhunger.food = {}
 hbhunger.hunger = {}
 hbhunger.hunger_out = {}
 
+-- Count number of poisonings a player has at once
+hbhunger.poisonings = {}
+
 -- HUD item ids
 local hunger_hud = {}
 
@@ -83,6 +86,7 @@ minetest.register_on_joinplayer(function(player)
 	hbhunger.hunger[name] = hbhunger.get_hunger(player)
 	hbhunger.hunger_out[name] = hbhunger.hunger[name]
 	hbhunger.exhaustion[name] = 0
+	hbhunger.poisonings[name] = 0
 	custom_hud(player)
 	hbhunger.set_hunger(player)
 end)

@@ -54,7 +54,11 @@ local function poisenp(tick, time, time_left, player)
 	if time_left < time then
 		minetest.after(tick, poisenp, tick, time, time_left, player)
 	else
-		--reset hud image
+		hbhunger.poisonings[player:get_player_name()] = hbhunger.poisonings[player:get_player_name()] - 1
+		if hbhunger.poisonings[player:get_player_name()] <= 0 then
+			-- Reset HUD bar color
+			hb.change_hudbar(player, "health", nil, nil, "hudbars_icon_health.png", nil, "hudbars_bar_health.png")
+		end
 	end
 	if player:get_hp()-1 > 0 then
 		player:set_hp(player:get_hp()-1)
@@ -85,7 +89,9 @@ function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 			end
 			-- Poison
 			if poisen then
-				--set hud-img
+				-- Set poison bar
+				hb.change_hudbar(user, "health", nil, nil, "hbhunger_icon_health_poison.png", nil, "hbhunger_bar_health_poison.png")
+				hbhunger.poisonings[name] = hbhunger.poisonings[name] + 1
 				poisenp(1.0, poisen, 0, user)
 			end
 
