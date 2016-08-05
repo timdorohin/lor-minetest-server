@@ -96,7 +96,7 @@ function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 				-- Set poison bar
 				hb.change_hudbar(user, "health", nil, nil, "hbhunger_icon_health_poison.png", nil, "hbhunger_bar_health_poison.png")
 				hbhunger.poisonings[name] = hbhunger.poisonings[name] + 1
-				poisenp(1.0, poisen, 0, user)
+				poisenp(1, poisen, 0, user)
 			end
 
 			--sound:eat
