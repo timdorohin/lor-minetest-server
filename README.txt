@@ -2,32 +2,29 @@ Minetest mod: Hunger [hbhunger]
 ===============================
 Version: 0.4.0
 
-License of source code: LGPL v2.1
----------------------------------
-by Wuzzy (2015-2016)
-
-Forked from the “Better HUD (and hunger)” mod by BlockMen (2013-2015),
-most code comes from this mod.
-
-
 Using the mod:
 --------------
 This mod adds a mechanic for hunger.
-This mod depends on the HUD bars mod [hudbars], major version 1.
-
-You can create a "hunger.conf" file to customize the properties of hunger for your needs.
+This mod depends on the HUD bars mod [hudbars], version 1.4.1 or any later version
+starting with “1.”.
 
 About hunger
 ============
-This mod adds a hunger mechanic to the game.
-A new player starts with 20 satiation points out of 30.
-Player actions like digging, placing and walking cause exhausion, which lower the player's
-satiation. Also every 800 seconds you lose 1 satiation point without doing anything.
-If you are hungry (1 or 0 satiation) you will suffer damage and die in case you don't eat something.
-If your satiation is 16 or higher, you will slowly regenerate health points.
-Eating food will increase your satiation.
-Important: Eating food will not directly increase your health anymore, as long as the food item
-is supported by this mod (see below).
+This mod adds a hunger mechanic to the game. Players get a new attribute called “satiation”
+
+- A new player starts with 20 satiation points out of 30.
+- Actions like digging, placing and walking cause exhausion, which lower the satiation
+- Every 800 seconds you lose 1 satiation point without doing anything
+- At 1 or 0 satiation you will suffer damage and die in case you don't eat something
+- If your satiation is 16 or higher, you will slowly regenerate health points
+- Eating food will increase your satiation (Duh!)
+
+Important: Eating food will not directly increase your health anymore, as long as the food
+item is supported by this mod (see below).
+
+Careful! Some foods may be poisoned. If you eat a poisoned item, you may still get a satiation
+boost, but for a brief perioud you lose health points because of food poisoning. However,
+food poisoning can never kill you.
 
 Statbar mode
 ============
@@ -39,51 +36,63 @@ satiation. This is different from the hunger mod by BlockMen.
 You gain health at 5.5 symbols or more, as 5.5 symbols correspond to 16 satiation points.
 You MAY lose health at exactly 0.5 symbols, as 0.5 symbols correspond to 1-2 satiation points.
 
+Supported food:
+---------------
+All mods which add food through standard measures (minetest.item_eat) are already
+supported automatically. Poisoned food needs special support.
 
-Currently supported food:
--------------------------
-- Apples (default)
-- red/brown mushroom (flowers)
-- Animalmaterials (mobf modpack)
-- Bread (default)
-- Bushes
-- bushes_classic
-- Creatures
-- Dwarves (beer and such)
-- Docfarming
-- Fishing
-- Farming plus
-- Farming (default and Tenplus1's fork)
-- Food
-- fruit
-- Glooptest
-- JKMod
-- kpgmobs
-- Mobfcooking
-- Mooretrees
-- Mtfoods
-- mushroom
-- mush45
-- Seaplants (sea)
-- Simple mobs
-- Pizza
+Known supported food mods:
+--------------------------
+- Apple [default]
+- Red and brown mushroom [flowers]
+- Bread [farming]
+
+- [animalmaterials] (Mob Framework (mobf modpack))
+- Bushes [bushes]
+- [bushes_classic]
+- Creatures [creatures]
+- [dwarves] (beer and such)
+- Docfarming [docfarming]
+- Ethereal [ethereal]
+- Farming [farming] from Minetest Game
+- Farming Redo [farming] by TenPlus1
+- Farming plus [farming_plus]
+- Ferns [ferns]
+- Fishing [fishing]
+- [fruit]
+- Glooptest [glooptest]
+- JKMod ([jkanimals], [jkfarming], [jkwine])
+- [kpgmobs]
+- [mobfcooking]
+- [mooretrees]
+- [mtfoods]
+- [mushroom]
+- [mush45]
+- Seaplants [sea]
+- Simple mobs [mobs]
+- Pizza [pizza]
+
+Supported mods without optional dependency (mods provide their own support):
+- Food ([food], [food_basic])
+- Sweet Foods [food_sweet]
 
 Examples: 
-Eating an apple (from the default Minetest game) increases your satiation by 2,
-eating a bread (from the default Minetest game) increases your satiation by 4.
+Eating an apple (from Minetest Game) increases your satiation by 2,
+eating a bread (from Minetest Game) increases your satiation by 4.
 
+License of source code: LGPL v2.1
+---------------------------------
+by Wuzzy (2015-2016)
+
+Forked from the “Better HUD (and hunger)” mod by BlockMen (2013-2015),
+most code comes from this mod.
 
 License of textures:
 --------------------
-hunger_icon.png - PilzAdam (WTFPL), modified by BlockMen
-hunger_bgicon.png - PilzAdam (WTFPL), modified by BlockMen
-hunger_bar.png - Wuzzy (WTFPL)
+hbhunger_icon.png - PilzAdam (WTFPL), modified by BlockMen
+hbhunger_bgicon.png - PilzAdam (WTFPL), modified by BlockMen
+hbhunger_bar.png - Wuzzy (WTFPL)
+hbhunger_icon_health_poison.png - celeron55 (CC BY-SA 3.0), modified by BlockMen, modified again by Wuzzy
 
-everything else is WTFPL:
-(c) Copyright BlockMen (2013-2015)
-
-This program is free software. It comes without any warranty, to
-the extent permitted by applicable law. You can redistribute it
-and/or modify it under the terms of the Do What The Fuck You Want
-To Public License, Version 2, as published by Sam Hocevar. See
-http://sam.zoy.org/wtfpl/COPYING for more details.
+everything else is WTFPL
+Authors: BlockMen and Wuzzy
