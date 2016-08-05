@@ -1,5 +1,5 @@
 
--- Mobs Api (3rd August 2016)
+-- Mobs Api (5th August 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2374,7 +2374,7 @@ end -- END mobs:register_mob function
 -- global functions
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
-	interval, chance, active_object_count, min_height, max_height, day_toggle)
+	interval, chance, aoc, min_height, max_height, day_toggle)
 
 	-- chance override in minetest.conf for registered mob
 	local new_chance = tonumber(minetest.setting_get(name .. "_chance"))
@@ -2403,8 +2403,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		action = function(pos, node, active_object_count, active_object_count_wider)
 
 			-- do not spawn if too many active entities in area
-			if active_object_count_wider > active_object_count
+			if active_object_count_wider >= aoc
 			or not mobs.spawning_mobs[name] then
+
 				return
 			end
 
