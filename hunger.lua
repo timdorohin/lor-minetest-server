@@ -57,8 +57,7 @@ end
 local function overwrite(name, hunger_change, replace_with_item, poisen, heal)
 	local tab = minetest.registered_items[name]
 	if tab == nil then return end
-	tab.on_use = hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
-	minetest.registered_items[name] = tab
+	minetest.override_item(name, {on_use = hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal) })
 end
 
 if minetest.get_modpath("default") ~= nil then
