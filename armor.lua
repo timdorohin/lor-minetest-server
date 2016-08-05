@@ -31,7 +31,7 @@ function hbarmor.set_armor(player_name, ges_state, items)
 		lvl = 0
 	end
 
-	hbarmor.armor[player_name] = lvl* (items * (100 / max_items))
+	hbarmor.armor[player_name] = math.min(lvl* (items * (100 / max_items)), 100)
 
 
 end
