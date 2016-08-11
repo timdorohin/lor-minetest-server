@@ -21,16 +21,16 @@ hbhunger.poisonings = {}
 -- HUD item ids
 local hunger_hud = {}
 
-HUNGER_HUD_TICK = 0.1
+hbhunger.HUD_TICK = 0.1
 
 --Some hunger settings
 hbhunger.exhaustion = {} -- Exhaustion is experimental!
 
-HUNGER_HUNGER_TICK = 800 -- time in seconds after that 1 hunger point is taken 
-HUNGER_EXHAUST_DIG = 3  -- exhaustion increased this value after digged node
-HUNGER_EXHAUST_PLACE = 1 -- exhaustion increased this value after placed
-HUNGER_EXHAUST_MOVE = 0.3 -- exhaustion increased this value if player movement detected
-HUNGER_EXHAUST_LVL = 160 -- at what exhaustion player satiation gets lowerd
+hbhunger.HUNGER_TICK = 800 -- time in seconds after that 1 hunger point is taken
+hbhunger.EXHAUST_DIG = 3  -- exhaustion increased this value after digged node
+hbhunger.EXHAUST_PLACE = 1 -- exhaustion increased this value after placed
+hbhunger.EXHAUST_MOVE = 0.3 -- exhaustion increased this value if player movement detected
+hbhunger.EXHAUST_LVL = 160 -- at what exhaustion player satiation gets lowerd
 
 
 --load custom settings
@@ -41,7 +41,7 @@ if set then
 end
 
 local function custom_hud(player)
-	hb.init_hudbar(player, "satiation", hbhunger.get_hunger(player))
+	hb.init_hudbar(player, "satiation", hbhunger.get_hunger_raw(player))
 end
 
 dofile(minetest.get_modpath("hbhunger").."/hunger.lua")
@@ -61,7 +61,7 @@ local function update_hud(player)
 	end
 end
 
-hbhunger.get_hunger = function(player)
+hbhunger.get_hunger_raw = function(player)
 	local inv = player:get_inventory()
 	if not inv then return nil end
 	local hgp = inv:get_stack("hunger", 1):get_count()
@@ -74,7 +74,7 @@ hbhunger.get_hunger = function(player)
 	return hgp-1
 end
 
-hbhunger.set_hunger = function(player)
+hbhunger.set_hunger_raw = function(player)
 	local inv = player:get_inventory()
 	local name = player:get_player_name()
 	local value = hbhunger.hunger[name]
@@ -91,19 +91,19 @@ minetest.register_on_joinplayer(function(player)
 	local name = player:get_player_name()
 	local inv = player:get_inventory()
 	inv:set_size("hunger",1)
-	hbhunger.hunger[name] = hbhunger.get_hunger(player)
+	hbhunger.hunger[name] = hbhunger.get_hunger_raw(player)
 	hbhunger.hunger_out[name] = hbhunger.hunger[name]
 	hbhunger.exhaustion[name] = 0
 	hbhunger.poisonings[name] = 0
 	custom_hud(player)
-	hbhunger.set_hunger(player)
+	hbhunger.set_hunger_raw(player)
 end)
 
 minetest.register_on_respawnplayer(function(player)
 	-- reset hunger (and save)
 	local name = player:get_player_name()
 	hbhunger.hunger[name] = 20
-	hbhunger.set_hunger(player)
+	hbhunger.set_hunger_raw(player)
 	hbhunger.exhaustion[name] = 0
 end)
 
@@ -114,8 +114,8 @@ minetest.register_globalstep(function(dtime)
 	main_timer = main_timer + dtime
 	timer = timer + dtime
 	timer2 = timer2 + dtime
-	if main_timer > HUNGER_HUD_TICK or timer > 4 or timer2 > HUNGER_HUNGER_TICK then
-		if main_timer > HUNGER_HUD_TICK then main_timer = 0 end
+	if main_timer > hbhunger.HUD_TICK or timer > 4 or timer2 > hbhunger.HUNGER_TICK then
+		if main_timer > hbhunger.HUD_TICK then main_timer = 0 end
 		for _,player in ipairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
 
@@ -131,11 +131,11 @@ minetest.register_globalstep(function(dtime)
 				end
 			end
 			-- lower satiation by 1 point after xx seconds
-			if timer2 > HUNGER_HUNGER_TICK then
+			if timer2 > hbhunger.HUNGER_TICK then
 				if h > 0 then
 					h = h-1
 					hbhunger.hunger[name] = h
-					hbhunger.set_hunger(player)
+					hbhunger.set_hunger_raw(player)
 				end
 			end
 
@@ -150,7 +150,7 @@ minetest.register_globalstep(function(dtime)
 		end
 	end
 	if timer > 4 then timer = 0 end
-	if timer2 > HUNGER_HUNGER_TICK then timer2 = 0 end
+	if timer2 > hbhunger.HUNGER_TICK then timer2 = 0 end
 end)
 
 end

@@ -1,9 +1,9 @@
 -- Keep these for backwards compatibility
 function hbhunger.save_hunger(player)
-	hbhunger.set_hunger(player)
+	hbhunger.set_hunger_raw(player)
 end
 function hbhunger.load_hunger(player)
-	hbhunger.get_hunger(player)
+	hbhunger.get_hunger_raw(player)
 end
 
 -- wrapper for minetest.item_eat (this way we make sure other mods can't break this one)
@@ -83,7 +83,7 @@ function hbhunger.item_eat(hunger_change, replace_with_item, poisen, heal)
 				h = h + hunger_change
 				if h > 30 then h = 30 end
 				hbhunger.hunger[name] = h
-				hbhunger.set_hunger(user)
+				hbhunger.set_hunger_raw(user)
 			end
 			-- Healing
 			if hp < 20 and heal then
@@ -427,23 +427,23 @@ function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	local name = player:get_player_name()
 	local exhaus = hbhunger.exhaustion[name]
 	if exhaus == nil then return end
-	local new = HUNGER_EXHAUST_PLACE
+	local new = hbhunger.EXHAUST_PLACE
 	-- placenode event
 	if not ext then
-		new = HUNGER_EXHAUST_DIG
+		new = hbhunger.EXHAUST_DIG
 	end
 	-- assume its send by main timer when movement detected
 	if not pos and not oldnode then
-		new = HUNGER_EXHAUST_MOVE
+		new = hbhunger.EXHAUST_MOVE
 	end
 	exhaus = exhaus + new
-	if exhaus > HUNGER_EXHAUST_LVL then
+	if exhaus > hbhunger.EXHAUST_LVL then
 		exhaus = 0
 		local h = tonumber(hbhunger.hunger[name])
 		h = h - 1
 		if h < 0 then h = 0 end
 		hbhunger.hunger[name] = h
-		hbhunger.set_hunger(player)
+		hbhunger.set_hunger_raw(player)
 	end
 	hbhunger.exhaustion[name] = exhaus
 end
