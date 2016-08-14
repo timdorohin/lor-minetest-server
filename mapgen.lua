@@ -56,8 +56,8 @@ function farming.register_mgv7_decorations()
 end
 
 -- detect mapgen
-if minetest.get_mapgen_params().mgname == "v6" then
-	farming.register_mgv6_decorations()
+if minetest.get_mapgen_setting("mg_name") == "v6" then
+	farming.register_mgv6_decorations() ; print ("v6")
 else
-	farming.register_mgv7_decorations()
+	farming.register_mgv7_decorations() ; print ("v7")
 end
