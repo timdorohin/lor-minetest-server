@@ -28,10 +28,10 @@ mobs.intllib = S
 
 -- Invisibility mod
 
-local invis = {}
-if minetest.global_exists("invisibility") then
-	invis = invisibility
-end
+--local invis = {}
+--if minetest.global_exists("invisibility") then
+	local invis = invisibility
+--end
 
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
