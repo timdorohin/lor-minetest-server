@@ -1,5 +1,5 @@
 
--- Mobs Api (5th August 2016)
+-- Mobs Api (16th August 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -27,7 +27,11 @@ end
 mobs.intllib = S
 
 -- Invisibility mod
-local invisibility = invisibility or {}
+
+local invis = {}
+if minetest.global_exists("invisibility") then
+	invis = invisibility
+end
 
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
@@ -606,7 +610,7 @@ end
 -- should mob follow what I'm holding ?
 function follow_holding(self, clicker)
 
-	if invisibility[clicker:get_player_name()] then
+	if invis[clicker:get_player_name()] then
 		return false
 	end
 
@@ -986,7 +990,7 @@ local monster_attack = function(self)
 
 		if objs[n]:is_player() then
 
-			if invisibility[ objs[n]:get_player_name() ] then
+			if invis[ objs[n]:get_player_name() ] then
 
 				type = ""
 			else
@@ -1087,7 +1091,7 @@ local follow_flop = function(self)
 		for n = 1, #players do
 
 			if get_distance(players[n]:getpos(), s) < self.view_range
-			and not invisibility[ players[n]:get_player_name() ] then
+			and not invis[ players[n]:get_player_name() ] then
 
 				self.following = players[n]
 
@@ -1390,7 +1394,7 @@ local do_states = function(self, dtime)
 		or not self.attack
 		or not self.attack:getpos()
 		or self.attack:get_hp() <= 0
-		or (self.attack:is_player() and invisibility[ self.attack:get_player_name() ]) then
+		or (self.attack:is_player() and invis[ self.attack:get_player_name() ]) then
 
 			--print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
@@ -1971,7 +1975,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and self.state ~= "flop"
 	and self.child == false
 	and hitter:get_player_name() ~= self.owner
-	and not invisibility[ hitter:get_player_name() ] then
+	and not invis[ hitter:get_player_name() ] then
 
 		-- attack whoever punched mob
 		self.state = ""
@@ -2394,6 +2398,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 
 	minetest.register_abm({
 
+		label = name .. " spawning",
 		nodenames = nodes,
 		neighbors = neighbors,
 		interval = interval,
