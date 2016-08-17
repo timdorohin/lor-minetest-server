@@ -1,5 +1,5 @@
 
--- Mobs Api (16th August 2016)
+-- Mobs Api (17th August 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -28,10 +28,14 @@ mobs.intllib = S
 
 -- Invisibility mod
 
---local invis = {}
---if minetest.global_exists("invisibility") then
-	local invis = invisibility
---end
+function check_global(name)
+	return rawget(_G, name) ~= nil
+end
+
+local invis = {}
+if check_global("invisibility") then
+	invis = invisibility
+end
 
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
