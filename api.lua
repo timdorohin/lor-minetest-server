@@ -26,7 +26,7 @@ else
 end
 mobs.intllib = S
 
--- Invisibility mod
+-- Invisibility mod check
 
 function check_global(name)
 	return rawget(_G, name) ~= nil
