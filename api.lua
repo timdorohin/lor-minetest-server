@@ -1,5 +1,5 @@
 
--- Mobs Api (17th August 2016)
+-- Mobs Api (3rd September 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1906,14 +1906,14 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
-	-- add healthy afterglow when hit
-	core.after(0.1, function()
-		self.object:settexturemod("^[colorize:#c9900070")
+	-- add healthy afterglow when hit (can causehit lag with larger textures)
+--	core.after(0.1, function()
+--		self.object:settexturemod("^[colorize:#c9900070")
 
-		core.after(0.3, function()
-			self.object:settexturemod("")
-		end)
-	end)
+--		core.after(0.3, function()
+--			self.object:settexturemod("")
+--		end)
+--	end)
 
 	-- blood_particles
 	if self.blood_amount > 0
