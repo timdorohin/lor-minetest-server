@@ -1,5 +1,5 @@
 
--- Mobs Api (3rd September 2016)
+-- Mobs Api (5th September 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -27,13 +27,8 @@ end
 mobs.intllib = S
 
 -- Invisibility mod check
-
-function check_global(name)
-	return rawget(_G, name) ~= nil
-end
-
 local invis = {}
-if check_global("invisibility") then
+if rawget(_G, "invisibility") then
 	invis = invisibility
 end
 
@@ -56,6 +51,8 @@ local square = math.sqrt
 local sin = math.sin
 local cos = math.cos
 local abs = math.abs
+local min = math.min
+local max = math.max
 local atann = math.atan
 local random = math.random
 local floor = math.floor
@@ -77,7 +74,7 @@ do_attack = function(self, player)
 		if random(0,100) < 90
 		and self.sounds.war_cry then
 
-			minetest.sound_play(self.sounds.war_cry,{
+			minetest.sound_play(self.sounds.war_cry, {
 				object = self.object,
 				max_hear_distance = self.sounds.distance
 			})
@@ -301,7 +298,7 @@ function check_for_death(self)
 
 		if self.sounds.damage then
 
-			minetest.sound_play(self.sounds.damage,{
+			minetest.sound_play(self.sounds.damage, {
 				object = self.object,
 				gain = 1.0,
 				max_hear_distance = self.sounds.distance
@@ -353,7 +350,7 @@ function check_for_death(self)
 	-- play death sound
 	if self.sounds.death then
 
-		minetest.sound_play(self.sounds.death,{
+		minetest.sound_play(self.sounds.death, {
 			object = self.object,
 			gain = 1.0,
 			max_hear_distance = self.sounds.distance
@@ -362,9 +359,13 @@ function check_for_death(self)
 
 	-- execute custom death function
 	if self.on_die then
+
 		self.on_die(self, pos)
+
+		return true
 	end
 
+	-- default death function
 	self.object:remove()
 
 	effect(pos, 20, "tnt_smoke.png")
@@ -372,7 +373,7 @@ function check_for_death(self)
 	return true
 end
 
--- check if within map limits (-30911 to 30927)
+-- check if within physical map limits (-30911 to 30927)
 function within_limits(pos, radius)
 
 	if  (pos.x - radius) > -30913
@@ -643,7 +644,7 @@ end
 -- find two animals of same type and breed if nearby and horny
 local function breed(self)
 
-	-- child take 240 seconds before growing into adult
+	-- child takes 240 seconds before growing into adult
 	if self.child == true then
 
 		self.hornytimer = self.hornytimer + 1
@@ -736,7 +737,7 @@ local function breed(self)
 				ent.hornytimer = 41
 
 				-- spawn baby
-				minetest.after(5, function(dtime)
+				minetest.after(5, function()
 
 					local mob = minetest.add_entity(pos, self.name)
 					local ent2 = mob:get_luaentity()
@@ -849,8 +850,7 @@ function smart_mobs(self, s, p, dist, dtime)
 		s.y = floor(s.y + 0.5) - sheight
 		s.z = floor(s.z + 0.5)
 
-		local ssight, sground
-		ssight, sground = minetest.line_of_sight(s, {
+		local ssight, sground = minetest.line_of_sight(s, {
 			x = s.x, y = s.y - 4, z = s.z}, 1)
 
 		-- determine node above ground
@@ -949,6 +949,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 			-- frustration! cant find the damn path :(
 			if self.sounds.random then
+
 				minetest.sound_play(self.sounds.random, {
 					object = self.object,
 					max_hear_distance = self.sounds.distance
@@ -986,7 +987,7 @@ local monster_attack = function(self)
 
 	local s = self.object:getpos()
 	local p, sp, dist
-	local player, type, obj, min_player = nil, nil, nil, nil
+	local player, type, obj, min_player
 	local min_dist = self.view_range + 1
 	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
@@ -1785,7 +1786,7 @@ local falling = function(self, pos)
 
 			self.object:setacceleration({
 				x = 0,
-				y = -self.fall_speed / (math.max(1, v.y) ^ 2),
+				y = -self.fall_speed / (max(1, v.y) ^ 2),
 				z = 0
 			})
 		end
@@ -1906,14 +1907,14 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
-	-- add healthy afterglow when hit (can causehit lag with larger textures)
---	core.after(0.1, function()
---		self.object:settexturemod("^[colorize:#c9900070")
+	--[[ add healthy afterglow when hit (can cause hit lag with larger textures)
+	core.after(0.1, function()
+		self.object:settexturemod("^[colorize:#c9900070")
 
---		core.after(0.3, function()
---			self.object:settexturemod("")
---		end)
---	end)
+		core.after(0.3, function()
+			self.object:settexturemod("")
+		end)
+	end) ]]
 
 	-- blood_particles
 	if self.blood_amount > 0
@@ -1921,7 +1922,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 		local pos = self.object:getpos()
 
-		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) / 2
+		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
 
 		effect(pos, self.blood_amount, self.blood_texture)
 	end
@@ -1931,7 +1932,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and tflp > punch_interval then
 
 		local v = self.object:getvelocity()
-		local r = 1.4 - math.min(punch_interval, 1.4)
+		local r = 1.4 - min(punch_interval, 1.4)
 		local kb = r * 5
 		local up = 2
 
@@ -2620,7 +2621,7 @@ function mobs:register_arrow(name, def)
 		hit_player = def.hit_player,
 		hit_node = def.hit_node,
 		hit_mob = def.hit_mob,
-		drop = def.drop or false,
+		drop = def.drop or false, -- drops arrow as registered item when true
 		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 		timer = 0,
 		switch = 0,
