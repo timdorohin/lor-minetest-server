@@ -975,6 +975,25 @@ function smart_mobs(self, s, p, dist, dtime)
 	end
 end
 
+-- specific attacks
+local specific_attack = function(list, what)
+
+	-- no list so attack default (player, animals etc.)
+	if list == nil then
+		return true
+	end
+
+	-- is found entity on list to attack?
+	for no = 1, #list do
+
+		if list[no] == what then
+			return true
+		end
+	end
+
+	return false
+end
+
 -- monster find someone to attack
 local monster_attack = function(self)
 
@@ -988,7 +1007,7 @@ local monster_attack = function(self)
 	local s = self.object:getpos()
 	local p, sp, dist
 	local player, obj, min_player
-	local type = ""
+	local type, name = "", ""
 	local min_dist = self.view_range + 1
 	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
@@ -1002,6 +1021,7 @@ local monster_attack = function(self)
 			else
 				player = objs[n]
 				type = "player"
+				name = "player"
 			end
 		else
 			obj = objs[n]:get_luaentity()
@@ -1009,12 +1029,14 @@ local monster_attack = function(self)
 			if obj then
 				player = obj.object
 				type = obj.type
+				name = obj.name or ""
 			end
 		end
 
-		if type == "player"
-		or type == "npc"
-		or (type == "animal" and self.attack_animals == true) then
+		-- find specific mob to attack, failing that attack player/npc/animal
+		if specific_attack(self.specific_attack, name)
+		and (type == "player" or type == "npc"
+		or (type == "animal" and self.attack_animals == true)) then
 
 			s = self.object:getpos()
 			p = player:getpos()
@@ -2326,6 +2348,7 @@ minetest.register_entity(name, {
 	dogshoot_count = 0,
 	dogshoot_count_max = def.dogshoot_count_max or 5,
 	attack_animals = def.attack_animals or false,
+	specific_attack = def.specific_attack,
 
 	on_blast = def.on_blast or do_tnt,
 
