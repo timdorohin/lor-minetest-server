@@ -1390,8 +1390,8 @@ local do_states = function(self, dtime)
 
 		self.runaway_timer = self.runaway_timer + 1
 
-		-- stop after 3 seconds or when at cliff
-		if self.runaway_timer > 3
+		-- stop after 5 seconds or when at cliff
+		if self.runaway_timer > 5
 		or is_at_cliff(self) then
 			self.runaway_timer = 0
 			set_velocity(self, 0)
