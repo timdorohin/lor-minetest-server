@@ -987,8 +987,7 @@ local monster_attack = function(self)
 
 	local s = self.object:getpos()
 	local p, sp, dist
-	local player, obj, min_player
-	local type = ""
+	local player, type, obj, min_player
 	local min_dist = self.view_range + 1
 	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
@@ -1013,8 +1012,7 @@ local monster_attack = function(self)
 		end
 
 		if type == "player"
-		or type == "npc"
-		or (type == "animal" and self.attack_animals == true) then
+		or type == "npc" then
 
 			s = self.object:getpos()
 			p = player:getpos()
@@ -2325,7 +2323,6 @@ minetest.register_entity(name, {
 	dogshoot_switch = def.dogshoot_switch,
 	dogshoot_count = 0,
 	dogshoot_count_max = def.dogshoot_count_max or 5,
-	attack_animals = def.attack_animals or false,
 
 	on_blast = def.on_blast or do_tnt,
 
