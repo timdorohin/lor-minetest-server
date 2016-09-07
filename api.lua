@@ -361,7 +361,7 @@ function check_for_death(self)
 	if self.on_die then
 
 		self.on_die(self, pos)
-
+self.object:remove()
 		return true
 	end
 
