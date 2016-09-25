@@ -18,9 +18,9 @@ minetest.register_alias("farming_plus:carrot_1", "farming:carrot_1")
 minetest.register_alias("farming_plus:carrot_2", "farming:carrot_4")
 minetest.register_alias("farming_plus:carrot_3", "farming:carrot_6")
 minetest.register_alias("farming_plus:carrot", "farming:carrot_8")
+minetest.register_alias("farming_plus:carrot_item", "farming:carrot")
 
 -- Cocoa
-
 minetest.register_alias("farming_plus:cocoa_sapling", "farming:cocoa_beans")
 minetest.register_alias("farming_plus:cocoa_leaves", "default:leaves")
 minetest.register_alias("farming_plus:cocoa", "default:apple")
