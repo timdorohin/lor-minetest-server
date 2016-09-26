@@ -2716,6 +2716,7 @@ function mobs:register_arrow(name, def)
 					and player:get_luaentity()
 					and player:get_luaentity().name ~= self.object:get_luaentity().name
 					and player:get_luaentity().name ~= "__builtin:item"
+					and player:get_luaentity().name ~= "__builtin:falling_node"
 					and player:get_luaentity().name ~= "gauges:hp_bar"
 					and player:get_luaentity().name ~= "signs:text"
 					and player:get_luaentity().name ~= "itemframes:item" then

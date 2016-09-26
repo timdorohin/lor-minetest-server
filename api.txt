@@ -235,3 +235,12 @@ This function allows the mob to be fed the item inside self.follow be it apple, 
     'feed_count' number of times mob must be fed to tame or breed
     'breed' true or false stating if mob can be bred and a child created afterwards
     'tame' true or false stating if mob can be tamed so player can pick them up
+
+
+Useful Internal Variables
+
+    'self.health' contains current health of mob
+    'self.base_texture' contains current skin texture which was randomly selected from textures list
+    'self.gotten' true when sheep have been sheared or cows have been milked, a toggle switch which can be used for many functions
+    'self.child' true when mob is currently a child (when two mobs have bred and current mob is the outcome)
+    'self.hornytimer' background timer that controls breeding functions and mob childhood timings
