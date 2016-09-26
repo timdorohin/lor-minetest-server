@@ -1,5 +1,5 @@
 
-MOB API (5th September 2016)
+MOB API (26th September 2016)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -240,6 +240,8 @@ This function allows the mob to be fed the item inside self.follow be it apple, 
 Useful Internal Variables
 
     'self.health' contains current health of mob
+    'self.texture_list' contains list of all mob textures
+    'self.child_texture' contains mob child texture when growing up
     'self.base_texture' contains current skin texture which was randomly selected from textures list
     'self.gotten' true when sheep have been sheared or cows have been milked, a toggle switch which can be used for many functions
     'self.child' true when mob is currently a child (when two mobs have bred and current mob is the outcome)

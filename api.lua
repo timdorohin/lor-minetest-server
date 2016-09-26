@@ -1,5 +1,5 @@
 
--- Mobs Api (5th September 2016)
+-- Mobs Api (26th September 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2333,6 +2333,7 @@ minetest.register_entity(name, {
 	health = 0,
 	reach = def.reach or 3,
 	htimer = 0,
+	texture_list = def.textures,
 	child_texture = def.child_texture,
 	docile_by_day = def.docile_by_day or false,
 	time_of_day = 0.5,
