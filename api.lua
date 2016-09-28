@@ -1,5 +1,5 @@
 
--- Mobs Api (26th September 2016)
+-- Mobs Api (28th September 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -39,6 +39,7 @@ local disable_blood = minetest.setting_getbool("mobs_disable_blood")
 local creative = minetest.setting_getbool("creative_mode")
 local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
 local remove_far = minetest.setting_getbool("remove_far_mobs")
+local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 
 -- pathfinding settings
 local enable_pathfinding = true
@@ -361,7 +362,8 @@ function check_for_death(self)
 	if self.on_die then
 
 		self.on_die(self, pos)
-self.object:remove()
+		self.object:remove()
+
 		return true
 	end
 
@@ -2281,8 +2283,8 @@ minetest.register_entity(name, {
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 	lifetimer = def.lifetimer or 180, -- 3 minutes
-	hp_min = def.hp_min or 5,
-	hp_max = def.hp_max or 10,
+	hp_min = (def.hp_min or 5) * difficulty,
+	hp_max = (def.hp_max or 10) * difficulty,
 	physical = true,
 	collisionbox = def.collisionbox,
 	visual = def.visual,
@@ -2292,7 +2294,7 @@ minetest.register_entity(name, {
 	view_range = def.view_range or 5,
 	walk_velocity = def.walk_velocity or 1,
 	run_velocity = def.run_velocity or 2,
-	damage = def.damage or 0,
+	damage = (def.damage or 0) * difficulty,
 	light_damage = def.light_damage or 0,
 	water_damage = def.water_damage or 0,
 	lava_damage = def.lava_damage or 0,
