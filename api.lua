@@ -1,5 +1,5 @@
 
--- Mobs Api (28th September 2016)
+-- Mobs Api (29th September 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2283,8 +2283,8 @@ minetest.register_entity(name, {
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 	lifetimer = def.lifetimer or 180, -- 3 minutes
-	hp_min = (def.hp_min or 5) * difficulty,
-	hp_max = (def.hp_max or 10) * difficulty,
+	hp_min = max(1, (def.hp_min or 5) * difficulty),
+	hp_max = max(1, (def.hp_max or 10) * difficulty),
 	physical = true,
 	collisionbox = def.collisionbox,
 	visual = def.visual,
@@ -2294,7 +2294,7 @@ minetest.register_entity(name, {
 	view_range = def.view_range or 5,
 	walk_velocity = def.walk_velocity or 1,
 	run_velocity = def.run_velocity or 2,
-	damage = (def.damage or 0) * difficulty,
+	damage = max(1, (def.damage or 0) * difficulty),
 	light_damage = def.light_damage or 0,
 	water_damage = def.water_damage or 0,
 	lava_damage = def.lava_damage or 0,
