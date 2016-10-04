@@ -27,9 +27,9 @@ end
 mobs.intllib = S
 
 -- Invisibility mod check
-local invis = {}
+mobs.invis = {}
 if rawget(_G, "invisibility") then
-	invis = invisibility
+	mobs.invis = invisibility
 end
 
 -- Load settings
@@ -617,7 +617,7 @@ end
 -- should mob follow what I'm holding ?
 function follow_holding(self, clicker)
 
-	if invis[clicker:get_player_name()] then
+	if mobs.invis[clicker:get_player_name()] then
 		return false
 	end
 
@@ -1017,7 +1017,7 @@ local monster_attack = function(self)
 
 		if objs[n]:is_player() then
 
-			if invis[ objs[n]:get_player_name() ] then
+			if mobs.invis[ objs[n]:get_player_name() ] then
 
 				type = ""
 			else
@@ -1122,7 +1122,7 @@ local follow_flop = function(self)
 		for n = 1, #players do
 
 			if get_distance(players[n]:getpos(), s) < self.view_range
-			and not invis[ players[n]:get_player_name() ] then
+			and not mobs.invis[ players[n]:get_player_name() ] then
 
 				self.following = players[n]
 
@@ -1425,7 +1425,7 @@ local do_states = function(self, dtime)
 		or not self.attack
 		or not self.attack:getpos()
 		or self.attack:get_hp() <= 0
-		or (self.attack:is_player() and invis[ self.attack:get_player_name() ]) then
+		or (self.attack:is_player() and mobs.invis[ self.attack:get_player_name() ]) then
 
 			--print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
@@ -2004,7 +2004,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	and self.state ~= "flop"
 	and self.child == false
 	and hitter:get_player_name() ~= self.owner
-	and not invis[ hitter:get_player_name() ] then
+	and not mobs.invis[ hitter:get_player_name() ] then
 
 		-- attack whoever punched mob
 		self.state = ""
