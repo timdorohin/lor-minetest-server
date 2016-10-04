@@ -1,5 +1,5 @@
 
--- Mobs Api (29th September 2016)
+-- Mobs Api (4th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1470,9 +1470,7 @@ local do_states = function(self, dtime)
 					if get_velocity(self) <= 0.5
 					and self.object:getvelocity().y == 0 then
 
-						local v = self.object:getvelocity()
-						v.y = 5
-						self.object:setvelocity(v)
+						do_jump(self)
 					end
 
 					set_velocity(self, self.run_velocity)
