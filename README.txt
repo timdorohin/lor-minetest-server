@@ -1,6 +1,6 @@
 Minetest mod: Hunger [hbhunger]
 ===============================
-Version: 0.4.0
+Version: 0.4.1
 
 Using the mod:
 --------------
@@ -71,6 +71,7 @@ Known supported food mods:
 - Seaplants [sea]
 - Simple mobs [mobs]
 - Pizza [pizza]
+- Not So Simple Mobs [nssm]
 
 Supported mods without optional dependency (mods provide their own support):
 - Food ([food], [food_basic])

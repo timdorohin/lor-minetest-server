@@ -30,3 +30,7 @@ Initial release
 - Special support for beans from Farming Redo [farming]
 - Fix crash when poisoned player leaves server
 - Changed license to LGPL v2.1
+
+0.4.1
+-----
+- Add foods from Not So Simple Mobs [nssm]
