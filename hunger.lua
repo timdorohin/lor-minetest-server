@@ -419,6 +419,23 @@ if minetest.get_modpath("pizza") ~= nil then
 	hbhunger.register_food("pizza:pizzaslice", 5, "", nil, 5)
 end
 
+if minetest.get_modpath("nssm") then
+	hbhunger.register_food("nssm:werewolf_leg", 3)
+	hbhunger.register_food("nssm:heron_leg", 2)
+	hbhunger.register_food("nssm:chichibios_heron_leg", 4)
+	hbhunger.register_food("nssm:crocodile_tail", 3)
+	hbhunger.register_food("nssm:duck_legs", 1)
+	hbhunger.register_food("nssm:ant_leg", 1)
+	hbhunger.register_food("nssm:spider_leg", 1)
+	hbhunger.register_food("nssm:tentacle", 2)
+	hbhunger.register_food("nssm:worm_flesh", 2, "", 2) -- poisonous
+	hbhunger.register_food("nssm:amphibian_heart", 1)
+	hbhunger.register_food("nssm:raw_scrausics_wing", 1)
+	-- superfoods
+	hbhunger.register_food("nssm:phoenix_nuggets", 20, "", nil, 20)
+	hbhunger.register_food("nssm:phoenix_tear", 20, "", nil, 20)
+end
+
 -- player-action based hunger changes
 function hbhunger.handle_node_actions(pos, oldnode, player, ext)
 	if not player or not player:is_player() then
