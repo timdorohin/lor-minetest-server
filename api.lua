@@ -1,5 +1,5 @@
 
--- Mobs Api (4th October 2016)
+-- Mobs Api (8th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1770,6 +1770,7 @@ local do_states = function(self, dtime)
 				local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
 				local v = ent.velocity or 1 -- or set to default
 				ent.switch = 1
+				ent.owner_id = tostring(self.object) -- add unique owner id to arrow
 
 				 -- offset makes shoot aim accurate
 				vec.y = vec.y + self.shoot_offset
@@ -2442,7 +2443,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			-- do not spawn if too many active entities in area
 			if active_object_count_wider >= aoc
 			or not mobs.spawning_mobs[name] then
-
+--print ("--- too many entities", name, aoc)
 				return
 			end
 
@@ -2454,11 +2455,13 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 				if tod > 4500 and tod < 19500 then
 					-- daylight, but mob wants night
 					if day_toggle == false then
+--print ("--- mob needs night", name)
 						return
 					end
 				else
 					-- night time but mob wants day
 					if day_toggle == true then
+--print ("--- mob needs day", name)
 						return
 					end
 				end
@@ -2473,6 +2476,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			for n = 1, #objs do
 
 				if objs[n]:is_player() then
+--print ("--- player too close", name)
 					return
 				end
 			end
@@ -2480,27 +2484,36 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			-- mobs cannot spawn in protected areas when enabled
 			if spawn_protected == 1
 			and minetest.is_protected(pos, "") then
+--print ("--- inside protected area", name)
 				return
 			end
 
-			-- check if light and height levels are ok to spawn
+			-- are light levels ok?
 			local light = minetest.get_node_light(pos)
 			if not light
 			or light > max_light
-			or light < min_light
-			or pos.y > max_height
+			or light < min_light then
+--print ("--- light limits not met", name, light)
+				return
+			end
+
+			-- are we spawning within height limits?
+			if pos.y > max_height
 			or pos.y < min_height then
+--print ("--- height limits not met", name, pos.y)
 				return
 			end
 
 			-- are we spawning inside solid nodes?
 			if minetest.registered_nodes[node_ok(pos).name].walkable == true then
+--print ("--- feet in block", name, node_ok(pos).name)
 				return
 			end
 
 			pos.y = pos.y + 1
 
 			if minetest.registered_nodes[node_ok(pos).name].walkable == true then
+--print ("--- head in block", name, node_ok(pos).name)
 				return
 			end
 
@@ -2652,6 +2665,7 @@ function mobs:register_arrow(name, def)
 		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
 		timer = 0,
 		switch = 0,
+		owner_id = def.owner_id,
 
 		on_step = def.on_step or function(self, dtime)
 
@@ -2672,15 +2686,31 @@ function mobs:register_arrow(name, def)
 			if def.tail
 			and def.tail == 1
 			and def.tail_texture then
-				effect(pos, 1, def.tail_texture, 10, 0)
+--				effect(pos, 1, def.tail_texture, 10, 0)
+
+				minetest.add_particlespawner({
+					amount = 1,
+					time = 0.25,
+					minpos = pos,
+					maxpos = pos,
+					minvel = {x = 0, y = 0, z = 0},
+					maxvel = {x = 0, y = 0, z = 0},
+					minacc = {x = 0, y = 0, z = 0},
+					maxacc = {x = 0, y = 0, z = 0},
+					minexptime = 0.1,
+					maxexptime = 1,
+					minsize = def.tail_size or 5,
+					maxsize = def.tail_size or 10,
+					texture = def.tail_texture,
+				})
 			end
 
 			if self.hit_node then
 
 				local node = node_ok(pos).name
 
-				--if minetest.registered_nodes[node].walkable then
-				if node ~= "air" then
+				if minetest.registered_nodes[node].walkable then
+				--if node ~= "air" then
 
 					self.hit_node(self, pos, node)
 
@@ -2699,9 +2729,7 @@ function mobs:register_arrow(name, def)
 				end
 			end
 
-			if (self.hit_player or self.hit_mob)
-			-- clear mob entity before arrow becomes active
-			and self.timer > (10 - (self.velocity / 2)) then
+			if self.hit_player or self.hit_mob then
 
 				for _,player in pairs(minetest.get_objects_inside_radius(pos, 1.0)) do
 
@@ -2713,18 +2741,21 @@ function mobs:register_arrow(name, def)
 						return
 					end
 
+					local entity = player:get_luaentity()
+						and player:get_luaentity().name or ""
+
 					if self.hit_mob
-					and player:get_luaentity()
-					and player:get_luaentity().name ~= self.object:get_luaentity().name
-					and player:get_luaentity().name ~= "__builtin:item"
-					and player:get_luaentity().name ~= "__builtin:falling_node"
-					and player:get_luaentity().name ~= "gauges:hp_bar"
-					and player:get_luaentity().name ~= "signs:text"
-					and player:get_luaentity().name ~= "itemframes:item" then
+					and tostring(player) ~= self.owner_id
+					and entity ~= self.object:get_luaentity().name
+					and entity ~= "__builtin:item"
+					and entity ~= "__builtin:falling_node"
+					and entity ~= "gauges:hp_bar"
+					and entity ~= "signs:text"
+					and entity ~= "itemframes:item" then
 
 						self.hit_mob(self, player)
 
-						self.object:remove() ; -- print ("hit mob")
+						self.object:remove() ;  --print ("hit mob")
 
 						return
 					end
