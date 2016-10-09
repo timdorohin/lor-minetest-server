@@ -139,7 +139,7 @@ The mob api also has some preset variables and functions that it will remember f
 
 mobs:register_spawn(name, nodes, max_light, min_light, chance, active_object_count, max_height, day_toggle)
 
-mobs:spawn_specfic(name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height, day_toggle)
+mobs:spawn_specfic(name, nodes, neighbors, min_light, max_light, interval, chance, active_object_count, min_height, max_height, day_toggle, on_spawn)
 
 These functions register a spawn algorithm for the mob. Without this function the call the mobs won't spawn.
 
@@ -154,6 +154,7 @@ These functions register a spawn algorithm for the mob. Without this function th
     'min_height' is the maximum height the mob can spawn
     'max_height' is the maximum height the mob can spawn
     'day_toggle' true for day spawning, false for night or nil for anytime
+    'on_spawn' is a custom function which runs after mob has spawned and gives self and pos values.
 
 ... also a simpler way to handle mob spawns has been added with the mobs:spawn(def) command which uses above names to make settings clearer:
 

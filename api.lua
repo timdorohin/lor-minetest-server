@@ -1,5 +1,5 @@
 
--- Mobs Api (8th October 2016)
+-- Mobs Api (9th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2411,7 +2411,7 @@ end -- END mobs:register_mob function
 -- global functions
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
-	interval, chance, aoc, min_height, max_height, day_toggle)
+	interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 
 	-- chance override in minetest.conf for registered mob
 	local new_chance = tonumber(minetest.setting_get(name .. "_chance"))
@@ -2526,6 +2526,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 --				print ("[mobs] Spawned " .. name .. " at "
 --				.. minetest.pos_to_string(pos) .. " on "
 --				.. node.name .. " near " .. neighbors[1])
+				if on_spawn and not on_spawn(mob, pos) then
+					return
+				end
 			else
 				print (S("[mobs] @1 failed to spawn at @2",
 				name, minetest.pos_to_string(pos)))
@@ -2556,9 +2559,10 @@ function mobs:spawn(def)
 	local min_height = def.min_height or -31000
 	local max_height = def.max_height or 31000
 	local day_toggle = def.day_toggle or nil
+	local on_spawn = def.on_spawn
 
 	mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
-		chance, active_object_count, min_height, max_height, day_toggle)
+		chance, active_object_count, min_height, max_height, day_toggle, on_spawn)
 end
 
 -- set content id's
