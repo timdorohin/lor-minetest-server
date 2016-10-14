@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.22 (4th June 2016)
+	Minetest Farming Redo Mod 1.23 (14th October 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -538,6 +538,14 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	end
 
 	local under = minetest.get_node(pt.under)
+
+	-- am I right-clicking on something that has a custom on_place set?
+	-- thanks to Krock for helping with this issue :)
+	local def = minetest.registered_nodes[under.name]
+	if def and def.on_rightclick then
+		return def.on_rightclick(pt.under, under, placer, itemstack)
+	end
+
 	local above = minetest.get_node(pt.above)
 
 	-- check if pointing at the top of the node
@@ -623,7 +631,8 @@ farming.register_plant = function(name, def)
 		selection_box = farming.select,
 
 		on_place = function(itemstack, placer, pointed_thing)
-			return farming.place_seed(itemstack, placer, pointed_thing, mname .. ":"..pname.."_1")
+			return farming.place_seed(itemstack, placer,
+				pointed_thing, mname .. ":" .. pname .. "_1")
 		end,
 	})
 
