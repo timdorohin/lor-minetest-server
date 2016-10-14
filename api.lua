@@ -1,5 +1,5 @@
 
--- Mobs Api (9th October 2016)
+-- Mobs Api (14th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -565,11 +565,6 @@ do_jump = function(self)
 				gain = 1.0,
 				max_hear_distance = self.sounds.distance
 			})
-		end
-	else
-		if self.state ~= "attack" then
-			self.state = "stand"
-			set_animation(self, "stand")
 		end
 	end
 end
