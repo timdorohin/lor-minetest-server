@@ -10,7 +10,7 @@ The mob api is a function that can be called on by other mods to add new animals
     'mobs_disable_blood' if false blood effects appear when mob is hit (default is false)
     'mobs_spawn_protected' if set to 1 then mobs will not spawn in protected areas (default is 0)
     'remove_far_mobs' if true then mobs that are outside players visual range will be removed (default is false)
-    'mobname_chance' can change specific mob chance rates or set to 0 to disable e.g. mobs_animal:cow_chance = 1000
+    'mobname' can change specific mob chance rate (0 to disable) and spawn number e.g. mobs_animal:cow = 1000,5
     'mob_difficulty' sets difficulty level (health and hit damage multiplied by this number), defaults to 1.0.
 
 

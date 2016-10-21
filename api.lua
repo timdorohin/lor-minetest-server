@@ -1,5 +1,5 @@
 
--- Mobs Api (14th October 2016)
+-- Mobs Api (21st October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2403,24 +2403,47 @@ minetest.register_entity(name, {
 
 end -- END mobs:register_mob function
 
+-- count how many mobs of one type are inside an area
+local count_mobs = function(pos, type)
+
+	local num = 0
+	local objs = minetest.get_objects_inside_radius(pos, 16)
+
+	for n = 1, #objs do
+
+		if not objs[n]:is_player() then
+
+			obj = objs[n]:get_luaentity()
+
+			if obj and obj.name and obj.name == type then
+				num = num + 1
+			end
+		end
+	end
+
+	return num
+end
+
 -- global functions
 
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 	interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 
-	-- chance override in minetest.conf for registered mob
-	local new_chance = tonumber(minetest.setting_get(name .. "_chance"))
+	-- chance/spawn number override in minetest.conf for registered mob
+	local numbers = minetest.setting_get(name)
 
-	if new_chance ~= nil then
+	if numbers then
+		numbers = numbers:split(",")
+		chance = tonumber(numbers[1]) or chance
+		aoc = tonumber(numbers[2]) or aoc
 
-		if new_chance == 0 then
+		if chance == 0 then
 			print(S("[Mobs Redo] @1 has spawning disabled", name))
 			return
 		end
 
-		chance = new_chance
-
-		print (S("[Mobs Redo] Chance setting for @1 changed to @2", name, chance))
+		print (S("[Mobs Redo] Chance setting for @1 changed to @2", name, chance)
+			.. " (total: " .. aoc .. ")")
 
 	end
 
@@ -2435,9 +2458,15 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 
 		action = function(pos, node, active_object_count, active_object_count_wider)
 
-			-- do not spawn if too many active entities in area
+			-- is mob actually registered?
+			if not mobs.spawning_mobs[name] then
+--print ("--- mob doesn't exist", name)
+				return
+			end
+
+			-- do not spawn if too many of same mob in area
 			if active_object_count_wider >= aoc
-			or not mobs.spawning_mobs[name] then
+			and count_mobs(pos, name) >= aoc then
 --print ("--- too many entities", name, aoc)
 				return
 			end
