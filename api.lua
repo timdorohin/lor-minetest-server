@@ -2595,6 +2595,7 @@ local c_ignore = minetest.get_content_id("ignore")
 local c_obsidian = minetest.get_content_id("default:obsidian")
 local c_brick = minetest.get_content_id("default:obsidianbrick")
 local c_chest = minetest.get_content_id("default:chest_locked")
+local c_fire = minetest.get_content_id("fire:basic_flame")
 
 -- explosion (cannot break protected or unbreakable nodes)
 function mobs:explosion(pos, radius, fire, smoke, sound)
@@ -2643,16 +2644,21 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 		and data[vi] ~= c_ignore
 		and data[vi] ~= c_obsidian
 		and data[vi] ~= c_brick
-		and data[vi] ~= c_chest then
+		and data[vi] ~= c_chest
+		and data[vi] ~= c_fire then
 
 			local n = node_ok(p).name
 			local on_blast = minetest.registered_nodes[n].on_blast
 
 			if on_blast then
+
 				return on_blast(p)
+
 			elseif minetest.registered_nodes[n].groups.unbreakable == 1 then
+
 				-- do nothing
 			else
+
 				-- after effects
 				if fire > 0
 				and (minetest.registered_nodes[n].groups.flammable
