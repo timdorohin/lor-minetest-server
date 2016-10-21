@@ -2650,6 +2650,8 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 
 			if on_blast then
 				return on_blast(p)
+			elseif minetest.registered_nodes[n].groups.unbreakable == 1 then
+				-- do nothing
 			else
 				-- after effects
 				if fire > 0
