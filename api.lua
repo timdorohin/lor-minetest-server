@@ -1,5 +1,5 @@
 
--- Mobs Api (21st October 2016)
+-- Mobs Api (22nd October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1848,9 +1848,6 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
-	-- direction error check
-	dir = dir or {x = 0, y = 0, z = 0}
-
 	-- weapon wear
 	local weapon = hitter:get_wielded_item()
 	local punch_interval = 1.4
@@ -1889,7 +1886,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		end
 	end
 
-	-- print ("Mob Damage is", damage)
+--	print ("Mob Damage is", damage)
 
 	-- add weapon wear
 	if tool_capabilities then
@@ -1961,6 +1958,9 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		or self.fly then
 			up = 0
 		end
+
+		-- direction error check
+		dir = dir or {x = 0, y = 0, z = 0}
 
 		self.object:setvelocity({
 			x = dir.x * kb,
