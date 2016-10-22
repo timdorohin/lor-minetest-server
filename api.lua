@@ -2413,7 +2413,7 @@ local count_mobs = function(pos, type)
 
 		if not objs[n]:is_player() then
 
-			obj = objs[n]:get_luaentity()
+			local obj = objs[n]:get_luaentity()
 
 			if obj and obj.name and obj.name == type then
 				num = num + 1
