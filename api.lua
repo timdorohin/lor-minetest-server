@@ -2407,7 +2407,7 @@ end -- END mobs:register_mob function
 local count_mobs = function(pos, type)
 
 	local num = 0
-	local objs = minetest.get_objects_inside_radius(pos, 16)
+	local objs = minetest.get_objects_inside_radius(pos, 20)
 
 	for n = 1, #objs do
 
