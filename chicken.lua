@@ -85,8 +85,8 @@ mobs:spawn({
 	name = "mobs_animal:chicken",
 	nodes = {"default:dirt_with_grass", "ethereal:bamboo_dirt"},
 	interval = 1,
-	chance = 5000,
-	active_object_count = 2,
+	chance = 12000,
+	active_object_count = 1,
 	day_toggle = true,
 })
 
