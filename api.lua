@@ -1,5 +1,5 @@
 
--- Mobs Api (22nd October 2016)
+-- Mobs Api (26th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2407,7 +2407,7 @@ end -- END mobs:register_mob function
 local count_mobs = function(pos, type)
 
 	local num = 0
-	local objs = minetest.get_objects_inside_radius(pos, 20)
+	local objs = minetest.get_objects_inside_radius(pos, 32)
 
 	for n = 1, #objs do
 
