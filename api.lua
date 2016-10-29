@@ -2582,7 +2582,7 @@ function mobs:spawn(def)
 	local active_object_count = def.active_object_count or 1
 	local min_height = def.min_height or -31000
 	local max_height = def.max_height or 31000
-	local day_toggle = def.day_toggle or nil
+	local day_toggle = def.day_toggle
 	local on_spawn = def.on_spawn
 
 	mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
