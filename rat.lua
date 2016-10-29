@@ -57,8 +57,6 @@ mobs:register_mob("mobs_animal:rat", {
 ]]
 })
 
---mobs:register_spawn("mobs_animal:rat", {"default:stone"}, 20, 5, 15000, 2, 0)
-
 local function rat_spawn(self, pos)
 	print (self:get_luaentity().name, pos.x, pos.y, pos.z)
 end
@@ -66,6 +64,8 @@ end
 mobs:spawn({
 	name = "mobs_animal:rat",
 	nodes = {"default:stone"},
+	min_light = 3,
+	active_object_count = 2,
 	max_height = 0,
 --	on_spawn = rat_spawn,
 })
