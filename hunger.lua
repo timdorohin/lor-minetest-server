@@ -438,7 +438,7 @@ end
 
 -- player-action based hunger changes
 function hbhunger.handle_node_actions(pos, oldnode, player, ext)
-	if not player or not player:is_player() then
+	if not player or not player:is_player() or player.is_fake_player == true then
 		return
 	end
 	local name = player:get_player_name()
