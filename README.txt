@@ -1,6 +1,6 @@
 Minetest mod: Hunger [hbhunger]
 ===============================
-Version: 0.5.0
+Version: 0.5.1
 
 Using the mod:
 --------------

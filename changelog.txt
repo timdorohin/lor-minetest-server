@@ -39,3 +39,7 @@ Initial release
 -----
 - Fix custom sound not working
 - Add Portuguese translation
+
+0.5.1
+-----
+- Fix incompability problem with pipeworks mod
