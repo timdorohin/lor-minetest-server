@@ -438,6 +438,7 @@ end
 
 -- player-action based hunger changes
 function hbhunger.handle_node_actions(pos, oldnode, player, ext)
+	-- is_fake_player comes from the pipeworks, we are not interested in those
 	if not player or not player:is_player() or player.is_fake_player == true then
 		return
 	end
