@@ -1,5 +1,5 @@
 
--- Mobs Api (26th October 2016)
+-- Mobs Api (30th October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1900,6 +1900,9 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		hitter:set_wielded_item(weapon)
 	end
 
+-- only play hit sound and show blood effects if damage is 1 or over
+if damage >= 1 then
+
 	-- weapon sounds
 	if weapon:get_definition().sounds ~= nil then
 
@@ -1915,6 +1918,19 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			max_hear_distance = 5
 		})
 	end
+
+	-- blood_particles
+	if self.blood_amount > 0
+	and not disable_blood then
+
+		local pos = self.object:getpos()
+
+		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
+
+		effect(pos, self.blood_amount, self.blood_texture)
+	end
+
+end
 
 	-- do damage
 	self.health = self.health - floor(damage)
@@ -1932,17 +1948,6 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			self.object:settexturemod("")
 		end)
 	end) ]]
-
-	-- blood_particles
-	if self.blood_amount > 0
-	and not disable_blood then
-
-		local pos = self.object:getpos()
-
-		pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
-
-		effect(pos, self.blood_amount, self.blood_texture)
-	end
 
 	-- knock back effect (only on full punch)
 	if self.knock_back > 0
