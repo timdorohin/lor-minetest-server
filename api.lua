@@ -1,5 +1,5 @@
 
--- Mobs Api (30th October 2016)
+-- Mobs Api (31st October 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1886,6 +1886,12 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		end
 	end
 
+	-- healing
+	if damage <= -1 then
+		self.health = self.health - floor(damage)
+		return
+	end
+
 --	print ("Mob Damage is", damage)
 
 	-- add weapon wear
@@ -1930,8 +1936,6 @@ if damage >= 1 then
 		effect(pos, self.blood_amount, self.blood_texture)
 	end
 
-end
-
 	-- do damage
 	self.health = self.health - floor(damage)
 
@@ -1975,6 +1979,8 @@ end
 
 		self.pause_timer = r
 	end
+
+end -- END if damage
 
 	-- if skittish then run away
 	if self.runaway == true then
