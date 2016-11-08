@@ -48,6 +48,7 @@ mobs:register_mob("mobs_animal:kitten", {
 			return
 		end
 
+		mobs:protect(self, clicker)
 		mobs:capture_mob(self, clicker, 50, 50, 90, false, nil)
 	end
 })

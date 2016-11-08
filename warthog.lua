@@ -51,6 +51,7 @@ mobs:register_mob("mobs_animal:pumba", {
 			return
 		end
 
+		mobs:protect(self, clicker)
 		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
 	end,
 })

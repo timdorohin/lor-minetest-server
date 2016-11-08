@@ -56,6 +56,7 @@ mobs:register_mob("mobs_animal:chicken", {
 			return
 		end
 
+		mobs:protect(self, clicker)
 		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
 

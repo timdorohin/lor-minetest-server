@@ -165,6 +165,9 @@ for _, col in pairs(all_colours) do
 				return
 			end
 
+			-- protect mod with mobs:protector item
+			mobs:protect(self, clicker)
+
 			--are we capturing?
 			mobs:capture_mob(self, clicker, 0, 5, 60, false, nil)
 		end
