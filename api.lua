@@ -1,5 +1,5 @@
 
--- Mobs Api (31st October 2016)
+-- Mobs Api (8th November 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1848,6 +1848,14 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
+-- is mob protected?
+if self.protected
+and minetest.is_protected(self.object:getpos(), hitter:get_player_name()) then
+	minetest.chat_send_player(hitter:get_player_name(), "Mob has been protected!")
+	return
+end
+
+
 	-- weapon wear
 	local weapon = hitter:get_wielded_item()
 	local punch_interval = 1.4
@@ -2947,6 +2955,31 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 			end
 		end
 	end
+end
+
+-- protect tamed mob with rune iten
+function mobs:protect(self, clicker)
+
+	if self.tamed == false then
+		minetest.chat_send_player(name, S("Not tamed!"))
+		return false
+	end
+
+	local tool = clicker:get_wielded_item()
+	local name = clicker:get_player_name()
+
+	if tool:get_name() == "mobs:protector" then
+
+		tool:take_item() -- take 1 protection rune
+		clicker:set_wielded_item(tool)
+
+		self.protected = true
+		minetest.chat_send_player(name, S("Protected!"))
+
+		return true
+	end
+
+	return false
 end
 
 local mob_obj = {}

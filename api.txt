@@ -240,6 +240,14 @@ This function allows the mob to be fed the item inside self.follow be it apple, 
     'tame' true or false stating if mob can be tamed so player can pick them up
 
 
+mobs:protect(self, clicker)
+
+This function can be used to right-click any tamed mob with mobs:protector item, this will protect the mob from harm inside of a protected area from other players.
+
+    'self' mob information
+    'clicker' player information
+
+
 Useful Internal Variables
 
     'self.health' contains current health of mob
