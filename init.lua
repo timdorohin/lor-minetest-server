@@ -1,7 +1,6 @@
 local S
 if (minetest.get_modpath("intllib")) then
-	dofile(minetest.get_modpath("intllib").."/intllib.lua")
-	S = intllib.Getter(minetest.get_current_modname())
+	S = intllib.Getter()
 else
 	S = function ( s ) return s end
 end
@@ -58,7 +57,7 @@ local function custom_hud(player)
 end
 
 --register and define armor HUD bar
-hb.register_hudbar("armor", 0xFFFFFF, S("Armor"), { icon = "hbarmor_icon.png", bgicon = "hbarmor_bgicon.png", bar = "hbarmor_bar.png" }, 0, 100, hbarmor.autohide, "%s: %d%%")
+hb.register_hudbar("armor", 0xFFFFFF, S("Armor"), { icon = "hbarmor_icon.png", bgicon = "hbarmor_bgicon.png", bar = "hbarmor_bar.png" }, 0, 100, hbarmor.autohide, S("%s: %d%%"))
 
 dofile(minetest.get_modpath("hbarmor").."/armor.lua")
 

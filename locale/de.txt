@@ -1,1 +1,2 @@
 Armor = Panzerung
+%s: %d%% = %s: %d%%
