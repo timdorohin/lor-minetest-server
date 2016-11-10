@@ -2960,13 +2960,14 @@ end
 -- protect tamed mob with rune iten
 function mobs:protect(self, clicker)
 
+	local name = clicker:get_player_name()
+
 	if self.tamed == false then
 		minetest.chat_send_player(name, S("Not tamed!"))
 		return false
 	end
 
 	local tool = clicker:get_wielded_item()
-	local name = clicker:get_player_name()
 
 	if tool:get_name() == "mobs:protector" then
 
