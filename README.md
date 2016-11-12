@@ -12,7 +12,7 @@ starting with “1.”.
 This mod adds a hunger mechanic to the game. Players get a new attribute called “satiation”:
 
 * A new player starts with 20 satiation points out of 30
-* Actions like digging, placing and walking cause exhausion, which lower the satiation
+* Actions like digging, placing and walking cause exhaustion, which lower the satiation
 * Every 800 seconds you lose 1 satiation point without doing anything
 * At 1 or 0 satiation you will suffer damage and die in case you don't eat something
 * If your satiation is 16 or higher, you will slowly regenerate health points
@@ -22,13 +22,13 @@ Important: Eating food will not directly increase your health anymore, as long a
 item is supported by this mod (see below).
 
 Careful! Some foods may be poisoned. If you eat a poisoned item, you may still get a satiation
-boost, but for a brief perioud you lose health points because of food poisoning. However,
+boost, but for a brief period you lose health points because of food poisoning. However,
 food poisoning can never kill you.
 
 ## Statbar mode
 If you use the statbar mode of the HUD Bars mod, these things are important to know:
 As with all mods using HUD Bars, the bread statbar symbols represent the rough percentage
-out of 30 satiation points, in steps of 5%, so the sybols give you an estimate of your
+out of 30 satiation points, in steps of 5%, so the symbols give you an estimate of your
 satiation. This is different from the hunger mod by BlockMen.
 
 You gain health at 5.5 symbols or more, as 5.5 symbols correspond to 16 satiation points.
