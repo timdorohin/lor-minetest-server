@@ -1,9 +1,6 @@
-minetest.after(0, function()
- if not armor.def then
-	minetest.after(2,minetest.chat_send_all,"#Better HUD: Please update your version of 3darmor")
-	HUD_SHOW_ARMOR = false
- end
-end)
+if (not armor) or (not armor.def) then
+	minetest.log("error", "[hbarmor] Outdated 3d_armor version. Please update your version of 3d_armor!")
+end
 
 function hbarmor.get_armor(player)
 	if not player or not armor.def then
@@ -32,6 +29,4 @@ function hbarmor.set_armor(player_name, ges_state, items)
 	end
 
 	hbarmor.armor[player_name] = math.min(lvl* (items * (100 / max_items)), 100)
-
-
 end
