@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.23 (14th October 2016)
+	Minetest Farming Redo Mod 1.23 (12th November 2016)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -710,3 +710,4 @@ dofile(farming.path.."/barley.lua")
 dofile(farming.path.."/donut.lua")
 dofile(farming.path.."/mapgen.lua")
 dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
+dofile(farming.path.."/lucky_block.lua")

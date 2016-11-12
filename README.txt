@@ -45,6 +45,9 @@ Changelog:
 0.1 - Fixed growing bug
 0.0 - Initial release
 
+Lucky Blocks: 10 (plus 3 for default farming items)
+
+
 License of media (textures):
 ----------------------------
 Created by PilzAdam (License: WTFPL):
