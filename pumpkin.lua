@@ -82,7 +82,10 @@ minetest.register_node("farming:jackolantern_on", {
 	},
 	light_source = default.LIGHT_MAX - 1,
 	paramtype2 = "facedir",
-	groups = {choppy = 1, oddly_breakable_by_hand = 1, flammable = 2},
+	groups = {
+		choppy = 1, oddly_breakable_by_hand = 1, flammable = 2,
+		not_in_creative_inventory = 1
+	},
 	sounds = default.node_sound_wood_defaults(),
 	drop = "farming:jackolantern",
 	on_punch = function(pos, node, puncher)
