@@ -1,5 +1,5 @@
 
--- Mobs Api (8th November 2016)
+-- Mobs Api (22nd November 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -238,9 +238,12 @@ function line_of_sight_water(self, pos1, pos2, stepsize)
 end
 
 -- particle effects
-function effect(pos, amount, texture, max_size, radius)
+function effect(pos, amount, texture, min_size, max_size, radius, gravity)
 
 	radius = radius or 2
+	min_size = min_size or 0.5
+	max_size = max_size or 1
+	gravity = gravity or -10
 
 	minetest.add_particlespawner({
 		amount = amount,
@@ -249,12 +252,12 @@ function effect(pos, amount, texture, max_size, radius)
 		maxpos = pos,
 		minvel = {x = -radius, y = -radius, z = -radius},
 		maxvel = {x = radius, y = radius, z = radius},
-		minacc = {x = -radius, y = -radius, z = -radius},
-		maxacc = {x = radius, y = radius, z = radius},
+		minacc = {x = 0, y = gravity, z = 0},
+		maxacc = {x = 0, y = gravity, z = 0},
 		minexptime = 0.1,
 		maxexptime = 1,
-		minsize = 0.5,
-		maxsize = (max_size or 1),
+		minsize = min_size,
+		maxsize = max_size,
 		texture = texture,
 	})
 end
@@ -688,7 +691,7 @@ local function breed(self)
 
 		local pos = self.object:getpos()
 
-		effect({x = pos.x, y = pos.y + 1, z = pos.z}, 4, "heart.png")
+		effect({x = pos.x, y = pos.y + 1, z = pos.z}, 8, "heart.png", 3, 4, 1, 0.1)
 
 		local objs = minetest.get_objects_inside_radius(pos, 3)
 		local num = 0
@@ -1515,7 +1518,7 @@ local do_states = function(self, dtime)
 
 						self.object:remove()
 
-						effect(pos, 15, "tnt_smoke.png", 5)
+						effect(pos, 15, "tnt_smoke.png")
 
 						return
 					end
@@ -2688,7 +2691,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 					minetest.set_node(p, {name = "air"})
 
 					if smoke > 0 then
-						effect(p, 2, "tnt_smoke.png", 5)
+						effect(p, 2, "tnt_smoke.png")
 					end
 				end
 			end
@@ -2741,8 +2744,12 @@ function mobs:register_arrow(name, def)
 			if def.tail
 			and def.tail == 1
 			and def.tail_texture then
---				effect(pos, 1, def.tail_texture, 10, 0)
 
+				effect(pos, 1, def.tail_texture,
+					def.tail_size or 5,
+					def.tail_size or 10,
+					0, 0) -- 0 radius and 0 gravity to just hover
+--[[
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.25,
@@ -2757,7 +2764,7 @@ function mobs:register_arrow(name, def)
 					minsize = def.tail_size or 5,
 					maxsize = def.tail_size or 10,
 					texture = def.tail_texture,
-				})
+				})]]
 			end
 
 			if self.hit_node then
