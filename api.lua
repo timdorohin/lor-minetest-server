@@ -2745,11 +2745,11 @@ function mobs:register_arrow(name, def)
 			and def.tail == 1
 			and def.tail_texture then
 
-				effect(pos, 1, def.tail_texture,
-					def.tail_size or 5,
-					def.tail_size or 10,
-					0, 0) -- 0 radius and 0 gravity to just hover
---[[
+--				effect(pos, 1, def.tail_texture,
+--					def.tail_size or 5,
+--					def.tail_size or 10,
+--					0, 0) -- 0 radius and 0 gravity to just hover
+
 				minetest.add_particlespawner({
 					amount = 1,
 					time = 0.25,
@@ -2764,7 +2764,7 @@ function mobs:register_arrow(name, def)
 					minsize = def.tail_size or 5,
 					maxsize = def.tail_size or 10,
 					texture = def.tail_texture,
-				})]]
+				})
 			end
 
 			if self.hit_node then
