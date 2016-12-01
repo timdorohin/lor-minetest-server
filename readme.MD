@@ -18,6 +18,8 @@ Crafts:
  - Shears are used to right-click sheep and return 1-3 wool.
  - Protection Rune lets you protect tamed mobs from harm by other players
 
+Lucky Blocks: 9
+
 
 Changelog:
 
