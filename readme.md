@@ -34,3 +34,5 @@ Warthog
 - Warthogs unlike pigs defend themselves when hit and give 1-3 raw pork when killed, they can also be right-clicked with 8x apples to tame or breed.
 
 Note: After breeding animals need to rest for 4 minutes, baby animals take 4 minutes to grow up and feeding them helps them grow quicker...
+
+Lucky Blocks: 14
