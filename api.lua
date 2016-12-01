@@ -1,5 +1,5 @@
 
--- Mobs Api (22nd November 2016)
+-- Mobs Api (1st December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2175,8 +2175,8 @@ local mob_step = function(self, dtime)
 				end
 			end
 
-			minetest.log("action",
-				S("lifetimer expired, removed @1", self.name))
+--			minetest.log("action",
+--				S("lifetimer expired, removed @1", self.name))
 
 			effect(pos, 15, "tnt_smoke.png")
 
@@ -2384,7 +2384,8 @@ minetest.register_entity(name, {
 		-- remove mob when out of range unless tamed
 		if remove_far
 		and self.remove_ok
-		and not self.tamed then
+		and not self.tamed
+		and self.lifetimer < 20000 then
 
 			--print ("REMOVED " .. self.name)
 
