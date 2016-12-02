@@ -1,5 +1,5 @@
 
--- Mobs Api (1st December 2016)
+-- Mobs Api (2nd December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -195,6 +195,19 @@ set_animation = function(self, type)
 
 			self.animation.current = "shoot"
 		end
+	elseif type == "die"
+	and self.animation.current ~= "die" then
+
+		if self.animation.die_start
+		and self.animation.die_end then
+
+			self.object:set_animation({
+				x = self.animation.die_start,
+				y = self.animation.die_end},
+				(self.animation.speed_die or self.animation.speed_normal), 0)
+
+			self.animation.current = "die"
+		end
 	end
 end
 
@@ -370,8 +383,25 @@ function check_for_death(self)
 		return true
 	end
 
-	-- default death function
-	self.object:remove()
+	-- default death function and die animation (if defined)
+	if self.animation.die_start
+	and self.animation.die_end then
+
+		self.attack = nil
+		self.v_start = false
+		self.timer = 0
+		self.blinktimer = 0
+		self.passive = true
+		self.state = "die"
+		set_velocity(self, 0)
+		set_animation(self, "die")
+
+		minetest.after(1, function(self)
+			self.object:remove()
+		end, self)
+	else
+		self.object:remove()
+	end
 
 	effect(pos, 20, "tnt_smoke.png")
 

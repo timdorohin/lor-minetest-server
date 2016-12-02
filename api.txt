@@ -115,11 +115,14 @@ This functions registers a new mob as a Minetest entity.
             'punch2_end' end frame of alt.punch animation
             'shoot_start' start frame of shoot animation
             'shoot_end' end frame of shoot animation
+            'die_start' start frame of die animation
+            'die_end' end frame of die animation
             'speed_normal' normal animation speed
             'speed_run' running animation speed
             'speed_punch' punching animation speed
             'speed_punch2' alternative punching animation speed
             'speed_shoot' shooting animation speed
+            'speed_die' die animation speed
         'replace_what' group if items to replace e.g. {"farming:wheat_8", "farming:carrot_8"}
         'replace_with' replace with what e.g. "air" or in chickens case "mobs:egg"
         'replace_rate' how random should the replace rate be (typically 10)
