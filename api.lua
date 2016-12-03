@@ -384,7 +384,8 @@ function check_for_death(self)
 	end
 
 	-- default death function and die animation (if defined)
-	if self.animation.die_start
+	if self.animation
+	and self.animation.die_start
 	and self.animation.die_end then
 
 		self.attack = nil
