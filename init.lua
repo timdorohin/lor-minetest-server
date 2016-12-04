@@ -16,17 +16,24 @@ hbarmor.player_active = {}
 -- HUD item ids
 local armor_hud = {}
 
+-- Time difference in seconds between updates to the HUD armor bar.
+-- Increase this number for slow servers.
 hbarmor.tick = 0.1
 
 -- If true, the armor bar is hidden when the player does not wear any armor
 hbarmor.autohide = true
 
 --load custom settings
-local set = io.open(minetest.get_modpath("hbarmor").."/hbarmor.conf", "r")
-if set then 
-	dofile(minetest.get_modpath("hbarmor").."/hbarmor.conf")
-	set:close()
+local set = minetest.setting_getbool("hbarmor_autohide")
+if set ~= nil then
+	hbarmor.autohide = set
 end
+
+set = minetest.setting_get("hbarmor_tick")
+if tonumber(set) ~= nil then
+	hbarmor.tick = tonumber(set)
+end
+
 
 local must_hide = function(playername, arm)
 	return ((not armor.def[playername].count or armor.def[playername].count == 0) and arm == 0)
