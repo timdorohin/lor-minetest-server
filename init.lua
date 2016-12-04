@@ -5,16 +5,13 @@ else
 	S = function ( s ) return s end
 end
 
-hbarmor = {}
+local hbarmor = {}
 
 -- HUD statbar values
 hbarmor.armor = {}
 
 -- Stores if player's HUD bar has been initialized so far.
 hbarmor.player_active = {}
-
--- HUD item ids
-local armor_hud = {}
 
 -- Time difference in seconds between updates to the HUD armor bar.
 -- Increase this number for slow servers.
