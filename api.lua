@@ -1,5 +1,5 @@
 
--- Mobs Api (2nd December 2016)
+-- Mobs Api (6th December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -40,6 +40,11 @@ local creative = minetest.setting_getbool("creative_mode")
 local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
+
+-- calculate aoc range for mob counts
+local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
+local abr = tonumber(minetest.setting_get("active_block_range"))
+local aoc_range = math.max(aosrb, abr) * 16
 
 -- pathfinding settings
 local enable_pathfinding = true
@@ -2461,7 +2466,7 @@ end -- END mobs:register_mob function
 local count_mobs = function(pos, type)
 
 	local num = 0
-	local objs = minetest.get_objects_inside_radius(pos, 32)
+	local objs = minetest.get_objects_inside_radius(pos, aoc_range)
 
 	for n = 1, #objs do
 
@@ -2469,7 +2474,8 @@ local count_mobs = function(pos, type)
 
 			local obj = objs[n]:get_luaentity()
 
-			if obj and obj.name and obj.name == type then
+			if obj and obj.name and obj.name == type then -- mob type count
+			--if obj and obj.name and obj.health ~= nil then -- all mob count
 				num = num + 1
 			end
 		end
@@ -2566,19 +2572,19 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 				return
 			end
 
+			-- are we spawning within height limits?
+			if pos.y > max_height
+			or pos.y < min_height then
+--print ("--- height limits not met", name, pos.y)
+				return
+			end
+
 			-- are light levels ok?
 			local light = minetest.get_node_light(pos)
 			if not light
 			or light > max_light
 			or light < min_light then
 --print ("--- light limits not met", name, light)
-				return
-			end
-
-			-- are we spawning within height limits?
-			if pos.y > max_height
-			or pos.y < min_height then
---print ("--- height limits not met", name, pos.y)
 				return
 			end
 
