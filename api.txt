@@ -26,7 +26,7 @@ This functions registers a new mob as a Minetest entity.
         'attacks_monsters' usually for npc's to attack monsters in area
         'group_attack' true to defend same kind of mobs from attack in area
         'attack_animals' true for monster to attack animals as well as player and npc's
-        'attack_specific' has a table of entity names that monsters can attack {"player", "mobs_animal:chicken"}
+        'specific_attack' has a table of entity names that monsters can attack {"player", "mobs_animal:chicken"}
         'hp_min' minimum health
         'hp_max' maximum health (mob health is randomly selected between both)
         'physical' same is in minetest.register_entity()
