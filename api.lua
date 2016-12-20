@@ -1,5 +1,5 @@
 
--- Mobs Api (6th December 2016)
+-- Mobs Api (16th December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -72,6 +72,7 @@ local atan = function(x)
 		return atann(x)
 	end
 end
+local atan2 = math.atan2
 
 do_attack = function(self, player)
 
@@ -362,7 +363,7 @@ function check_for_death(self)
 
 				obj:setvelocity({
 					x = random(-10, 10) / 9,
-					y = 5,
+					y = 6,
 					z = random(-10, 10) / 9,
 				})
 			end
@@ -1211,16 +1212,10 @@ local follow_flop = function(self)
 			else
 				local vec = {
 					x = p.x - s.x,
-					y = p.y - s.y,
 					z = p.z - s.z
 				}
 
-				local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
-
-				if p.x > s.x then
-					yaw = yaw + pi
-				end
-
+				local yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 				self.object:setyaw(yaw)
 
 				-- anyone but standing npc's can move along
@@ -1320,17 +1315,12 @@ local do_states = function(self, dtime)
 
 				local vec = {
 					x = lp.x - s.x,
-					y = lp.y - s.y,
 					z = lp.z - s.z
 				}
 
-				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
-
-				if lp.x > s.x then
-					yaw = yaw + pi
-				end
+				yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 			else
-				yaw = (random(0, 360) - 180) / 180 * pi
+				yaw = random() * 2 * pi
 			end
 
 			self.object:setyaw(yaw)
@@ -1373,19 +1363,36 @@ local do_states = function(self, dtime)
 			lp = minetest.find_node_near(s, 1, {"group:lava"})
 		end
 
-		-- if something then avoid
 		if lp then
 
-			local vec = {
-				x = lp.x - s.x,
-				y = lp.y - s.y,
-				z = lp.z - s.z
-			}
+			-- if mob in water or lava then look for land
+			if (self.lava_damage and minetest.registered_nodes[self.standing_in].groups.lava)
+			or (self.water_damage and minetest.registered_nodes[self.standing_in].groups.water) then
 
-			yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
+				lp = minetest.find_node_near(s, 5, {"group:soil", "group:stone",
+					"group:sand", "default:ice", "default:snowblock"})
 
-			if lp.x > s.x then
-				yaw = yaw + pi
+				-- did we find land?
+				if lp then
+
+					local vec = {
+						x = lp.x - s.x,
+						z = lp.z - s.z
+					}
+
+					yaw = atan2(vec.z, vec.x) + pi / 2 - self.rotate
+				else
+					yaw = random() * 2 * pi
+				end
+
+			else
+
+				local vec = {
+					x = lp.x - s.x,
+					z = lp.z - s.z
+				}
+
+				yaw = atan2(vec.z, vec.x) + pi / 2 - self.rotate
 			end
 
 			self.object:setyaw(yaw)
@@ -1393,7 +1400,7 @@ local do_states = function(self, dtime)
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
 
-			local yaw = (random(0, 360) - 180) / 180 * pi
+			yaw = random() * 2 * pi
 
 			self.object:setyaw(yaw)
 		end
@@ -1477,15 +1484,10 @@ local do_states = function(self, dtime)
 
 			local vec = {
 				x = p.x - s.x,
-				y = p.y - s.y,
 				z = p.z - s.z
 			}
 
-			yaw = atan(vec.z / vec.x) + pi / 2 - self.rotate
-
-			if p.x > s.x then
-				yaw = yaw + pi
-			end
+			yaw = atan2(vec.z, vec.x) - pi / 2 - self.rotate
 
 			self.object:setyaw(yaw)
 
@@ -1652,15 +1654,10 @@ local do_states = function(self, dtime)
 
 			local vec = {
 				x = p.x - s.x,
-				y = p.y - s.y,
 				z = p.z - s.z
 			}
 
-			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
-
-			if p.x > s.x then
-				yaw = yaw + pi
-			end
+			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 
 			self.object:setyaw(yaw)
 
@@ -1737,7 +1734,11 @@ local do_states = function(self, dtime)
 								})
 							end
 
-							-- punch player
+							-- punch player (or what player is attached to)
+							local attached = self.attack:get_attach()
+							if attached then
+								self.attack = attached
+							end
 							self.attack:punch(self.object, 1.0, {
 								full_punch_interval = 1.0,
 								damage_groups = {fleshy = self.damage}
@@ -1769,11 +1770,7 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
-
-			if p.x > s.x then
-				yaw = yaw + pi
-			end
+			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 
 			self.object:setyaw(yaw)
 
@@ -1887,12 +1884,12 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
--- is mob protected?
-if self.protected and hitter:is_player()
-and minetest.is_protected(self.object:getpos(), hitter:get_player_name()) then
-	minetest.chat_send_player(hitter:get_player_name(), "Mob has been protected!")
-	return
-end
+	-- is mob protected?
+	if self.protected and hitter:is_player()
+	and minetest.is_protected(self.object:getpos(), hitter:get_player_name()) then
+		minetest.chat_send_player(hitter:get_player_name(), "Mob has been protected!")
+		return
+	end
 
 
 	-- weapon wear
