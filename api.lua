@@ -1,5 +1,5 @@
 
--- Mobs Api (16th December 2016)
+-- Mobs Api (26th December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1720,8 +1720,8 @@ local do_states = function(self, dtime)
 						local p2 = p
 						local s2 = s
 
-						p2.y = p2.y + 1.5
-						s2.y = s2.y + 1.5
+						p2.y = p2.y + .5--1.5
+						s2.y = s2.y + .5--1.5
 
 						if line_of_sight_water(self, p2, s2) == true then
 
