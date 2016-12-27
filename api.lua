@@ -1,5 +1,5 @@
 
--- Mobs Api (26th December 2016)
+-- Mobs Api (27th December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -40,6 +40,7 @@ local creative = minetest.setting_getbool("creative_mode")
 local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
+local show_health = minetest.setting_getbool("mob_show_health") ~= false
 
 -- calculate aoc range for mob counts
 local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
@@ -337,13 +338,13 @@ function check_for_death(self)
 		if not self.nametag2 then
 			self.nametag2 = self.nametag or ""
 		end
-
+if show_health then
 		self.htimer = 2
 
 		self.nametag = "health: " .. self.health .. " of " .. self.hp_max
 
 		update_tag(self)
-
+end
 		return false
 	end
 
