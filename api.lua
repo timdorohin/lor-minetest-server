@@ -1,5 +1,5 @@
 
--- Mobs Api (27th December 2016)
+-- Mobs Api (29th December 2016)
 
 mobs = {}
 mobs.mod = "redo"
@@ -516,6 +516,12 @@ do_env_damage = function(self)
 	pos.y = pos.y + self.collisionbox[2] + 0.1 -- foot level
 	self.standing_in = node_ok(pos, "air").name
 	--print ("standing in " .. self.standing_in)
+
+	-- don't fall when on ignore, just stand still
+	if self.standing_in == "ignore" then
+		self.object:setvelocity({x = 0, y = 0, z = 0})
+		--print ("--- stopping on ignore")
+	end
 
 	if self.water_damage ~= 0
 	or self.lava_damage ~= 0 then
