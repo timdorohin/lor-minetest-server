@@ -18,6 +18,10 @@ local function node_is(pos)
 		return "air"
 	end
 
+	if minetest.get_item_group(node.name, "lava") ~= 0 then
+		return "lava"
+	end
+
 	if minetest.get_item_group(node.name, "liquid") ~= 0 then
 		return "liquid"
 	end
@@ -155,7 +159,7 @@ function mobs.detach(player, offset)
 end
 
 
-function mobs.drive(entity, moving_anim, stand_anim, can_fly)
+function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 
 	local rot_steer, rot_view = math.pi/2, 0
 
@@ -283,7 +287,27 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly)
 			new_acce.y = 0
 		end
 
-	elseif ni == "liquid" then
+	elseif ni == "liquid" or ni == "lava" then
+
+		if ni == "lava" and entity.lava_damage ~= 0 then
+
+			entity.lava_counter = (entity.lava_counter or 0) + dtime
+
+			if entity.lava_counter > 1 then
+
+				minetest.sound_play("default_punch", {
+					object = entity.object,
+					max_hear_distance = 5
+				})
+
+				entity.object:punch(entity.object, 1.0, {
+					full_punch_interval = 1.0,
+					damage_groups = {fleshy = entity.lava_damage}
+				}, nil)
+
+				entity.lava_counter = 0
+			end
+		end
 
 		if entity.terrain_type == 2
 		or entity.terrain_type == 3 then
@@ -309,7 +333,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly)
 				end
 			end
 		else
-			v = v*0.25
+			v = v * 0.25
 		end
 --	elseif ni == "walkable" then
 --		v = 0

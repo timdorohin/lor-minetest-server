@@ -281,7 +281,7 @@ This function will detach the player currently riding a mob to an offset positio
     'offset' position table containing offset values
 
 
-mobs:drive(self, move_animation, stand_animation, can_fly)
+mobs:drive(self, move_animation, stand_animation, can_fly, dtime)
 
 This function allows an attached player to move the mob around and animate it at same time.
 
@@ -289,6 +289,7 @@ This function allows an attached player to move the mob around and animate it at
     'move_animation' string containing movement animation e.g. "walk"
     'stand_animation' string containing standing animation e.g. "stand"
     'can_fly' if true then jump and sneak controls will allow mob to fly up and down
+    'dtime' tick time used inside drive function
 
 
 Certain variables need to be set before using the above functions:
@@ -356,7 +357,7 @@ mobs:register_mob("mob_horse:horse", {
 
 		-- when riding mob call drive function to control
 		if self.driver then
-			mobs.drive(self, "walk", "stand", false)
+			mobs.drive(self, "walk", "stand", false, dtime)
 			return false -- skip rest of mob functions
 		end
 
