@@ -1,5 +1,5 @@
 
-MOB API (27th December 2016)
+MOB API (29th December 2016)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -260,3 +260,149 @@ Useful Internal Variables
     'self.gotten' true when sheep have been sheared or cows have been milked, a toggle switch which can be used for many functions
     'self.child' true when mob is currently a child (when two mobs have bred and current mob is the outcome)
     'self.hornytimer' background timer that controls breeding functions and mob childhood timings
+
+
+Mobs can now be ridden by players and the following shows the functions and usage:
+
+
+mobs:attach(self, player)
+
+This function attaches a player to the mob so it can be ridden.
+
+    'self' mob information
+    'player' player information
+
+
+mobs:detach(player, offset)
+
+This function will detach the player currently riding a mob to an offset position.
+
+    'player' player information
+    'offset' position table containing offset values
+
+
+mobs:drive(self, move_animation, stand_animation, can_fly)
+
+This function allows an attached player to move the mob around and animate it at same time.
+
+    'self' mob information
+    'move_animation' string containing movement animation e.g. "walk"
+    'stand_animation' string containing standing animation e.g. "stand"
+    'can_fly' if true then jump and sneak controls will allow mob to fly up and down
+
+
+Certain variables need to be set before using the above functions:
+
+    'self.v2' toggle switch
+    'self.max_speed_forward' max speed mob can move forward
+    'self.max_speed_reverse' max speed mob can move backwards
+    'self.accel' acceleration speed
+    'self.terrain_type' integer containing terrain mob can walk on (1 = water, 2 or 3 = land)
+    'self.driver_attach_at' position offset for attaching player to mob
+    'self.driver_eye_offset' position offset for attached player view
+
+
+Here is an example mob to show how the above functions work:
+
+
+-- rideable horse
+mobs:register_mob("mob_horse:horse", {
+	type = "animal",
+	visual = "mesh",
+	visual_size = {x = 1.20, y = 1.20},
+	mesh = "mobs_horse.x",
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.25, 0.4},
+	animation = { 
+		speed_normal = 15,  speed_run = 30,
+		stand_start = 25,   stand_end = 75,
+		walk_start = 75,    walk_end = 100,
+		run_start = 75,     run_end = 100,
+	},
+	textures = {
+		{"mobs_horse.png"},
+		{"mobs_horsepeg.png"},
+		{"mobs_horseara.png"}
+	},
+	fear_height = 3,
+	runaway = true,
+	fly = false,
+	walk_chance = 60,
+	view_range = 5,
+	follow = {"farming:wheat"},
+	passive = true,
+	hp_min = 12,
+	hp_max = 16,
+	armor = 200,
+	lava_damage = 5,
+	fall_damage = 5,
+	water_damage = 1,
+	makes_footstep_sound = true,
+	drops = {
+		{name = "mobs:meat_raw", chance = 1, min = 2, max = 3}
+	},
+
+	-- custom function uses self.v2 toggle to set ride variables
+	do_custom = function(self, dtime)
+
+		if not self.v2 then
+			self.v2 = 0
+			self.max_speed_forward = 6
+			self.max_speed_reverse = 2
+			self.accel = 6
+			self.terrain_type = 3
+			self.driver_attach_at = {x = 0, y = 20, z = -2}
+			self.driver_eye_offset = {x = 0, y = 3, z = 0}
+		end
+
+		-- when riding mob call drive function to control
+		if self.driver then
+			mobs.drive(self, "walk", "stand", false)
+			return false -- skip rest of mob functions
+		end
+
+		return true
+	end,
+
+	on_rightclick = function(self, clicker)
+
+			-- check for actual player
+			if not clicker or not clicker:is_player() then
+				return
+			end
+
+			-- used to feed, tame and heal mob
+			if mobs:feed_tame(self, clicker, 10, true, true) then
+				return
+			end
+
+			-- check if mob has been tamed and player is owner
+			if self.tamed and self.owner == clicker:get_player_name() then
+
+				local inv = clicker:get_inventory()
+
+				-- detach player when riding mob (add saddle to inventory)
+				if self.driver and clicker == self.driver then
+
+					mobs.detach(clicker, {x = 1, y = 0, z = 1})
+
+					if inv:room_for_item("main", "mobs:saddle") then
+						inv:add_item("main", "mobs:saddle")
+					else
+						minetest.add_item(clicker.getpos(), "mobs:saddle")
+					end
+
+				-- attach player to mob if not riding (take saddle from inventory)
+				elseif not self.driver then
+
+					if clicker:get_wielded_item():get_name() == "mobs:saddle" then
+
+						self.object:set_properties({stepheight = 1.1})
+						mobs.attach(self, clicker)
+						inv:remove_item("main", "mobs:saddle")
+					end
+				end
+			end
+
+			mobs:capture_mob(self, clicker, 0, 0, 80, false, nil)
+		end
+})

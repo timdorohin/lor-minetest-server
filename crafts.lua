@@ -98,3 +98,18 @@ minetest.register_craft({
 		{"default:stone", "default:stone", "default:stone"},
 	}
 })
+
+-- saddle
+minetest.register_craftitem("mobs:saddle", {
+	description = "Saddle",
+	inventory_image = "mobs_saddle.png"
+})
+
+minetest.register_craft({
+	output = "mobs:saddle",
+	recipe = {
+		{"mobs:leather", "mobs:leather", "mobs:leather"},
+		{"mobs:leather", "default:steel_ingot", "mobs:leather"},
+		{"mobs:leather", "default:steel_ingot", "mobs:leather"},
+	}
+})
