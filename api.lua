@@ -1,5 +1,5 @@
 
--- Mobs Api (5th January 2017)
+-- Mobs Api (6th January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1272,17 +1272,13 @@ local do_states = function(self, dtime)
 
 			local lp = nil
 			local s = self.object:getpos()
+			local objs = minetest.get_objects_inside_radius(s, 3)
 
-			if self.type == "npc" then
+			for n = 1, #objs do
 
-				local objs = minetest.get_objects_inside_radius(s, 3)
-
-				for n = 1, #objs do
-
-					if objs[n]:is_player() then
-						lp = objs[n]:getpos()
-						break
-					end
+				if objs[n]:is_player() then
+					lp = objs[n]:getpos()
+					break
 				end
 			end
 
