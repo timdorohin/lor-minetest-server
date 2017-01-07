@@ -1,5 +1,5 @@
 
--- Mobs Api (6th January 2017)
+-- Mobs Api (7th January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -64,6 +64,7 @@ local abs = math.abs
 local min = math.min
 local max = math.max
 local atann = math.atan
+local atan2 = math.atan2
 local random = math.random
 local floor = math.floor
 local atan = function(x)
@@ -76,7 +77,6 @@ local atan = function(x)
 		return atann(x)
 	end
 end
-local atan2 = math.atan2
 
 
 mob_sound = function(self, sound)
@@ -106,14 +106,23 @@ do_attack = function(self, player)
 end
 
 
+set_yaw = function(self, yaw)
+
+	if yaw ~= yaw then
+		return
+	end
+
+	self.yaw = yaw
+	self.object:setyaw(yaw)
+end
+
+
 set_velocity = function(self, v)
 
-	local yaw = self.object:getyaw() + self.rotate or 0
-
 	self.object:setvelocity({
-		x = sin(yaw) * -v,
+		x = sin(self.yaw) * -v,
 		y = self.object:getvelocity().y,
-		z = cos(yaw) * v
+		z = cos(self.yaw) * v
 	})
 end
 
@@ -320,7 +329,8 @@ function check_for_death(self)
 		if show_health then
 
 			self.htimer = 2
-			self.nametag = "health: " .. self.health .. " of " .. self.hp_max
+			--self.nametag = "health: " .. self.health .. " of " .. self.hp_max
+			self.nametag = "♥ " .. self.health .. " / " .. self.hp_max
 
 			update_tag(self)
 		end
@@ -376,7 +386,7 @@ function check_for_death(self)
 		set_velocity(self, 0)
 		set_animation(self, "die")
 
-		minetest.after(1, function(self)
+		minetest.after(2, function(self)
 			self.object:remove()
 		end, self)
 	else
@@ -412,9 +422,8 @@ local function is_at_cliff(self)
 		return false
 	end
 
-	local yaw = self.object:getyaw()
-	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_x = -sin(self.yaw) * (self.collisionbox[4] + 0.5)
+	local dir_z = cos(self.yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:getpos()
 	local ypos = pos.y + self.collisionbox[2] -- just above floor
 
@@ -512,7 +521,7 @@ do_env_damage = function(self)
 
 			self.health = self.health - self.water_damage
 
-			effect(pos, 5, "bubble.png")
+			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
 		end
 
 		-- lava or fire
@@ -523,7 +532,7 @@ do_env_damage = function(self)
 
 			self.health = self.health - self.lava_damage
 
-			effect(pos, 5, "fire_basic_flame.png")
+			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
 		end
 	end
 
@@ -553,9 +562,8 @@ do_jump = function(self)
 	end
 
 	-- where is front
-	local yaw = self.object:getyaw()
-	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
-	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
+	local dir_x = -sin(self.yaw) * (self.collisionbox[4] + 0.5)
+	local dir_z = cos(self.yaw) * (self.collisionbox[4] + 0.5)
 
 	-- what is in front of mob?
 	local nod = node_ok({
@@ -614,17 +622,11 @@ function entity_physics(pos, radius)
 		local damage = floor((4 / dist) * radius)
 		local ent = objs[n]:get_luaentity()
 
-		if objs[n]:is_player() then
-			objs[n]:set_hp(objs[n]:get_hp() - damage)
-
-		else --if ent.health then
-
-			objs[n]:punch(objs[n], 1.0, {
-				full_punch_interval = 1.0,
-				damage_groups = {fleshy = damage},
-			}, nil)
-
-		end
+		-- punches work on entities AND players
+		objs[n]:punch(objs[n], 1.0, {
+			full_punch_interval = 1.0,
+			damage_groups = {fleshy = damage},
+		}, nil)
 	end
 end
 
@@ -934,7 +936,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 				else -- dig 2 blocks to make door toward player direction
 
-					local yaw1 = self.object:getyaw() + pi / 2
+					local yaw1 = self.yaw + pi / 2
 
 					local p1 = {
 						x = s.x + cos(yaw1),
@@ -1095,8 +1097,7 @@ local npc_attack = function(self)
 
 		obj = objs[n]:get_luaentity()
 
-		if obj
-		and obj.type == "monster" then
+		if obj and obj.type == "monster" then
 
 			p = obj.object:getpos()
 
@@ -1190,7 +1191,8 @@ local follow_flop = function(self)
 				}
 
 				local yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
-				self.object:setyaw(yaw)
+
+				set_yaw(self, yaw)
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
@@ -1264,7 +1266,7 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
-	local yaw = 0
+	local yaw = self.yaw -- 0
 
 	if self.state == "stand" then
 
@@ -1295,7 +1297,7 @@ local do_states = function(self, dtime)
 				yaw = random() * 2 * pi
 			end
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 		end
 
 		set_velocity(self, 0)
@@ -1338,8 +1340,10 @@ local do_states = function(self, dtime)
 		if lp then
 
 			-- if mob in water or lava then look for land
-			if (self.lava_damage and minetest.registered_nodes[self.standing_in].groups.lava)
-			or (self.water_damage and minetest.registered_nodes[self.standing_in].groups.water) then
+			if (self.lava_damage
+				and minetest.registered_nodes[self.standing_in].groups.lava)
+			or (self.water_damage
+				and minetest.registered_nodes[self.standing_in].groups.water) then
 
 				lp = minetest.find_node_near(s, 5, {"group:soil", "group:stone",
 					"group:sand", "default:ice", "default:snowblock"})
@@ -1367,14 +1371,14 @@ local do_states = function(self, dtime)
 				yaw = atan2(vec.z, vec.x) + pi / 2 - self.rotate
 			end
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
 
 			yaw = random() * 2 * pi
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 		end
 
 		-- stand for great fall in front
@@ -1461,7 +1465,7 @@ local do_states = function(self, dtime)
 
 			yaw = atan2(vec.z, vec.x) - pi / 2 - self.rotate
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 
 			if dist > self.reach then
 
@@ -1624,7 +1628,7 @@ local do_states = function(self, dtime)
 
 			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1731,7 +1735,7 @@ local do_states = function(self, dtime)
 
 			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
 
-			self.object:setyaw(yaw)
+			set_yaw(self, yaw)
 
 			set_velocity(self, 0)
 
@@ -1818,7 +1822,7 @@ local falling = function(self, pos)
 
 				self.health = self.health - floor(d - 5)
 
-				effect(pos, 5, "tnt_smoke.png")
+				effect(pos, 5, "tnt_smoke.png", 1, 2, 2, nil)
 
 				if check_for_death(self) then
 					return
@@ -1932,7 +1936,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 			pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
 
-			effect(pos, self.blood_amount, self.blood_texture)
+			effect(pos, self.blood_amount, self.blood_texture, nil, nil, 1, nil)
 		end
 
 		-- do damage
@@ -1998,7 +2002,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			yaw = yaw + pi
 		end
 
-		self.object:setyaw(yaw)
+		set_yaw(self, yaw)
 		self.state = "runaway"
 		self.runaway_timer = 0
 		self.following = nil
@@ -2121,7 +2125,6 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	self.object:set_armor_groups({immortal = 1, fleshy = self.armor})
 	self.old_y = self.object:getpos().y
 	self.old_health = self.health
-	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
 	self.sounds.distance = self.sounds.distance or 10
 	self.textures = textures
 	self.mesh = mesh
@@ -2131,6 +2134,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 
 	-- set anything changed above
 	self.object:set_properties(self)
+	set_yaw(self, ((random(0, 360) - 180) / 180 * pi))
 	update_tag(self)
 end
 
@@ -2138,7 +2142,7 @@ end
 local mob_step = function(self, dtime)
 
 	local pos = self.object:getpos()
-	local yaw = self.object:getyaw() or 0
+	local yaw = self.yaw
 
 	-- when lifetimer expires remove mob (except npc and tamed)
 	if self.type ~= "npc"
@@ -2167,7 +2171,7 @@ local mob_step = function(self, dtime)
 --			minetest.log("action",
 --				S("lifetimer expired, removed @1", self.name))
 
-			effect(pos, 15, "tnt_smoke.png")
+			effect(pos, 15, "tnt_smoke.png", 2, 4, 2, 0)
 
 			self.object:remove()
 
@@ -2314,7 +2318,6 @@ minetest.register_entity(name, {
 	walk_chance = def.walk_chance or 50,
 	attacks_monsters = def.attacks_monsters or false,
 	group_attack = def.group_attack or false,
-	--fov = def.fov or 120,
 	passive = def.passive or false,
 	recovery_time = def.recovery_time or 0.5,
 	knock_back = def.knock_back or 3,
