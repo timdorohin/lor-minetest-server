@@ -142,8 +142,7 @@ set_anim = function(self, anim_start, anim_end, anim_speed, anim_name)
 	end
 
 	self.object:set_animation(
-		{x = anim_start, y = anim_end},
-		anim_speed or 15, 0)
+		{x = anim_start, y = anim_end}, anim_speed or 15, 0)
 
 	self.animation.current = anim_name
 end
@@ -208,7 +207,7 @@ set_animation = function(self, type)
 	end
 end
 
--- Get distance
+-- get distance
 local get_distance = function(a, b)
 
 	local x, y, z = a.x - b.x, a.y - b.y, a.z - b.z
@@ -299,7 +298,7 @@ local function flight_check(self, pos_w)
 end
 
 
--- check line of sight for walkers and swimmers alike
+-- check line of sight for walkers and swimmers alike (deprecated)
 function line_of_sight_water(self, pos1, pos2, stepsize)
 
 	local s, pos_w = minetest.line_of_sight(pos1, pos2, stepsize)
@@ -607,10 +606,10 @@ do_env_damage = function(self)
 			self.health = self.health - self.water_damage
 
 			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
-		end
+--		end
 
 		-- lava or fire
-		if self.lava_damage ~= 0
+		elseif self.lava_damage ~= 0
 		and (nodef.groups.lava
 		or self.standing_in == "fire:basic_flame"
 		or self.standing_in == "fire:permanent_flame") then
@@ -618,6 +617,15 @@ do_env_damage = function(self)
 			self.health = self.health - self.lava_damage
 
 			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
+
+		-- damage_per_second node check
+		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
+
+			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
+
+			self.health = self.health - dps
+
+			effect(pos, 5, "tnt_smoke.png")
 		end
 	end
 
