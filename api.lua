@@ -112,7 +112,8 @@ set_yaw = function(self, yaw)
 		return
 	end
 
-	self.yaw = yaw - self.rotate
+	--self.yaw = yaw - self.rotate
+	self.yaw = yaw
 	self.object:setyaw(self.yaw)
 end
 
@@ -2372,6 +2373,9 @@ function mobs:register_mob(name, def)
 	mobs.spawning_mobs[name] = true
 
 minetest.register_entity(name, {
+
+automatic_face_movement_dir = def.rotate and math.rad(def.rotate) or false,
+automatic_face_movement_max_rotation_per_sec = -1,
 
 	stepheight = def.stepheight or 0.6,
 	name = name,
