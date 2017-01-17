@@ -112,8 +112,8 @@ set_yaw = function(self, yaw)
 		return
 	end
 
-	self.yaw = yaw
-	self.object:setyaw(yaw)
+	self.yaw = yaw - self.rotate
+	self.object:setyaw(self.yaw)
 end
 
 
@@ -1284,7 +1284,7 @@ local follow_flop = function(self)
 					z = p.z - s.z
 				}
 
-				local yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
+				local yaw = atan2(vec.z, vec.x) - pi / 2
 
 				set_yaw(self, yaw)
 
@@ -1389,7 +1389,7 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
-				yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
+				yaw = atan2(vec.z, vec.x) - pi / 2
 			else
 				yaw = random() * 2 * pi
 			end
@@ -1453,7 +1453,7 @@ local do_states = function(self, dtime)
 						z = lp.z - s.z
 					}
 
-					yaw = atan2(vec.z, vec.x) + pi / 2 - self.rotate
+					yaw = atan2(vec.z, vec.x) + pi / 2
 				else
 					yaw = random() * 2 * pi
 				end
@@ -1465,7 +1465,7 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
-				yaw = atan2(vec.z, vec.x) + pi / 2 - self.rotate
+				yaw = atan2(vec.z, vec.x) + pi / 2
 			end
 
 			set_yaw(self, yaw)
@@ -1560,7 +1560,7 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			yaw = atan2(vec.z, vec.x) - pi / 2 - self.rotate
+			yaw = atan2(vec.z, vec.x) - pi / 2
 
 			set_yaw(self, yaw)
 
@@ -1724,7 +1724,7 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
+			yaw = atan2(vec.z, vec.x) - pi / 2
 
 			set_yaw(self, yaw)
 
@@ -1832,7 +1832,7 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
-			yaw = (atan2(vec.z, vec.x) - pi / 2) - self.rotate
+			yaw = atan2(vec.z, vec.x) - pi / 2
 
 			set_yaw(self, yaw)
 
@@ -2095,7 +2095,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			z = lp.z - s.z
 		}
 
-		local yaw = atan(vec.z / vec.x) + 3 * pi / 2 - self.rotate
+		local yaw = atan(vec.z / vec.x) + 3 * pi / 2
 
 		if lp.x > s.x then
 			yaw = yaw + pi
@@ -2233,7 +2233,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 
 	-- set anything changed above
 	self.object:set_properties(self)
-	set_yaw(self, ((random(0, 360) - 180) / 180 * pi))
+	set_yaw(self, random() * 2 * pi)
 	update_tag(self)
 end
 
