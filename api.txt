@@ -301,6 +301,7 @@ Certain variables need to be set before using the above functions:
     'self.terrain_type' integer containing terrain mob can walk on (1 = water, 2 or 3 = land)
     'self.driver_attach_at' position offset for attaching player to mob
     'self.driver_eye_offset' position offset for attached player view
+    'self.driver_scale' sets driver scale for mobs larger than {x=1, y=1}
 
 
 Here is an example mob to show how the above functions work:
@@ -357,6 +358,7 @@ mobs:register_mob("mob_horse:horse", {
 			self.terrain_type = 3
 			self.driver_attach_at = {x = 0, y = 20, z = -2}
 			self.driver_eye_offset = {x = 0, y = 3, z = 0}
+			self.driver_scale = {x = 1, y = 1}
 		end
 
 		-- if driver present allow control of horse
