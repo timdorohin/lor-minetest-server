@@ -1,5 +1,5 @@
 
--- Mobs Api (17th January 2017)
+-- Mobs Api (19th January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -112,8 +112,7 @@ set_yaw = function(self, yaw)
 		return
 	end
 
-	--self.yaw = yaw - self.rotate
-	self.yaw = yaw
+	self.yaw = yaw + self.rotate
 	self.object:setyaw(self.yaw)
 end
 
