@@ -135,6 +135,7 @@ function mobs.attach(entity, player)
 	player:set_attach(entity.object, "", attach_at, entity.player_rotation)
 	default.player_attached[player:get_player_name()] = true
 	player:set_eye_offset(eye_offset, {x = 0, y = 0, z = 0})
+	player:set_properties({visual_size = {x=1, y=1}})
 
 	minetest.after(0.2, function()
 		default.player_set_animation(player, "sit" , 30)
