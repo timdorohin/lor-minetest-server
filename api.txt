@@ -194,6 +194,8 @@ This function registers a arrow for mobs with the attack type shoot.
         'tail' when set to 1 adds a trail or tail to mob arrows
         'tail_texture' texture string used for above effect
         'tail_size' has size for above texture (defaults to between 5 and 10)
+        'expire' contains float value for how long tail appears for (defaults to 0.25)
+        'glow' has value for how brightly tail glows 1 to 10 (default is 0, no glow)
     'on_step' is a custom function when arrow is active, nil for default.
 
 

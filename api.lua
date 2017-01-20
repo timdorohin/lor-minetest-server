@@ -1,5 +1,5 @@
 
--- Mobs Api (19th January 2017)
+-- Mobs Api (20th January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1893,19 +1893,21 @@ local do_states = function(self, dtime)
 				p.y = p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 
 				local obj = minetest.add_entity(p, self.arrow)
-				local ent = obj:get_luaentity()
-				local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
-				local v = ent.velocity or 1 -- or set to default
-				ent.switch = 1
-				ent.owner_id = tostring(self.object) -- add unique owner id to arrow
+				if obj then
+					local ent = obj:get_luaentity()
+					local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
+					local v = ent.velocity or 1 -- or set to default
+					ent.switch = 1
+					ent.owner_id = tostring(self.object) -- add unique owner id to arrow
 
-				 -- offset makes shoot aim accurate
-				vec.y = vec.y + self.shoot_offset
-				vec.x = vec.x * (v / amount)
-				vec.y = vec.y * (v / amount)
-				vec.z = vec.z * (v / amount)
+					 -- offset makes shoot aim accurate
+					vec.y = vec.y + self.shoot_offset
+					vec.x = vec.x * (v / amount)
+					vec.y = vec.y * (v / amount)
+					vec.z = vec.z * (v / amount)
 
-				obj:setvelocity(vec)
+					obj:setvelocity(vec)
+				end
 			end
 		end
 	end
@@ -2886,25 +2888,15 @@ function mobs:register_arrow(name, def)
 			and def.tail == 1
 			and def.tail_texture then
 
---				effect(pos, 1, def.tail_texture,
---					def.tail_size or 5,
---					def.tail_size or 10,
---					0, 0) -- 0 radius and 0 gravity to just hover
-
-				minetest.add_particlespawner({
-					amount = 1,
-					time = 0.25,
-					minpos = pos,
-					maxpos = pos,
-					minvel = {x = 0, y = 0, z = 0},
-					maxvel = {x = 0, y = 0, z = 0},
-					minacc = {x = 0, y = 0, z = 0},
-					maxacc = {x = 0, y = 0, z = 0},
-					minexptime = 0.1,
-					maxexptime = 1,
-					minsize = def.tail_size or 5,
-					maxsize = def.tail_size or 10,
+				minetest.add_particle({
+					pos = pos,
+					velocity = {x = 0, y = 0, z = 0},
+					acceleration = {x = 0, y = 0, z = 0},
+					expirationtime = def.expire or 0.25,
+					collisiondetection = false,
 					texture = def.tail_texture,
+					size = def.tail_size or 5,
+					glow = def.glow or 0,
 				})
 			end
 
