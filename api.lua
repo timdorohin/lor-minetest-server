@@ -1893,8 +1893,9 @@ local do_states = function(self, dtime)
 				p.y = p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 
 				local obj = minetest.add_entity(p, self.arrow)
-				if obj then
-					local ent = obj:get_luaentity()
+				local ent = obj:get_luaentity()
+
+				if ent then
 					local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
 					local v = ent.velocity or 1 -- or set to default
 					ent.switch = 1
@@ -2989,6 +2990,13 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		on_place = function(itemstack, placer, pointed_thing)
 
 			local pos = pointed_thing.above
+
+			-- am I clicking on something with existing on_rightclick function?
+			local under = minetest.get_node(pointed_thing.under)
+			local def = minetest.registered_nodes[under.name]
+			if def and def.on_rightclick then
+				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
+			end
 
 			if pos
 			and within_limits(pos, 0)
