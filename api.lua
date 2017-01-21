@@ -1,5 +1,5 @@
 
--- Mobs Api (20th January 2017)
+-- Mobs Api (21st January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -7,24 +7,18 @@ mobs.mod = "redo"
 
 -- Intllib
 local S
+
 if minetest.get_modpath("intllib") then
 	S = intllib.Getter()
 else
-	S = function(s, a, ...)
-		if a == nil then
-			return s
-		end
-		a = {a, ...}
-		return s:gsub("(@?)@(%(?)(%d+)(%)?)",
-			function(e, o, n, c)
-				if e == "" then
-					return a[tonumber(n)] .. (o == "" and c or "")
-				else
-					return "@" .. o .. n .. c
-				end
-			end)
+	S = function(s, a, ...) a = {a, ...}
+		return s:gsub("@(%d+)", function(n)
+			return a[tonumber(n)]
+		end)
 	end
+
 end
+
 mobs.intllib = S
 
 
@@ -2868,6 +2862,9 @@ function mobs:register_arrow(name, def)
 		timer = 0,
 		switch = 0,
 		owner_id = def.owner_id,
+		rotate = def.rotate,
+		automatic_face_movement_dir = def.rotate
+			and (def.rotate - (pi / 180)) or false,
 
 		on_step = def.on_step or function(self, dtime)
 
@@ -3027,6 +3024,56 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			return itemstack
 		end,
 	})
+
+	-- spawn egg containing mob information
+	minetest.register_craftitem(mob .. "_set", {
+
+		description = desc .. " (set)",
+		inventory_image = invimg,
+		groups = {not_in_creative_inventory = 1},
+		stack_max = 1,
+
+		on_place = function(itemstack, placer, pointed_thing)
+
+			local pos = pointed_thing.above
+
+			-- am I clicking on something with existing on_rightclick function?
+			local under = minetest.get_node(pointed_thing.under)
+			local def = minetest.registered_nodes[under.name]
+			if def and def.on_rightclick then
+				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
+			end
+
+			if pos
+			and within_limits(pos, 0)
+			and not minetest.is_protected(pos, placer:get_player_name()) then
+
+				pos.y = pos.y + 1
+
+				local data = itemstack:get_metadata()
+				local mob = minetest.add_entity(pos, mob, data)
+				local ent = mob:get_luaentity()
+
+				if not ent then
+					mob:remove()
+					return
+				end
+
+				if ent.type ~= "monster" then
+					-- set owner and tame if not monster
+					ent.owner = placer:get_player_name()
+					ent.tamed = true
+				end
+
+				-- if not in creative then take item
+				if not creative then
+					itemstack:take_item()
+				end
+			end
+
+			return itemstack
+		end,
+	})
 end
 
 
@@ -3097,7 +3144,27 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 			-- calculate chance.. add to inventory if successful?
 			if random(1, 100) <= chance then
 
-				clicker:get_inventory():add_item("main", mobname)
+-- add special mob egg containing all mob information
+local new_stack = ItemStack(mobname .. "_set")
+local tmp = {}
+for _,stat in pairs(self) do
+	local t = type(stat)
+	if  t ~= 'function'
+	and t ~= 'nil'
+	and t ~= 'userdata' then
+		tmp[_] = self[_]
+	end
+end
+local data_str = minetest.serialize(tmp)
+local inv = clicker:get_inventory()
+new_stack:set_metadata(data_str)
+if inv:room_for_item("main", new_stack) then
+	inv:add_item("main", new_stack)
+else
+	minetest.add_item(clicker:getpos(), new_stack)
+end
+
+--				clicker:get_inventory():add_item("main", mobname)
 
 				self.object:remove()
 			else

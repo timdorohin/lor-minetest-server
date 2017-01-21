@@ -196,6 +196,7 @@ This function registers a arrow for mobs with the attack type shoot.
         'tail_size' has size for above texture (defaults to between 5 and 10)
         'expire' contains float value for how long tail appears for (defaults to 0.25)
         'glow' has value for how brightly tail glows 1 to 10 (default is 0, no glow)
+        'rotate' integer value in degrees to rotate arrow
     'on_step' is a custom function when arrow is active, nil for default.
 
 
