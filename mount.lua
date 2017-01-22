@@ -196,7 +196,10 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 		end
 
 		--entity.object:setyaw(entity.driver:get_look_yaw() - rot_steer)
-		entity.object:setyaw(entity.driver:get_look_horizontal())-- - rot_steer)
+--		entity.object:setyaw(entity.driver:get_look_horizontal())-- - rot_steer)
+
+		-- fix mob rotation
+		entity.object:setyaw(entity.driver:get_look_horizontal() - entity.rotate)
 
 		if can_fly then
 
