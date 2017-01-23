@@ -148,6 +148,7 @@ end
 function mobs.detach(player, offset)
 
 	force_detach(player)
+
 	default.player_set_animation(player, "stand" , 30)
 
 	local pos = player:getpos()

@@ -1,5 +1,5 @@
 
--- Mobs Api (21st January 2017)
+-- Mobs Api (23rd January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -422,6 +422,7 @@ function check_for_death(self)
 	-- drop items when dead
 	local obj
 	local pos = self.object:getpos()
+	self.drops = self.drops or {} -- error check
 
 	for n = 1, #self.drops do
 
