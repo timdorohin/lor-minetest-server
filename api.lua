@@ -1,5 +1,5 @@
 
--- Mobs Api (23rd January 2017)
+-- Mobs Api (31st January 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -101,7 +101,7 @@ end
 set_yaw = function(self, yaw)
 
 	if yaw ~= yaw then
-print ("--- yaw nan")
+--		print ("--- yaw nan")
 		return
 	end
 
@@ -201,6 +201,13 @@ set_animation = function(self, type)
 			self.animation.die_start,
 			self.animation.die_end,
 			self.animation.speed_die, "die")
+
+	elseif type == "fly" and self.animation.current ~= "fly" then
+
+		set_anim(self,
+			self.animation.fly_start,
+			self.animation.fly_end,
+			self.animation.speed_fly, "fly")
 	end
 end
 
@@ -276,7 +283,8 @@ end
 -- are we flying in what we are suppose to? (taikedz)
 local function flight_check(self, pos_w)
 
-	local nod = minetest.get_node(pos_w).name
+--	local nod = minetest.get_node(pos_w).name
+	local nod = self.standing_in
 
 	if type(self.fly_in) == "string"
 	and ( nod == self.fly_in or nod == self.fly_in:gsub("_source", "_flowing") ) then
@@ -288,6 +296,7 @@ local function flight_check(self, pos_w)
 		for _,fly_in in pairs(self.fly_in) do
 
 			if nod == fly_in or nod == fly_in:gsub("_source", "_flowing") then
+
 				return true
 			end
 		end
@@ -1521,7 +1530,15 @@ local do_states = function(self, dtime)
 			set_animation(self, "stand")
 		else
 			set_velocity(self, self.walk_velocity)
-			set_animation(self, "walk")
+
+			if flight_check(self)
+			and self.animation
+			and self.animation.fly_start
+			and self.animation.fly_end then
+				set_animation(self, "fly")
+			else
+				set_animation(self, "walk")
+			end
 		end
 
 	-- runaway when punched
