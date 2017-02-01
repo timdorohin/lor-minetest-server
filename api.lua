@@ -3166,8 +3166,8 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 				local new_stack = ItemStack(mobname)
 
 				-- add special mob egg with all mob information
-				-- unless 'force_take' is true for craftitems only
-				if not force_take then
+				-- unless 'replacewith' contains new item to use
+				if not replacewith then
 
 					new_stack = ItemStack(mobname .. "_set")
 

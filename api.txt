@@ -235,7 +235,7 @@ This function is generally called inside the on_rightclick section of the mob ap
     'chance_net' chance of capturing mob using net (1 to 100) 0 to disable
     'chance_lasso' chance of capturing mob using magic lasso (1 to 100) 0 to disable
     'force_take' take mob by force, even if tamed (true or false)
-    'replacewith' once captured replace mob with this item instead
+    'replacewith' once captured replace mob with this item instead (overrides new mob eggs with saved information)
 
 
 mobs:feed_tame(self, clicker, feed_count, breed)
