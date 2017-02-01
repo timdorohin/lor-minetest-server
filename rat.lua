@@ -29,7 +29,7 @@ mobs:register_mob("mobs_animal:rat", {
 	light_damage = 0,
 	fear_height = 2,
 	on_rightclick = function(self, clicker)
-		mobs:capture_mob(self, clicker, 25, 80, 0, true, nil)
+		mobs:capture_mob(self, clicker, 50, 90, 0, true, "mobs_animal:rat")
 	end,
 --[[
 	do_custom = function(self, dtime)

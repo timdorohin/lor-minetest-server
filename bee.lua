@@ -37,7 +37,7 @@ mobs:register_mob("mobs_animal:bee", {
 		walk_end = 65,
 	},
 	on_rightclick = function(self, clicker)
-		mobs:capture_mob(self, clicker, 25, 80, 0, true, nil)
+		mobs:capture_mob(self, clicker, 50, 90, 0, true, "mobs_animal:bee")
 	end,
 })
 
