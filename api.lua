@@ -1,5 +1,5 @@
 
--- Mobs Api (31st January 2017)
+-- Mobs Api (1st February 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -3162,27 +3162,38 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 			-- calculate chance.. add to inventory if successful?
 			if random(1, 100) <= chance then
 
--- add special mob egg containing all mob information
-local new_stack = ItemStack(mobname .. "_set")
-local tmp = {}
-for _,stat in pairs(self) do
-	local t = type(stat)
-	if  t ~= 'function'
-	and t ~= 'nil'
-	and t ~= 'userdata' then
-		tmp[_] = self[_]
-	end
-end
-local data_str = minetest.serialize(tmp)
-local inv = clicker:get_inventory()
-new_stack:set_metadata(data_str)
-if inv:room_for_item("main", new_stack) then
-	inv:add_item("main", new_stack)
-else
-	minetest.add_item(clicker:getpos(), new_stack)
-end
+				-- default mob egg
+				local new_stack = ItemStack(mobname)
 
---				clicker:get_inventory():add_item("main", mobname)
+				-- add special mob egg with all mob information
+				-- unless 'force_take' is true for craftitems only
+				if not force_take then
+
+					new_stack = ItemStack(mobname .. "_set")
+
+					local tmp = {}
+
+					for _,stat in pairs(self) do
+						local t = type(stat)
+						if  t ~= 'function'
+						and t ~= 'nil'
+						and t ~= 'userdata' then
+							tmp[_] = self[_]
+						end
+					end
+
+					local data_str = minetest.serialize(tmp)
+
+					new_stack:set_metadata(data_str)
+				end
+
+				local inv = clicker:get_inventory()
+
+				if inv:room_for_item("main", new_stack) then
+					inv:add_item("main", new_stack)
+				else
+					minetest.add_item(clicker:getpos(), new_stack)
+				end
 
 				self.object:remove()
 			else
