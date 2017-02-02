@@ -1,5 +1,5 @@
 
--- Mobs Api (1st February 2017)
+-- Mobs Api (2nd February 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1970,7 +1970,7 @@ local falling = function(self, pos)
 		if self.fall_damage == 1
 		and self.object:getvelocity().y == 0 then
 
-			local d = self.old_y - self.object:getpos().y
+			local d = (self.old_y or 0) - self.object:getpos().y -- remove or 0
 
 			if d > 5 then
 
@@ -2217,12 +2217,12 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	-- select random texture, set model and size
 	if not self.base_texture then
 
-		if #def.textures == 1 then
-			self.base_texture = def.textures
-		else
-			self.base_texture = def.textures[random(1, #def.textures)]
+		-- compatiblity with old simple mobs textures
+		if type(def.textures[1]) == "string" then
+			def.textures = {def.textures}
 		end
 
+		self.base_texture = def.textures[random(1, #def.textures)]
 		self.base_mesh = def.mesh
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
