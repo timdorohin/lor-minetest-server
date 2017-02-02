@@ -2217,7 +2217,12 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	-- select random texture, set model and size
 	if not self.base_texture then
 
-		self.base_texture = def.textures[random(1, #def.textures)]
+		if #def.textures == 1 then
+			self.base_texture = def.textures
+		else
+			self.base_texture = def.textures[random(1, #def.textures)]
+		end
+
 		self.base_mesh = def.mesh
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
