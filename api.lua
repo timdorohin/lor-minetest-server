@@ -1,5 +1,5 @@
 
--- Mobs Api (2nd February 2017)
+-- Mobs Api (10th February 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -38,6 +38,7 @@ local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) o
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
+local max_per_block = tonumber(minetest.setting_get("max_objects_per_block") or 99)
 
 -- calculate aoc range for mob counts
 local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
@@ -2583,7 +2584,8 @@ end -- END mobs:register_mob function
 -- count how many mobs of one type are inside an area
 local count_mobs = function(pos, type)
 
-	local num = 0
+	local num_type = 0
+	local num_total = 0
 	local objs = minetest.get_objects_inside_radius(pos, aoc_range)
 
 	for n = 1, #objs do
@@ -2592,14 +2594,21 @@ local count_mobs = function(pos, type)
 
 			local obj = objs[n]:get_luaentity()
 
-			if obj and obj.name and obj.name == type then -- mob type count
-			--if obj and obj.name and obj.health ~= nil then -- all mob count
-				num = num + 1
+			-- count mob type and add to total also
+			if obj and obj.name and obj.name == type then
+
+				num_type = num_type + 1
+				num_total = num_total + 1
+
+			-- add to total mobs
+			elseif obj and obj.name and obj.health ~= nil then
+
+				num_total = num_total + 1
 			end
 		end
 	end
 
-	return num
+	return num_type, num_total
 end
 
 
@@ -2644,9 +2653,9 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- do not spawn if too many of same mob in area
-			if active_object_count_wider >= aoc
-			and count_mobs(pos, name) >= aoc then
---print ("--- too many entities", name, aoc)
+			if active_object_count_wider >= max_per_block
+			or count_mobs(pos, name) >= aoc then
+--print ("--- too many entities", name, aoc, active_object_count_wider)
 				return
 			end
 
