@@ -49,7 +49,7 @@ minetest.register_alias("farming_plus:cocoa_bean", "farming:cocoa_beans")
 minetest.register_alias("farming_plus:orange_1", "farming:tomato_1")
 minetest.register_alias("farming_plus:orange_2", "farming:tomato_4")
 minetest.register_alias("farming_plus:orange_3", "farming:tomato_6")
-minetest.register_alias("farming_plus:orange", "farming:tomato_8")
+--minetest.register_alias("farming_plus:orange", "farming:tomato_8")
 
 if eth then
 	minetest.register_alias("farming_plus:orange_item", "ethereal:orange")
