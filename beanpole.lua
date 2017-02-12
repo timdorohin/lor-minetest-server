@@ -62,7 +62,7 @@ minetest.register_node("farming:beanpole", {
 	drawtype = "plantlike",
 	tiles = {"farming_beanpole.png"},
 	inventory_image = "farming_beanpole.png",
-	visual_scale = 1.45,
+	visual_scale = 1.90, -- 1.45,
 	paramtype = "light",
 	walkable = false,
 	buildable_to = true,
@@ -125,7 +125,7 @@ minetest.register_craft({
 local crop_def = {
 	drawtype = "plantlike",
 	tiles = {"farming_beanpole_1.png"},
-	visual_scale = 1.45,
+	visual_scale = 1.90, -- 1.45,
 	paramtype = "light",
 	walkable = false,
 	buildable_to = true,

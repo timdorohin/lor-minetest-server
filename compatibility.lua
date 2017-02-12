@@ -10,7 +10,6 @@ else
 	minetest.register_node(":ethereal:banana", {
 		description = "Banana",
 		drawtype = "torchlike",
-		visual_scale = 1.0,
 		tiles = {"banana_single.png"},
 		inventory_image = "banana_single.png",
 		wield_image = "banana_single.png",
@@ -59,7 +58,6 @@ else
 	minetest.register_node(":ethereal:orange", {
 		description = "Orange",
 		drawtype = "plantlike",
-		visual_scale = 1.0,
 		tiles = {"farming_orange.png"},
 		inventory_image = "farming_orange.png",
 		wield_image = "farming_orange.png",

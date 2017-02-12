@@ -89,7 +89,7 @@ minetest.register_node("farming:corn_5", table.copy(crop_def))
 
 -- stage 6
 crop_def.tiles = {"farming_corn_6.png"}
-crop_def.visual_scale = 1.45
+crop_def.visual_scale = 1.9 -- 1.45
 minetest.register_node("farming:corn_6", table.copy(crop_def))
 
 -- stage 7

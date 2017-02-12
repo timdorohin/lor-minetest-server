@@ -57,7 +57,7 @@ minetest.register_node("farming:trellis", {
 	drawtype = "plantlike",
 	tiles = {"farming_trellis.png"},
 	inventory_image = "farming_trellis.png",
-	visual_scale = 1.45,
+	visual_scale = 1.9, -- 1.45,
 	paramtype = "light",
 	walkable = false,
 	buildable_to = true,
@@ -120,7 +120,7 @@ minetest.register_craft({
 local crop_def = {
 	drawtype = "plantlike",
 	tiles = {"farming_grapes_1.png"},
-	visual_scale = 1.45,
+	visual_scale = 1.9, -- 1.45,
 	paramtype = "light",
 	walkable = false,
 	buildable_to = true,
