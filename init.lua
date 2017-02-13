@@ -163,7 +163,7 @@ local function plant_name_stage(node)
 
 	local name
 
-	if type(node) == 'table' then
+	if type(node) == "table" then
 
 		if node.name then
 			name = node.name
@@ -346,7 +346,7 @@ end
 
 minetest.after(0, function()
 
-	for _, node_def in pairs(minetest.registered_nodes) do
+	for _, node_def in ipairs(minetest.registered_nodes) do
 		register_plant_node(node_def)
 	end
 end)
@@ -513,7 +513,7 @@ function farming.refill_plant(player, plantname, index)
 		return
 	end
 
-	for i, stack in pairs(inv:get_list("main")) do
+	for i, stack in ipairs(inv:get_list("main")) do
 
 		if stack:get_name() == plantname and i ~= index then
 
@@ -645,15 +645,19 @@ farming.register_plant = function(name, def)
 	-- Register growing steps
 	for i = 1, def.steps do
 
+		local base_rarity = 1
+		if def.steps ~= 1 then
+			base_rarity =  8 - (i - 1) * 7 / (def.steps - 1)
+		end
 		local drop = {
 			items = {
-				{items = {mname .. ":" .. pname}, rarity = 9 - i},
-				{items = {mname .. ":" .. pname}, rarity= 18 - i * 2},
-				{items = {mname .. ":seed_" .. pname}, rarity = 9 - i},
-				{items = {mname .. ":seed_" .. pname}, rarity = 18 - i * 2},
+				{items = {mname .. ":" .. pname}, rarity = base_rarity},
+				{items = {mname .. ":" .. pname}, rarity = base_rarity * 2},
+				{items = {mname .. ":seed_" .. pname}, rarity = base_rarity},
+				{items = {mname .. ":seed_" .. pname}, rarity = base_rarity * 2},
 			}
 		}
-		
+
 		local g = {snappy = 3, flammable = 2, plant = 1, not_in_creative_inventory = 1, attached_node = 1, growing = 1}
 
 		-- Last step doesn't need growing=1 so Abm never has to check these
