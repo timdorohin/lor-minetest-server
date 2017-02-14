@@ -3060,7 +3060,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 	-- spawn egg containing mob information
 	minetest.register_craftitem(mob .. "_set", {
 
-		description = desc .. " (set)",
+		description = desc .. " (Tamed)",
 		inventory_image = invimg,
 		groups = {not_in_creative_inventory = 1},
 		stack_max = 1,
@@ -3097,10 +3097,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 					ent.tamed = true
 				end
 
-				-- if not in creative then take item
-				if not creative then
-					itemstack:take_item()
-				end
+				-- since mob is unique we remove egg once spawned
+				itemstack:take_item()
 			end
 
 			return itemstack
