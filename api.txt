@@ -157,7 +157,7 @@ These functions register a spawn algorithm for the mob. Without this function th
     'interval' is same as in register_abm() (default is 30 for mobs:register_spawn)
     'chance' is same as in register_abm()
     'active_object_count' mob is only spawned if active_object_count_wider of ABM is <= this
-    'min_height' is the maximum height the mob can spawn
+    'min_height' is the minimum height the mob can spawn
     'max_height' is the maximum height the mob can spawn
     'day_toggle' true for day spawning, false for night or nil for anytime
     'on_spawn' is a custom function which runs after mob has spawned and gives self and pos values.
