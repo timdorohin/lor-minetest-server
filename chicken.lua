@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Chicken by JK Murray
 
 mobs:register_mob("mobs_animal:chicken", {
@@ -79,9 +80,16 @@ mobs:register_mob("mobs_animal:chicken", {
 	end,
 })
 
+
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:bamboo_dirt"
+end
+
 mobs:spawn({
 	name = "mobs_animal:chicken",
-	nodes = {"default:dirt_with_grass", "ethereal:bamboo_dirt"},
+	nodes = {spawn_on},
 	min_light = 10,
 	chance = 15000,
 	active_object_count = 2,
@@ -89,10 +97,12 @@ mobs:spawn({
 	day_toggle = true,
 })
 
+
 mobs:register_egg("mobs_animal:chicken", S("Chicken"), "mobs_chicken_inv.png", 0)
 
--- compatibility
-mobs:alias_mob("mobs:chicken", "mobs_animal:chicken")
+
+mobs:alias_mob("mobs:chicken", "mobs_animal:chicken") -- compatibility
+
 
 -- egg entity
 
@@ -158,6 +168,7 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 	end
 })
 
+
 -- egg throwing item
 
 local egg_GRAVITY = 9
@@ -207,6 +218,7 @@ local mobs_shoot_egg = function (item, player, pointed_thing)
 	return item
 end
 
+
 -- egg
 minetest.register_node(":mobs:egg", {
 	description = S("Chicken Egg"),
@@ -231,6 +243,7 @@ minetest.register_node(":mobs:egg", {
 	end,
 	on_use = mobs_shoot_egg
 })
+
 
 -- fried egg
 minetest.register_craftitem(":mobs:chicken_egg_fried", {

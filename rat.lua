@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Rat by PilzAdam
 
 mobs:register_mob("mobs_animal:rat", {
@@ -57,6 +58,7 @@ mobs:register_mob("mobs_animal:rat", {
 ]]
 })
 
+
 local function rat_spawn(self, pos)
 	print (self:get_luaentity().name, pos.x, pos.y, pos.z)
 end
@@ -70,10 +72,12 @@ mobs:spawn({
 --	on_spawn = rat_spawn,
 })
 
+
 mobs:register_egg("mobs_animal:rat", S("Rat"), "mobs_rat_inventory.png", 0)
 
--- compatibility
-mobs:alias_mob("mobs:rat", "mobs_animal:rat")
+
+mobs:alias_mob("mobs:rat", "mobs_animal:rat") -- compatibility
+
 
 -- cooked rat, yummy!
 minetest.register_craftitem(":mobs:rat_cooked", {

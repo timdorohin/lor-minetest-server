@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Warthog by KrupnoPavel
 
 mobs:register_mob("mobs_animal:pumba", {
@@ -56,9 +57,16 @@ mobs:register_mob("mobs_animal:pumba", {
 	end,
 })
 
+
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:mushroom_dirt"
+end
+
 mobs:spawn({
 	name = "mobs_animal:pumba",
-	nodes = {"default:dirt_with_dry_grass", "ethereal:mushroom_dirt"},
+	nodes = {spawn_on},
 	min_light = 10,
 	chance = 15000,
 	min_height = 0,
@@ -66,10 +74,12 @@ mobs:spawn({
 	day_toggle = true,
 })
 
+
 mobs:register_egg("mobs_animal:pumba", S("Warthog"), "wool_pink.png", 1)
 
--- compatibility
-mobs:alias_mob("mobs:pumba", "mobs_animal:pumba")
+
+mobs:alias_mob("mobs:pumba", "mobs_animal:pumba") -- compatibility
+
 
 -- raw porkchop
 minetest.register_craftitem(":mobs:pork_raw", {

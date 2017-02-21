@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Penguin by D00Med
 
 mobs:register_mob("mobs_animal:penguin", {
@@ -58,6 +59,7 @@ mobs:register_mob("mobs_animal:penguin", {
 	end,
 })
 
+
 mobs:spawn({
 	name = "mobs_animal:penguin",
 	nodes = {"default:snowblock"},
@@ -66,5 +68,6 @@ mobs:spawn({
 	min_height = 0,
 	day_toggle = true,
 })
+
 
 mobs:register_egg("mobs_animal:penguin", S("Penguin"), "default_snow.png", 1)

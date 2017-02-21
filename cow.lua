@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Cow by Krupnovpavel (additional texture by JurajVajda)
 
 mobs:register_mob("mobs_animal:cow", {
@@ -97,9 +98,16 @@ mobs:register_mob("mobs_animal:cow", {
 	end,
 })
 
+
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:green_dirt"
+end
+
 mobs:spawn({
 	name = "mobs_animal:cow",
-	nodes = {"default:dirt_with_grass", "ethereal:green_dirt"},
+	nodes = {spawn_on},
 	min_light = 10,
 	chance = 15000,
 	min_height = 0,
@@ -107,10 +115,12 @@ mobs:spawn({
 	day_toggle = true,
 })
 
+
 mobs:register_egg("mobs_animal:cow", S("Cow"), "default_grass.png", 1)
 
--- compatibility
-mobs:alias_mob("mobs:cow", "mobs_animal:cow")
+
+mobs:alias_mob("mobs:cow", "mobs_animal:cow") -- compatibility
+
 
 -- bucket of milk
 minetest.register_craftitem(":mobs:bucket_milk", {

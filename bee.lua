@@ -66,7 +66,6 @@ minetest.register_craftitem(":mobs:honey", {
 minetest.register_node(":mobs:beehive", {
 	description = S("Beehive"),
 	drawtype = "plantlike",
-	visual_scale = 1.0,
 	tiles = {"mobs_beehive.png"},
 	inventory_image = "mobs_beehive.png",
 	paramtype = "light",
@@ -175,7 +174,7 @@ minetest.register_abm({
 		-- is hive full?
 		local meta = minetest.get_meta(pos)
 		if not meta then return end -- for older beehives
-		local inv = minetest.get_meta(pos):get_inventory()
+		local inv = meta:get_inventory()
 		local honey = inv:get_stack("beehive", 1):get_count()
 
 		-- is hive full?

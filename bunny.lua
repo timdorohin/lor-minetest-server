@@ -1,6 +1,7 @@
 
 local S = mobs.intllib
 
+
 -- Bunny by ExeterDad
 
 mobs:register_mob("mobs_animal:bunny", {
@@ -68,7 +69,7 @@ mobs:register_mob("mobs_animal:bunny", {
 			})
 
 			self.type = "monster"
-			self.object:set_hp(20)
+			self.health = 20
 
 			return
 		end
@@ -81,16 +82,24 @@ mobs:register_mob("mobs_animal:bunny", {
 	damage = 5,
 })
 
+
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:prairie_dirt"
+end
+
 mobs:spawn({
 	name = "mobs_animal:bunny",
-	nodes = {"default:dirt_with_grass", "ethereal:prairie_dirt"},
+	nodes = {spawn_on},
 	min_light = 10,
 	chance = 15000,
 	min_height = 0,
 	day_toggle = true,
 })
 
+
 mobs:register_egg("mobs_animal:bunny", S("Bunny"), "mobs_bunny_inv.png", 0)
 
--- compatibility
-mobs:alias_mob("mobs:bunny", "mobs_animal:bunny")
+
+mobs:alias_mob("mobs:bunny", "mobs_animal:bunny") -- compatibility
