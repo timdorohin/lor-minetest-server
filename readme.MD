@@ -23,6 +23,7 @@ Lucky Blocks: 9
 
 Changelog:
 
+- 1.34- Added function to fly mob using directional movement (thanks D00Med for flying code)
 - 1.33- Added functions to mount ride mobs (mobs.attach, mobs.detach, mobs.drive) many thanks to Blert2112
 - 1.32- Added new spawn check to count specific mobs AND new minetest.conf setting to chance spawn chance and numbers, added ability to protect tamed mobs
 - 1.31- Added 'attack_animals' and 'specific_attack' flags for custom monster attacks, also 'mob_difficulty' .conf setting to make mobs harder.

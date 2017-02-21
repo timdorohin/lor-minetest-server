@@ -1,5 +1,5 @@
 
-MOB API (31st January 2017)
+MOB API (21st February 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -296,6 +296,19 @@ This function allows an attached player to move the mob around and animate it at
     'stand_animation' string containing standing animation e.g. "stand"
     'can_fly' if true then jump and sneak controls will allow mob to fly up and down
     'dtime' tick time used inside drive function
+
+
+mobs:fly(self, dtime, speed, can_shoot, arrow_entity, move_animation, stand_animation)
+
+This function allows an attached player to fly the mob around using directional controls.
+
+    'self' mob information
+    'dtime' tick time used inside fly function
+    'speed' speed of flight
+    'can_shoot' true if mob can fire arrow (sneak and left mouse button fires)
+    'arrow_entity' name of arrow entity used for firing
+    'move_animation' string containing movement animation e.g. "walk"
+    'stand_animation' string containing movement animation e.g. "stand"
 
 
 Certain variables need to be set before using the above functions:

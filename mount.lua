@@ -370,3 +370,64 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 
 	entity.v2 = v
 end
+
+
+-- directional flying routine by D00Med (edited by TenPlus1)
+
+function mobs.fly(entity, dtime, speed, shoots, arrow, moving_anim, stand_anim)
+
+	local ctrl = entity.driver:get_player_control()
+	local velo = entity.object:getvelocity()
+	local dir = entity.driver:get_look_dir()
+	local yaw = entity.driver:get_look_yaw()
+	local rot_steer, rot_view = math.pi / 2, 0
+
+	if entity.player_rotation.y == 90 then
+		rot_steer, rot_view = 0, math.pi / 2
+	end
+
+	if ctrl.up then
+		entity.object:setvelocity({
+			x = dir.x * speed,
+			y = dir.y * speed + 2,
+			z = dir.z * speed
+		})
+
+	elseif ctrl.down then
+		entity.object:setvelocity({
+			x = -dir.x * speed,
+			y = dir.y * speed + 2,
+			z = -dir.z * speed
+		})
+
+	elseif not ctrl.down or ctrl.up or ctrl.jump then
+		entity.object:setvelocity({x = 0, y = -2, z = 0})
+	end
+
+	entity.object:setyaw(yaw + math.pi + math.pi / 2 - entity.rotate)
+
+	-- firing arrows
+	if ctrl.LMB and ctrl.sneak and shoots then
+
+		local pos = entity.object:getpos()
+		local obj = minetest.add_entity({
+			x = pos.x + 0 + dir.x * 2.5,
+			y = pos.y + 1.5 + dir.y,
+			z = pos.z + 0 + dir.z * 2.5}, arrow)
+
+		local vec = {x = dir.x * 6, y = dir.y * 6, z = dir.z * 6}
+		local yaw = entity.driver:get_look_yaw()
+
+		obj:setyaw(yaw + math.pi / 2)
+		obj:setvelocity(vec)
+	end
+
+	-- change animation if stopped
+	if velo.x == 0 and velo.y == 0 and velo.z == 0 then
+
+		set_animation(entity, stand_anim)
+	else
+		-- moving animation
+		set_animation(entity, moving_anim)
+	end
+end
