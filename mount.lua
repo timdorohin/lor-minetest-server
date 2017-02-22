@@ -340,9 +340,6 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 		else
 			v = v * 0.25
 		end
---	elseif ni == "walkable" then
---		v = 0
---		new_acce.y = 1
 	end
 
 	new_velo = get_velocity(v, entity.object:getyaw() - rot_view, velo.y)
@@ -415,11 +412,16 @@ function mobs.fly(entity, dtime, speed, shoots, arrow, moving_anim, stand_anim)
 			y = pos.y + 1.5 + dir.y,
 			z = pos.z + 0 + dir.z * 2.5}, arrow)
 
-		local vec = {x = dir.x * 6, y = dir.y * 6, z = dir.z * 6}
-		local yaw = entity.driver:get_look_yaw()
-
-		obj:setyaw(yaw + math.pi / 2)
-		obj:setvelocity(vec)
+		local ent = obj:get_luaentity()
+		if ent then
+			ent.switch = 1 -- for mob specific arrows
+			local vec = {x = dir.x * 6, y = dir.y * 6, z = dir.z * 6}
+			local yaw = entity.driver:get_look_yaw()
+			obj:setyaw(yaw + math.pi / 2)
+			obj:setvelocity(vec)
+		else
+			obj:remove()
+		end
 	end
 
 	-- change animation if stopped

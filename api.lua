@@ -1,5 +1,5 @@
 
--- Mobs Api (10th February 2017)
+-- Mobs Api (22nd February 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -3110,109 +3110,111 @@ end
 -- capture critter (thanks to blert2112 for idea)
 function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, force_take, replacewith)
 
-	if not self.child
-	and clicker:is_player()
-	and clicker:get_inventory() then
+	if self.child
+	or not clicker:is_player()
+	or not clicker:get_inventory() then
+		return false
+	end
 
-		-- get name of clicked mob
-		local mobname = self.name
+	-- get name of clicked mob
+	local mobname = self.name
 
-		-- if not nil change what will be added to inventory
-		if replacewith then
-			mobname = replacewith
+	-- if not nil change what will be added to inventory
+	if replacewith then
+		mobname = replacewith
+	end
+
+	local name = clicker:get_player_name()
+
+	-- is mob tamed?
+	if self.tamed == false
+	and force_take == false then
+
+		minetest.chat_send_player(name, S("Not tamed!"))
+
+		return false
+	end
+
+	-- cannot pick up if not owner
+	if self.owner ~= name
+	and force_take == false then
+
+		minetest.chat_send_player(name, S("@1 is owner!", self.owner))
+
+		return false
+	end
+
+	if clicker:get_inventory():room_for_item("main", mobname) then
+
+		-- was mob clicked with hand, net, or lasso?
+		local tool = clicker:get_wielded_item()
+		local chance = 0
+
+		if tool:is_empty() then
+			chance = chance_hand
+
+		elseif tool:get_name() == "mobs:net" then
+
+			chance = chance_net
+
+			tool:add_wear(4000) -- 17 uses
+
+			clicker:set_wielded_item(tool)
+
+		elseif tool:get_name() == "mobs:magic_lasso" then
+
+			chance = chance_lasso
+
+			tool:add_wear(650) -- 100 uses
+
+			clicker:set_wielded_item(tool)
 		end
 
-		local name = clicker:get_player_name()
+		-- calculate chance.. add to inventory if successful?
+		if chance > 0 and random(1, 100) <= chance then
 
-		-- is mob tamed?
-		if self.tamed == false
-		and force_take == false then
+			-- default mob egg
+			local new_stack = ItemStack(mobname)
 
-			minetest.chat_send_player(name, S("Not tamed!"))
+			-- add special mob egg with all mob information
+			-- unless 'replacewith' contains new item to use
+			if not replacewith then
 
-			return
-		end
+				new_stack = ItemStack(mobname .. "_set")
 
-		-- cannot pick up if not owner
-		if self.owner ~= name
-		and force_take == false then
+				local tmp = {}
 
-			minetest.chat_send_player(name, S("@1 is owner!", self.owner))
-
-			return
-		end
-
-		if clicker:get_inventory():room_for_item("main", mobname) then
-
-			-- was mob clicked with hand, net, or lasso?
-			local tool = clicker:get_wielded_item()
-			local chance = 0
-
-			if tool:is_empty() then
-				chance = chance_hand
-
-			elseif tool:get_name() == "mobs:net" then
-
-				chance = chance_net
-
-				tool:add_wear(4000) -- 17 uses
-
-				clicker:set_wielded_item(tool)
-
-			elseif tool:get_name() == "mobs:magic_lasso" then
-
-				chance = chance_lasso
-
-				tool:add_wear(650) -- 100 uses
-
-				clicker:set_wielded_item(tool)
-			end
-
-			-- return if no chance
-			if chance == 0 then return end
-
-			-- calculate chance.. add to inventory if successful?
-			if random(1, 100) <= chance then
-
-				-- default mob egg
-				local new_stack = ItemStack(mobname)
-
-				-- add special mob egg with all mob information
-				-- unless 'replacewith' contains new item to use
-				if not replacewith then
-
-					new_stack = ItemStack(mobname .. "_set")
-
-					local tmp = {}
-
-					for _,stat in pairs(self) do
-						local t = type(stat)
-						if  t ~= 'function'
-						and t ~= 'nil'
-						and t ~= 'userdata' then
-							tmp[_] = self[_]
-						end
+				for _,stat in pairs(self) do
+					local t = type(stat)
+					if  t ~= 'function'
+					and t ~= 'nil'
+					and t ~= 'userdata' then
+						tmp[_] = self[_]
 					end
-
-					local data_str = minetest.serialize(tmp)
-
-					new_stack:set_metadata(data_str)
 				end
 
-				local inv = clicker:get_inventory()
+				local data_str = minetest.serialize(tmp)
 
-				if inv:room_for_item("main", new_stack) then
-					inv:add_item("main", new_stack)
-				else
-					minetest.add_item(clicker:getpos(), new_stack)
-				end
-
-				self.object:remove()
-			else
-				minetest.chat_send_player(name, S("Missed!"))
+				new_stack:set_metadata(data_str)
 			end
+
+			local inv = clicker:get_inventory()
+
+			if inv:room_for_item("main", new_stack) then
+				inv:add_item("main", new_stack)
+			else
+				minetest.add_item(clicker:getpos(), new_stack)
+			end
+
+			self.object:remove()
+
+			return true
+		else
+			minetest.chat_send_player(name, S("Missed!"))
 		end
 	end
+
+	return false
 end
 
 
@@ -3223,6 +3225,11 @@ function mobs:protect(self, clicker)
 
 	if self.tamed == false then
 		minetest.chat_send_player(name, S("Not tamed!"))
+		return false
+	end
+
+	if self.protected == true then
+		minetest.chat_send_player(name, S("Already protected!"))
 		return false
 	end
 
