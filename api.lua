@@ -1,5 +1,5 @@
 
--- Mobs Api (22nd February 2017)
+-- Mobs Api (24th February 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1991,6 +1991,11 @@ end
 
 
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
+
+	-- mob health check
+	if self.health <= 0 then
+		return
+	end
 
 	-- error checking when mod profiling is enabled
 	if not tool_capabilities then
