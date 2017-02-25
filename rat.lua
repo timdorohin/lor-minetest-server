@@ -60,7 +60,10 @@ mobs:register_mob("mobs_animal:rat", {
 
 
 local function rat_spawn(self, pos)
-	print (self:get_luaentity().name, pos.x, pos.y, pos.z)
+	self = self:get_luaentity()
+	print (self.name, pos.x, pos.y, pos.z)
+	self.hp_max = 100
+	self.health = 100
 end
 
 mobs:spawn({
