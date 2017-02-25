@@ -55,15 +55,9 @@ mobs:register_mob("mobs_animal:kitten", {
 })
 
 
-local spawn_on = "default:dirt_with_grass"
-
-if minetest.get_modpath("ethereal") then
-	spawn_on = "ethereal:grove_dirt"
-end
-
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {spawn_on},
+	nodes = {"default:dirt_with_grass", "ethereal:grove_dirt"},
 	min_light = 12,
 	chance = 22000,
 	min_height = 0,
