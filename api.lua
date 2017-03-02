@@ -1,5 +1,5 @@
 
--- Mobs Api (24th February 2017)
+-- Mobs Api (2nd March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -3381,6 +3381,11 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		if not mob_obj[name]
 		or not mob_obj[name].object then
 			return
+		end
+
+		-- limit name entered to 64 characters long
+		if string.len(fields.name) > 64 then
+			fields.name = string.sub(fields.name, 1, 64)
 		end
 
 		-- update nametag

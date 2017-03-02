@@ -141,7 +141,8 @@ function mobs.attach(entity, player)
 		default.player_set_animation(player, "sit" , 30)
 	end)
 
-	player:set_look_yaw(entity.object:getyaw() - rot_view)
+	--player:set_look_yaw(entity.object:getyaw() - rot_view)
+	player:set_look_horizontal(entity.object:getyaw() - rot_view)
 end
 
 
@@ -196,10 +197,8 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 			entity.v = entity.v - entity.accel / 10
 		end
 
-		--entity.object:setyaw(entity.driver:get_look_yaw() - rot_steer)
---		entity.object:setyaw(entity.driver:get_look_horizontal())-- - rot_steer)
-
 		-- fix mob rotation
+--		entity.object:setyaw(entity.driver:get_look_yaw() - entity.rotate)
 		entity.object:setyaw(entity.driver:get_look_horizontal() - entity.rotate)
 
 		if can_fly then
@@ -376,7 +375,8 @@ function mobs.fly(entity, dtime, speed, shoots, arrow, moving_anim, stand_anim)
 	local ctrl = entity.driver:get_player_control()
 	local velo = entity.object:getvelocity()
 	local dir = entity.driver:get_look_dir()
-	local yaw = entity.driver:get_look_yaw()
+--	local yaw = entity.driver:get_look_yaw()
+	local yaw = entity.driver:get_look_horizontal() + 1.57 -- offset fix between old and new commands
 	local rot_steer, rot_view = math.pi / 2, 0
 
 	if entity.player_rotation.y == 90 then
@@ -415,8 +415,10 @@ function mobs.fly(entity, dtime, speed, shoots, arrow, moving_anim, stand_anim)
 		local ent = obj:get_luaentity()
 		if ent then
 			ent.switch = 1 -- for mob specific arrows
+			ent.owner_id = tostring(entity.object) -- so arrows dont hurt entity you are riding
 			local vec = {x = dir.x * 6, y = dir.y * 6, z = dir.z * 6}
-			local yaw = entity.driver:get_look_yaw()
+--			local yaw = entity.driver:get_look_yaw()
+			local yaw = entity.driver:get_look_horizontal()
 			obj:setyaw(yaw + math.pi / 2)
 			obj:setvelocity(vec)
 		else
