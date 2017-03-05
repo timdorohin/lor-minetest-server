@@ -1,5 +1,5 @@
 
--- Mobs Api (2nd March 2017)
+-- Mobs Api (5th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -630,13 +630,13 @@ do_env_damage = function(self)
 			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
 
 		-- damage_per_second node check
-		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
+--		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
 
-			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
+--			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
 
-			self.health = self.health - dps
+--			self.health = self.health - dps
 
-			effect(pos, 5, "tnt_smoke.png")
+--			effect(pos, 5, "tnt_smoke.png")
 		end
 	end
 
