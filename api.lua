@@ -1,5 +1,5 @@
 
--- Mobs Api (5th March 2017)
+-- Mobs Api (6th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -133,84 +133,28 @@ get_velocity = function(self)
 end
 
 
-set_anim = function(self, anim_start, anim_end, anim_speed, anim_name)
+-- set defined animation
+set_animation = function(self, anim)
 
-	if not anim_start or not anim_end then
-		return
-	end
-
-	self.object:set_animation(
-		{x = anim_start, y = anim_end}, anim_speed or 15, 0)
-
-	self.animation.current = anim_name
-end
-
-
-set_animation = function(self, type)
-
-	if not self.animation then
-		return
-	end
+	if not self.animation then return end
 
 	self.animation.current = self.animation.current or ""
 
-	if type == "stand" and self.animation.current ~= "stand" then
-
-		set_anim(self,
-			self.animation.stand_start,
-			self.animation.stand_end,
-			self.animation.speed_stand, "stand")
-
-	elseif type == "walk" and self.animation.current ~= "walk" then
-
-		set_anim(self,
-			self.animation.walk_start,
-			self.animation.walk_end,
-			self.animation.speed_walk, "walk")
-
-	elseif type == "run" and self.animation.current ~= "run" then
-
-		set_anim(self,
-			self.animation.run_start,
-			self.animation.run_end,
-			self.animation.speed_run, "run")
-
-	elseif type == "punch" and self.animation.current ~= "punch" then
-
-		set_anim(self,
-			self.animation.punch_start,
-			self.animation.punch_end,
-			self.animation.speed_punch, "punch")
-
-	elseif type == "punch2" and self.animation.current ~= "punch2" then
-
-		set_anim(self,
-			self.animation.punch2_start,
-			self.animation.punch2_end,
-			self.animation.speed_punch2, "punch2")
-
-	elseif type == "shoot" and self.animation.current ~= "shoot" then
-
-		set_anim(self,
-			self.animation.shoot_start,
-			self.animation.shoot_end,
-			self.animation.speed_shoot, "shoot")
-
-	elseif type == "die" and self.animation.current ~= "die" then
-
-		set_anim(self,
-			self.animation.die_start,
-			self.animation.die_end,
-			self.animation.speed_die, "die")
-
-	elseif type == "fly" and self.animation.current ~= "fly" then
-
-		set_anim(self,
-			self.animation.fly_start,
-			self.animation.fly_end,
-			self.animation.speed_fly, "fly")
+	if anim == self.animation.current
+	or not self.animation[anim .. "_start"]
+	or not self.animation[anim .. "_end"] then
+		return
 	end
+
+	self.animation.current = anim
+
+	self.object:set_animation({
+		x = self.animation[anim .. "_start"],
+		y = self.animation[anim .. "_end"]
+	}, self.animation[anim .. "_speed"] or self.animation.speed_normal or 15)
+
 end
+
 
 -- get distance
 local get_distance = function(a, b)

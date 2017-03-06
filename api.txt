@@ -1,5 +1,5 @@
 
-MOB API (21st February 2017)
+MOB API (6th March 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -102,34 +102,23 @@ This functions registers a new mob as a Minetest entity.
             'jump' sound when jumping
             'explode' sound when exploding
             'distance' maximum distance sounds are heard from (default is 10)
-        'animation' a table with the animation ranges and speed of the model
-            'stand_start' start frame of stand animation
-            'stand_end' end frame of stand animation
-            'walk_start' start frame of walk animation
-            'walk_end' end frame of walk animation
-            'run_start' start frame of run animation
-            'run_end' end frame of run animation
-            'punch_start' start frame of punch animation
-            'punch_end' end frame of punch animation
-            'punch2_start' start frame of alt.punch animation
-            'punch2_end' end frame of alt.punch animation
-            'shoot_start' start frame of shoot animation
-            'shoot_end' end frame of shoot animation
-            'die_start' start frame of die animation
-            'die_end' end frame of die animation
-            'speed_normal' normal animation speed
-            'fly_start' start frame of fly animation
-            'fly_end' end frame of fly animation
-            'speed_run' running animation speed
-            'speed_punch' punching animation speed
-            'speed_punch2' alternative punching animation speed
-            'speed_shoot' shooting animation speed
-            'speed_die' die animation speed
-            'speed_fly' fly animation speed
         'replace_what' group if items to replace e.g. {"farming:wheat_8", "farming:carrot_8"}
         'replace_with' replace with what e.g. "air" or in chickens case "mobs:egg"
         'replace_rate' how random should the replace rate be (typically 10)
         'replace_offset' +/- value to check specific node to replace
+
+Mob animation comes in three parts, start_frame, end_frame and frame_speed which
+can be added to the mob definition under pre-defined mob animation names like:
+
+   'animation' a table with the animation ranges and speed of the model
+      'stand_start', 'stand_end', 'stand_speed' when mob stands still
+      'walk_start', 'walk_end', 'walk_speed' when mob walks
+      'run_start', 'run_end', 'run_speed' when mob runs
+      'fly_start', 'fly_end', 'fly_speed' when mob flies
+      'punch_start', 'punch_end', 'punch_speed' when mob attacks
+      'punch2_start', 'punch2_end', 'punch2_speed' when mob attacks (alternative)
+      'die_start', 'die_end', 'die_speed' when mob dies
+also  'speed_normal' for compatibility with older mobs for animation speed (deprecated)
 
 
 The mob api also has some preset variables and functions that it will remember for each mob
@@ -139,6 +128,7 @@ The mob api also has some preset variables and functions that it will remember f
     'self.child' used for when breeding animals have child, will use child_texture and be half size
     'self.owner' string used to set owner of npc mobs, typically used for dogs
     'self.order' set to "follow" or "stand" so that npc will follow owner or stand it's ground
+    'self.nametag' contains the name of the mob which it can show above
     'on_die' a function that is called when mob is killed
     'do_custom' a custom function that is called every tick while mob is active and which has access to all of the self.* variables e.g. (self.health for health or self.standing_in for node status), return with 'false' to skip remainder of mob API.
 
