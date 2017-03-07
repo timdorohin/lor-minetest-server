@@ -1,5 +1,5 @@
 
--- Mobs Api (6th March 2017)
+-- Mobs Api (7th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -850,28 +850,41 @@ end
 -- find and replace what mob is looking for (grass, wheat etc.)
 function replace(self, pos)
 
-	if self.replace_rate
-	and self.child == false
-	and random(1, self.replace_rate) == 1 then
+	if not self.replace_rate
+	or not self.replace_what
+	or self.child == true
+	or self.object:getvelocity().y ~= 0
+	or random(1, self.replace_rate) > 1 then
+		return
+	end
 
-		local pos = self.object:getpos()
+	local what, with, y_offset
 
-		pos.y = pos.y + self.replace_offset
+	if type(self.replace_what[1]) == "table" then
+
+		local num = random(#self.replace_what)
+
+		what = self.replace_what[num][1] or ""
+		with = self.replace_what[num][2] or ""
+		y_offset = self.replace_what[num][3] or 0
+	else
+		what = self.replace_what
+		with = self.replace_with or ""
+		y_offset = self.replace_offset or 0
+	end
+
+	pos.y = pos.y + y_offset
+
+	if #minetest.find_nodes_in_area(pos, pos, what) > 0 then
 
 -- print ("replace node = ".. minetest.get_node(pos).name, pos.y)
 
-		if self.replace_what
-		and self.replace_with
-		and self.object:getvelocity().y == 0
-		and #minetest.find_nodes_in_area(pos, pos, self.replace_what) > 0 then
+		minetest.set_node(pos, {name = with})
 
-			minetest.set_node(pos, {name = self.replace_with})
-
-			-- when cow/sheep eats grass, replace wool and milk
-			if self.gotten == true then
-				self.gotten = false
-				self.object:set_properties(self)
-			end
+		-- when cow/sheep eats grass, replace wool and milk
+		if self.gotten == true then
+			self.gotten = false
+			self.object:set_properties(self)
 		end
 	end
 end
