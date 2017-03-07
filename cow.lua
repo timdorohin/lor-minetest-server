@@ -49,7 +49,11 @@ mobs:register_mob("mobs_animal:cow", {
 	follow = "farming:wheat",
 	view_range = 7,
 	replace_rate = 10,
-	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
+--	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
+	replace_what = {
+		{"group:grass", "air", 0},
+		{"default:dirt_with_grass", "default:dirt", -1}
+	},
 	replace_with = "air",
 	fear_height = 2,
 	on_rightclick = function(self, clicker)
