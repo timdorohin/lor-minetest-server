@@ -1,5 +1,5 @@
 
--- Mobs Api (7th March 2017)
+-- Mobs Api (10th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -99,27 +99,13 @@ do_attack = function(self, player)
 end
 
 
-set_yaw = function(self, yaw)
-
-	if yaw ~= yaw then
---		print ("--- yaw nan")
-		return
-	end
-
-	self.yaw = yaw -- + self.rotate
-	self.object:setyaw(self.yaw)
-end
-
-
 set_velocity = function(self, v)
 
 	local yaw = self.object:getyaw() + self.rotate
 
 	self.object:setvelocity({
---		x = sin(self.yaw) * -v,
 		x = sin(yaw) * -v,
 		y = self.object:getvelocity().y,
---		z = cos(self.yaw) * v
 		z = cos(yaw) * v
 	})
 end
@@ -228,7 +214,6 @@ end
 -- are we flying in what we are suppose to? (taikedz)
 local function flight_check(self, pos_w)
 
---	local nod = minetest.get_node(pos_w).name
 	local nod = self.standing_in
 
 	if type(self.fly_in) == "string"
@@ -246,41 +231,6 @@ local function flight_check(self, pos_w)
 			end
 		end
 	end
-end
-
-
--- check line of sight for walkers and swimmers alike (deprecated)
-function line_of_sight_water(self, pos1, pos2, stepsize)
-
-	local s, pos_w = minetest.line_of_sight(pos1, pos2, stepsize)
-
-	-- normal walking and flying mobs can see you through air
-	if s == true then
-		return true
-	end
-
-	-- swimming mobs can see you through water
-	if s == false
-	and self.fly
-	and self.fly_in == "default:water_source" then
-
-		local nod = minetest.get_node(pos_w).name
-
-		if nod == "default:water_source"
-		or nod == "default:water_flowing" then
-
-			return true
-		end
-
-	-- just incase we have a special node for flying/swimming mobs
-	elseif s == false
-	and self.fly
-	and flight_check(self, pos_w) then
-		return true
-	end
-
-	return false
-
 end
 
 
@@ -364,7 +314,6 @@ function check_for_death(self)
 		if show_health then
 
 			self.htimer = 2
-			--self.nametag = "health: " .. self.health .. " of " .. self.hp_max
 			self.nametag = "♥ " .. self.health .. " / " .. self.hp_max
 
 			update_tag(self)
@@ -459,8 +408,6 @@ local function is_at_cliff(self)
 	end
 
 	local yaw = self.object:getyaw()
---	local dir_x = -sin(self.yaw) * (self.collisionbox[4] + 0.5)
---	local dir_z = cos(self.yaw) * (self.collisionbox[4] + 0.5)
 	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
 	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:getpos()
@@ -561,7 +508,6 @@ do_env_damage = function(self)
 			self.health = self.health - self.water_damage
 
 			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
---		end
 
 		-- lava or fire
 		elseif self.lava_damage ~= 0
@@ -591,9 +537,18 @@ end
 -- jump if facing a solid node (not fences or gates)
 do_jump = function(self)
 
-	if self.fly
+	if not self.jump
+	or self.jump_height == 0
+	or self.fly
 	or self.child then
-		return
+		return false
+	end
+
+	-- something stopping us while moving?
+	if self.state ~= "stand"
+	and get_velocity(self) > 0.5
+	and self.object:getvelocity().y ~= 0 then
+		return false
 	end
 
 	local pos = self.object:getpos()
@@ -607,12 +562,10 @@ do_jump = function(self)
 --print ("standing on:", nod.name, pos.y)
 
 	if minetest.registered_nodes[nod.name].walkable == false then
-		return
+		return false
 	end
 
 	-- where is front
---	local dir_x = -sin(self.yaw) * (self.collisionbox[4] + 0.5)
---	local dir_z = cos(self.yaw) * (self.collisionbox[4] + 0.5)
 	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
 	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
 
@@ -625,7 +578,7 @@ do_jump = function(self)
 
 	-- thin blocks that do not need to be jumped
 	if nod.name == "default:snow" then
-		return
+		return false
 	end
 
 --print ("in front:", nod.name, pos.y + 0.5)
@@ -637,12 +590,18 @@ do_jump = function(self)
 
 		local v = self.object:getvelocity()
 
-		v.y = self.jump_height + 1
+		v.y = self.jump_height -- + 1
+
+		set_animation(self, "jump") -- only when defined
 
 		self.object:setvelocity(v)
 
 		mob_sound(self, self.sounds.jump)
+
+		return true
 	end
+
+	return false
 end
 
 
@@ -951,7 +910,7 @@ function smart_mobs(self, s, p, dist, dtime)
 		p1.y = floor(p1.y + 0.5)
 		p1.z = floor(p1.z + 0.5)
 
-		self.path.way = minetest.find_path(s, p1, 16, 2, 6, "Dijkstra") --"A*_noprefetch")
+		self.path.way = minetest.find_path(s, p1, 16, 2, 6, "Dijkstra")
 
 		-- attempt to unstick mob that is "daydreaming"
 		self.object:setpos({
@@ -1000,9 +959,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 				else -- dig 2 blocks to make door toward player direction
 
---					local yaw1 = self.yaw + pi / 2
 					local yaw1 = self.object:getyaw() + pi / 2
-
 					local p1 = {
 						x = s.x + cos(yaw1),
 						y = s.y,
@@ -1128,7 +1085,6 @@ local monster_attack = function(self)
 			-- field of view check goes here
 
 				-- choose closest player to attack
---				if line_of_sight_water(self, sp, p, 2) == true
 				if line_of_sight(self, sp, p, 2) == true
 				and dist < min_dist then
 					min_dist = dist
@@ -1256,26 +1212,15 @@ local follow_flop = function(self)
 					z = p.z - s.z
 				}
 
---				local yaw = atan2(vec.z, vec.x) - pi / 2
 				local yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 				if p.x > s.x then yaw = yaw + pi end
 
 				self.object:setyaw(yaw)
---				set_yaw(self, yaw)
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
 				and self.order ~= "stand" then
-
-					if (self.jump
-					and get_velocity(self) <= 0.5
-					and self.object:getvelocity().y == 0)
-					or (self.object:getvelocity().y == 0
-					and self.jump_chance > 0) then
-
-						do_jump(self)
-					end
 
 					set_velocity(self, self.walk_velocity)
 
@@ -1339,7 +1284,7 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
-	local yaw = 0 -- self.yaw
+	local yaw = 0
 
 	if self.state == "stand" then
 
@@ -1365,17 +1310,14 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
---				yaw = atan2(vec.z, vec.x) - pi / 2
 				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 				if lp.x > s.x then yaw = yaw + pi end
 			else
---				yaw = random() * 2 * pi
 				yaw = (random(0, 360) - 180) / 180 * pi
 			end
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 		end
 
 		set_velocity(self, 0)
@@ -1434,12 +1376,10 @@ local do_states = function(self, dtime)
 						z = lp.z - s.z
 					}
 
---					yaw = atan2(vec.z, vec.x) + pi / 2
 					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 					if lp.x > s.x then yaw = yaw + pi end
 				else
---					yaw = random() * 2 * pi
 					yaw = (random(0, 360) - 180) / 180 * pi
 				end
 
@@ -1450,14 +1390,12 @@ local do_states = function(self, dtime)
 					z = lp.z - s.z
 				}
 
---				yaw = atan2(vec.z, vec.x) + pi / 2
 				yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 				if lp.x > s.x then yaw = yaw + pi end
 			end
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
@@ -1465,20 +1403,10 @@ local do_states = function(self, dtime)
 			yaw = random() * 2 * pi
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 		end
 
 		-- stand for great fall in front
 		local temp_is_cliff = is_at_cliff(self)
-
-		-- jump when walking comes to a halt
-		if temp_is_cliff == false
-		and self.jump
-		and get_velocity(self) <= 0.5
-		and self.object:getvelocity().y == 0 then
-
-			do_jump(self)
-		end
 
 		if temp_is_cliff
 		or random(1, 100) <= 30 then
@@ -1516,14 +1444,6 @@ local do_states = function(self, dtime)
 			set_animation(self, "walk")
 		end
 
-		-- jump when walking comes to a halt
-		if self.jump
-		and get_velocity(self) <= 0.5
-		and self.object:getvelocity().y == 0 then
-
-			do_jump(self)
-		end
-
 	-- attack routines (explode, dogfight, shoot, dogshoot)
 	elseif self.state == "attack" then
 
@@ -1558,13 +1478,11 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			yaw = atan2(vec.z, vec.x) - pi / 2
 			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 			if p.x > s.x then yaw = yaw + pi end
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 
 			if dist > self.reach then
 
@@ -1577,12 +1495,6 @@ local do_states = function(self, dtime)
 				else
 					self.timer = 0
 					self.blinktimer = 0
-
-					if get_velocity(self) <= 0.5
-					and self.object:getvelocity().y == 0 then
-
-						do_jump(self)
-					end
 
 					set_velocity(self, self.run_velocity)
 				end
@@ -1631,7 +1543,7 @@ local do_states = function(self, dtime)
 
 					pos.y = pos.y - 1
 
-					mobs:explosion(pos, radius, 0, 1, self.sounds.explode)
+					mobs:explosion(pos, radius, 1, 1, self.sounds.explode)
 
 					self.object:remove()
 
@@ -1653,7 +1565,6 @@ local do_states = function(self, dtime)
 				local p_y = floor(p2.y + 1)
 				local v = self.object:getvelocity()
 
---				if nod.name == self.fly_in then
 				if flight_check(self, s) then
 
 					if me_y < p_y then
@@ -1726,13 +1637,11 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			yaw = atan2(vec.z, vec.x) - pi / 2
 			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 			if p.x > s.x then yaw = yaw + pi end
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1742,16 +1651,6 @@ local do_states = function(self, dtime)
 				and enable_pathfinding then
 
 					smart_mobs(self, s, p, dist, dtime)
-				end
-
-				-- jump attack
-				if (self.jump
-				and get_velocity(self) <= 0.5
-				and self.object:getvelocity().y == 0)
-				or (self.object:getvelocity().y == 0
-				and self.jump_chance > 0) then
-
-					do_jump(self)
 				end
 
 				if is_at_cliff(self) then
@@ -1793,10 +1692,9 @@ local do_states = function(self, dtime)
 						local p2 = p
 						local s2 = s
 
-						p2.y = p2.y + .5--1.5
-						s2.y = s2.y + .5--1.5
+						p2.y = p2.y + .5
+						s2.y = s2.y + .5
 
---						if line_of_sight_water(self, p2, s2) == true then
 						if line_of_sight(self, p2, s2) == true then
 
 							-- play attack sound
@@ -1838,13 +1736,11 @@ local do_states = function(self, dtime)
 				z = p.z - s.z
 			}
 
---			yaw = atan2(vec.z, vec.x) - pi / 2
 			yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 			if p.x > s.x then yaw = yaw + pi end
 
 			self.object:setyaw(yaw)
---			set_yaw(self, yaw)
 
 			set_velocity(self, 0)
 
@@ -1928,7 +1824,7 @@ local falling = function(self, pos)
 		if self.fall_damage == 1
 		and self.object:getvelocity().y == 0 then
 
-			local d = (self.old_y or 0) - self.object:getpos().y -- remove or 0
+			local d = (self.old_y or 0) - self.object:getpos().y
 
 			if d > 5 then
 
@@ -2119,7 +2015,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			yaw = yaw + pi
 		end
 
-		set_yaw(self, yaw)
+		self.object:setyaw(yaw)
 		self.state = "runaway"
 		self.runaway_timer = 0
 		self.following = nil
@@ -2256,7 +2152,6 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 
 	-- set anything changed above
 	self.object:set_properties(self)
---	set_yaw(self, random() * 2 * pi)
 	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
 	update_tag(self)
 end
@@ -2265,7 +2160,6 @@ end
 local mob_step = function(self, dtime)
 
 	local pos = self.object:getpos()
---	local yaw = self.yaw
 	local yaw = 0
 
 	-- when lifetimer expires remove mob (except npc and tamed)
@@ -2370,6 +2264,8 @@ local mob_step = function(self, dtime)
 
 	follow_flop(self)
 
+	do_jump(self)
+
 	do_states(self, dtime)
 
 end
@@ -2398,9 +2294,6 @@ function mobs:register_mob(name, def)
 
 minetest.register_entity(name, {
 
---automatic_face_movement_dir = def.rotate and math.rad(def.rotate) or false,
---automatic_face_movement_max_rotation_per_sec = -1,
-
 	stepheight = def.stepheight or 0.6,
 	name = name,
 	type = def.type,
@@ -2412,7 +2305,6 @@ minetest.register_entity(name, {
 	on_die = def.on_die,
 	do_custom = def.do_custom,
 	jump_height = def.jump_height or 6,
-	jump_chance = def.jump_chance or 0,
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 	lifetimer = def.lifetimer or 180, -- 3 minutes
@@ -2441,7 +2333,7 @@ minetest.register_entity(name, {
 	sounds = def.sounds or {},
 	animation = def.animation,
 	follow = def.follow,
-	jump = def.jump or true,
+	jump = def.jump ~= false,
 	walk_chance = def.walk_chance or 50,
 	attacks_monsters = def.attacks_monsters or false,
 	group_attack = def.group_attack or false,
@@ -2523,7 +2415,7 @@ minetest.register_entity(name, {
 
 		local tmp = {}
 
-		for _,stat in pairs(self) do
+		for _,stat in ipairs(self) do
 
 			local t = type(stat)
 
@@ -2897,7 +2789,6 @@ function mobs:register_arrow(name, def)
 				local node = node_ok(pos).name
 
 				if minetest.registered_nodes[node].walkable then
-				--if node ~= "air" then
 
 					self.hit_node(self, pos, node)
 

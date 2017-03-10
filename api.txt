@@ -1,5 +1,5 @@
 
-MOB API (7th March 2017)
+MOB API (10th March 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -42,14 +42,13 @@ This functions registers a new mob as a Minetest entity.
         'makes_footstep_sound' same is in minetest.register_entity()
         'follow' item when held will cause mob to follow player, can be single string "default:apple" or table {"default:apple", "default:diamond"}
         'view_range' the range in that the monster will see the playerand follow him
-        'walk_chance' chance of mob walking around
-        'jump_chance' chance of mob jumping around, set above to 0 for jumping mob only
+        'walk_chance' chance of mob walking around, set above to 0 for jumping mob only
         'walk_velocity' the velocity when the monster is walking around
         'run_velocity' the velocity when the monster is attacking a player
         'runaway' when true mob will turn and run away when punched
         'stepheight' minimum node height mob can walk onto without jumping (default: 0.6)
         'jump' can mob jump, true or false
-        'jump_height' height mob can jump, default is 6
+        'jump_height' height mob can jump, default is 6 (0 to disable jump)
         'fly' can mob fly, true or false (used for swimming mobs also)
         'fly_in' node name that mob flys inside, e.g "air", "default:water_source" for fish
         'damage' the damage per second
