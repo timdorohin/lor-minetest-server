@@ -2264,9 +2264,9 @@ local mob_step = function(self, dtime)
 
 	follow_flop(self)
 
-	do_jump(self)
-
 	do_states(self, dtime)
+
+	do_jump(self)
 
 end
 
