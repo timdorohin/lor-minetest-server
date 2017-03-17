@@ -1266,7 +1266,10 @@ local dogswitch = function(self, dtime)
 
 	self.dogshoot_count = self.dogshoot_count + dtime
 
-	if self.dogshoot_count > self.dogshoot_count_max then
+	if (self.dogshoot_switch == 1
+	and self.dogshoot_count > self.dogshoot_count_max)
+	or (self.dogshoot_switch == 2
+	and self.dogshoot_count > self.dogshoot_count2_max) then
 
 		self.dogshoot_count = 0
 
@@ -2389,6 +2392,7 @@ minetest.register_entity(name, {
 	dogshoot_switch = def.dogshoot_switch,
 	dogshoot_count = 0,
 	dogshoot_count_max = def.dogshoot_count_max or 5,
+	dogshoot_count2_max = def.dogshoot_count2_max,
 	attack_animals = def.attack_animals or false,
 	specific_attack = def.specific_attack,
 
