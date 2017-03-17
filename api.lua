@@ -1,5 +1,5 @@
 
--- Mobs Api (10th March 2017)
+-- Mobs Api (17th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -40,7 +40,7 @@ local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
 local max_per_block = tonumber(minetest.setting_get("max_objects_per_block") or 99)
 
--- calculate aoc range for mob counts
+-- calculate aoc range for mob count
 local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
 local abr = tonumber(minetest.setting_get("active_block_range"))
 local aoc_range = math.max(aosrb, abr) * 16
@@ -1334,6 +1334,16 @@ local do_states = function(self, dtime)
 				set_velocity(self, self.walk_velocity)
 				self.state = "walk"
 				set_animation(self, "walk")
+
+-- fly up/down randombly for flying mobs
+if self.fly and random(1, 100) <= self.walk_chance then
+
+	local v = self.object:getvelocity()
+	local ud = random(-1, 2) / 9
+
+	self.object:setvelocity({x = v.x, y = ud, z = v.z})
+end
+
 			end
 		end
 
@@ -1379,6 +1389,11 @@ local do_states = function(self, dtime)
 					yaw = (atan(vec.z / vec.x) + pi / 2) - self.rotate
 
 					if lp.x > s.x then yaw = yaw + pi end
+
+-- look towards land and jump/move in that direction
+self.object:setyaw(yaw)
+do_jump(self)
+set_velocity(self, self.walk_velocity)
 				else
 					yaw = (random(0, 360) - 180) / 180 * pi
 				end
@@ -1558,7 +1573,7 @@ local do_states = function(self, dtime)
 			if self.fly
 			and dist > self.reach then
 
-				local nod = node_ok(s)
+--				local nod = node_ok(s)
 				local p1 = s
 				local me_y = floor(p1.y)
 				local p2 = p
