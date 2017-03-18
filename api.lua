@@ -1,5 +1,5 @@
 
--- Mobs Api (17th March 2017)
+-- Mobs Api (18th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -29,6 +29,27 @@ if rawget(_G, "invisibility") then
 end
 
 
+-- localize math functions
+local pi = math.pi
+local square = math.sqrt
+local sin = math.sin
+local cos = math.cos
+local abs = math.abs
+local min = math.min
+local max = math.max
+local atann = math.atan
+local random = math.random
+local floor = math.floor
+local atan = function(x)
+	if x ~= x then
+		--error("atan bassed NaN")
+		return 0
+	else
+		return atann(x)
+	end
+end
+
+
 -- Load settings
 local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
@@ -43,35 +64,15 @@ local max_per_block = tonumber(minetest.setting_get("max_objects_per_block") or 
 -- calculate aoc range for mob count
 local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
 local abr = tonumber(minetest.setting_get("active_block_range"))
-local aoc_range = math.max(aosrb, abr) * 16
+local aoc_range = max(aosrb, abr) * 16
 
 -- pathfinding settings
 local enable_pathfinding = true
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
--- localize functions
-local pi = math.pi
-local square = math.sqrt
-local sin = math.sin
-local cos = math.cos
-local abs = math.abs
-local min = math.min
-local max = math.max
-local atann = math.atan
-local random = math.random
-local floor = math.floor
-local atan = function(x)
 
-	if x ~= x then
-		--error("atan bassed NaN")
-		return 0
-	else
-		return atann(x)
-	end
-end
-
-
+-- play sound
 mob_sound = function(self, sound)
 
 	if sound then
@@ -84,6 +85,7 @@ mob_sound = function(self, sound)
 end
 
 
+-- attack player/mob
 do_attack = function(self, player)
 
 	if self.state == "attack" then
@@ -99,6 +101,7 @@ do_attack = function(self, player)
 end
 
 
+-- move mob in facing direction
 set_velocity = function(self, v)
 
 	local yaw = self.object:getyaw() + self.rotate
@@ -111,6 +114,7 @@ set_velocity = function(self, v)
 end
 
 
+-- get overall speed of mob
 get_velocity = function(self)
 
 	local v = self.object:getvelocity()
@@ -1338,15 +1342,14 @@ local do_states = function(self, dtime)
 				self.state = "walk"
 				set_animation(self, "walk")
 
--- fly up/down randombly for flying mobs
-if self.fly and random(1, 100) <= self.walk_chance then
+				-- fly up/down randombly for flying mobs
+				if self.fly and random(1, 100) <= self.walk_chance then
 
-	local v = self.object:getvelocity()
-	local ud = random(-1, 2) / 9
+					local v = self.object:getvelocity()
+					local ud = random(-1, 2) / 9
 
-	self.object:setvelocity({x = v.x, y = ud, z = v.z})
-end
-
+					self.object:setvelocity({x = v.x, y = ud, z = v.z})
+				end
 			end
 		end
 
@@ -1393,10 +1396,10 @@ end
 
 					if lp.x > s.x then yaw = yaw + pi end
 
--- look towards land and jump/move in that direction
-self.object:setyaw(yaw)
-do_jump(self)
-set_velocity(self, self.walk_velocity)
+						-- look towards land and jump/move in that direction
+						self.object:setyaw(yaw)
+						do_jump(self)
+						set_velocity(self, self.walk_velocity)
 				else
 					yaw = (random(0, 360) - 180) / 180 * pi
 				end
@@ -1576,7 +1579,6 @@ set_velocity(self, self.walk_velocity)
 			if self.fly
 			and dist > self.reach then
 
---				local nod = node_ok(s)
 				local p1 = s
 				local me_y = floor(p1.y)
 				local p2 = p
@@ -1861,6 +1863,7 @@ local falling = function(self, pos)
 end
 
 
+-- deal damage and effects when mob punched
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 	-- mob health check
@@ -2070,11 +2073,56 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 end
 
 
-local mob_activate = function(self, staticdata, dtime_s, def)
+-- get entity staticdata
+local mob_staticdata = function(self)
+
+	-- remove mob when out of range unless tamed
+	if remove_far
+	and self.remove_ok
+	and not self.tamed
+	and self.lifetimer < 20000 then
+
+		--print ("REMOVED " .. self.name)
+
+		self.object:remove()
+
+		return ""-- nil
+	end
+
+	self.remove_ok = true
+	self.attack = nil
+	self.following = nil
+	self.state = "stand"
+
+	-- used to rotate older mobs
+	if self.drawtype
+	and self.drawtype == "side" then
+		self.rotate = math.rad(90)
+	end
+
+	local tmp = {}
+
+	for _,stat in pairs(self) do
+
+		local t = type(stat)
+
+		if  t ~= "function"
+		and t ~= "nil"
+		and t ~= "userdata" then
+			tmp[_] = self[_]
+		end
+	end
+
+	--print('===== '..self.name..'\n'.. dump(tmp)..'\n=====\n')
+	return minetest.serialize(tmp)
+end
+
+
+-- activate mob and reload settings
+local mob_activate = function(self, staticdata, def)
 
 	-- remove monsters in peaceful mode, or when no data
-	if (self.type == "monster" and peaceful_only)
-	or not staticdata then
+	if (self.type == "monster" and peaceful_only) then
 
 		self.object:remove()
 
@@ -2085,7 +2133,6 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 	local tmp = minetest.deserialize(staticdata)
 
 	if tmp then
-
 		for _,stat in pairs(tmp) do
 			self[_] = stat
 		end
@@ -2175,6 +2222,7 @@ local mob_activate = function(self, staticdata, dtime_s, def)
 end
 
 
+-- main mob function
 local mob_step = function(self, dtime)
 
 	local pos = self.object:getpos()
@@ -2305,7 +2353,7 @@ end
 
 mobs.spawning_mobs = {}
 
--- register mob function
+-- register mob entity
 function mobs:register_mob(name, def)
 
 	mobs.spawning_mobs[name] = true
@@ -2402,51 +2450,12 @@ minetest.register_entity(name, {
 
 	on_punch = mob_punch,
 
-	on_activate = function(self, staticdata, dtime_s)
-		mob_activate(self, staticdata, dtime_s, def)
+	on_activate = function(self, staticdata)
+		return mob_activate(self, staticdata, def)
 	end,
 
 	get_staticdata = function(self)
-
-		-- remove mob when out of range unless tamed
-		if remove_far
-		and self.remove_ok
-		and not self.tamed
-		and self.lifetimer < 20000 then
-
-			--print ("REMOVED " .. self.name)
-
-			self.object:remove()
-
-			return nil
-		end
-
-		self.remove_ok = true
-		self.attack = nil
-		self.following = nil
-		self.state = "stand"
-
-		-- used to rotate older mobs
-		if self.drawtype
-		and self.drawtype == "side" then
-			self.rotate = math.rad(90)
-		end
-
-		local tmp = {}
-
-		for _,stat in ipairs(self) do
-
-			local t = type(stat)
-
-			if  t ~= 'function'
-			and t ~= 'nil'
-			and t ~= 'userdata' then
-				tmp[_] = self[_]
-			end
-		end
-
-		-- print('===== '..self.name..'\n'.. dump(tmp)..'\n=====\n')
-		return minetest.serialize(tmp)
+		return mob_staticdata(self)
 	end,
 
 })
@@ -2865,7 +2874,7 @@ function mobs:register_arrow(name, def)
 end
 
 
--- Spawn Egg
+-- register spawn eggs
 function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 	local grp = {}
@@ -2882,6 +2891,56 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			"^[mask:mobs_chicken_egg_overlay.png)"
 	end
 
+	-- register new spawn egg containing mob information
+	minetest.register_craftitem(mob .. "_set", {
+
+		description = desc .. " (Tamed)",
+		inventory_image = invimg,
+		groups = {not_in_creative_inventory = 1},
+		stack_max = 1,
+
+		on_place = function(itemstack, placer, pointed_thing)
+
+			local pos = pointed_thing.above
+
+			-- am I clicking on something with existing on_rightclick function?
+			local under = minetest.get_node(pointed_thing.under)
+			local def = minetest.registered_nodes[under.name]
+			if def and def.on_rightclick then
+				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
+			end
+
+			if pos
+			and within_limits(pos, 0)
+			and not minetest.is_protected(pos, placer:get_player_name()) then
+
+				pos.y = pos.y + 1
+
+				local data = itemstack:get_metadata()
+				local mob = minetest.add_entity(pos, mob, data)
+				local ent = mob:get_luaentity()
+
+				if not ent then
+					mob:remove()
+					return
+				end
+
+				if ent.type ~= "monster" then
+					-- set owner and tame if not monster
+					ent.owner = placer:get_player_name()
+					ent.tamed = true
+				end
+
+				-- since mob is unique we remove egg once spawned
+				itemstack:take_item()
+			end
+
+			return itemstack
+		end,
+	})
+
+
+	-- register old stackable mob egg
 	minetest.register_craftitem(mob, {
 
 		description = desc,
@@ -2929,53 +2988,6 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 		end,
 	})
 
-	-- spawn egg containing mob information
-	minetest.register_craftitem(mob .. "_set", {
-
-		description = desc .. " (Tamed)",
-		inventory_image = invimg,
-		groups = {not_in_creative_inventory = 1},
-		stack_max = 1,
-
-		on_place = function(itemstack, placer, pointed_thing)
-
-			local pos = pointed_thing.above
-
-			-- am I clicking on something with existing on_rightclick function?
-			local under = minetest.get_node(pointed_thing.under)
-			local def = minetest.registered_nodes[under.name]
-			if def and def.on_rightclick then
-				return def.on_rightclick(pointed_thing.under, under, placer, itemstack)
-			end
-
-			if pos
-			and within_limits(pos, 0)
-			and not minetest.is_protected(pos, placer:get_player_name()) then
-
-				pos.y = pos.y + 1
-
-				local data = itemstack:get_metadata()
-				local mob = minetest.add_entity(pos, mob, data)
-				local ent = mob:get_luaentity()
-
-				if not ent then
-					mob:remove()
-					return
-				end
-
-				if ent.type ~= "monster" then
-					-- set owner and tame if not monster
-					ent.owner = placer:get_player_name()
-					ent.tamed = true
-				end
-
-				-- since mob is unique we remove egg once spawned
-				itemstack:take_item()
-			end
-
-			return itemstack
-		end,
-	})
 end
 
 
@@ -3058,9 +3070,9 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 
 				for _,stat in pairs(self) do
 					local t = type(stat)
-					if  t ~= 'function'
-					and t ~= 'nil'
-					and t ~= 'userdata' then
+					if  t ~= "function"
+					and t ~= "nil"
+					and t ~= "userdata" then
 						tmp[_] = self[_]
 					end
 				end
@@ -3090,7 +3102,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 end
 
 
--- protect tamed mob with rune iten
+-- protect tamed mob with rune item
 function mobs:protect(self, clicker)
 
 	local name = clicker:get_player_name()
