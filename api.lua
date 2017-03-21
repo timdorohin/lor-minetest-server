@@ -2440,7 +2440,7 @@ minetest.register_entity(name, {
 	dogshoot_switch = def.dogshoot_switch,
 	dogshoot_count = 0,
 	dogshoot_count_max = def.dogshoot_count_max or 5,
-	dogshoot_count2_max = def.dogshoot_count2_max or 5,
+	dogshoot_count2_max = def.dogshoot_count2_max or dogshoot_count_max,
 	attack_animals = def.attack_animals or false,
 	specific_attack = def.specific_attack,
 
