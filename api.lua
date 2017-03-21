@@ -1,5 +1,5 @@
 
--- Mobs Api (18th March 2017)
+-- Mobs Api (21st March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2440,7 +2440,7 @@ minetest.register_entity(name, {
 	dogshoot_switch = def.dogshoot_switch,
 	dogshoot_count = 0,
 	dogshoot_count_max = def.dogshoot_count_max or 5,
-	dogshoot_count2_max = def.dogshoot_count2_max,
+	dogshoot_count2_max = def.dogshoot_count2_max or 5,
 	attack_animals = def.attack_animals or false,
 	specific_attack = def.specific_attack,
 
