@@ -1,5 +1,5 @@
 
--- Mobs Api (21st March 2017)
+-- Mobs Api (24th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -1546,9 +1546,6 @@ local do_states = function(self, dtime)
 					local pos = self.object:getpos()
 					local radius = self.explosion_radius or 1
 
-					-- hurt player/mobs caught in blast area
-					entity_physics(pos, radius)
-
 					-- dont damage anything if area protected or next to water
 					if minetest.find_node_near(pos, 1, {"group:water"})
 					or minetest.is_protected(pos, "") then
@@ -1559,6 +1556,9 @@ local do_states = function(self, dtime)
 
 						effect(pos, 15, "tnt_smoke.png")
 
+						-- hurt player/mobs caught in blast area
+						entity_physics(pos, radius)
+
 						return
 					end
 
@@ -1567,6 +1567,8 @@ local do_states = function(self, dtime)
 					mobs:explosion(pos, radius, 1, 1, self.sounds.explode)
 
 					self.object:remove()
+
+					entity_physics(pos, radius)
 
 					return
 				end
