@@ -31,7 +31,6 @@ mobs:register_mob("mobs_animal:chicken", {
 	walk_velocity = 1,
 	run_velocity = 3,
 	runaway = true,
-	jump = true,
 	drops = {
 		{name = "mobs:chicken_raw", chance = 1, min = 2, max = 2},
 	},
@@ -113,14 +112,14 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 	velocity = 6,
 
 	hit_player = function(self, player)
-		player:punch(self.object, 1.0, {
+		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1},
 		}, nil)
 	end,
 
 	hit_mob = function(self, player)
-		player:punch(self.object, 1.0, {
+		player:punch(minetest.get_player_by_name(self.playername) or self.object, 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = 1},
 		}, nil)
