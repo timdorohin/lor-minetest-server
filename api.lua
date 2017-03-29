@@ -1,5 +1,5 @@
 
--- Mobs Api (26th March 2017)
+-- Mobs Api (29th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -885,8 +885,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 	-- im stuck, search for path
 	if (self.path.stuck_timer > stuck_timeout and not self.path.following)
-	or (self.path.stuck_timer > stuck_path_timeout
-	and self.path.following) then
+	or (self.path.stuck_timer > stuck_path_timeout and self.path.following) then
 
 		self.path.stuck_timer = 0
 
@@ -939,7 +938,13 @@ function smart_mobs(self, s, p, dist, dtime)
 				if s.y < p1.y then
 
 					if not minetest.is_protected(s, "") then
-						minetest.set_node(s, {name = "default:dirt"})
+
+						local ndef1 = minetest.registered_nodes[self.standing_in]
+
+						if ndef1 and (ndef1.buildable_to or ndef1.groups.liquid) then
+
+								minetest.set_node(s, {name = "default:dirt"})
+						end
 					end
 
 					local sheight = math.ceil(self.collisionbox[5]) + 1
@@ -949,12 +954,18 @@ function smart_mobs(self, s, p, dist, dtime)
 
 					if not minetest.is_protected(s, "") then
 
-						local node1 = minetest.get_node(s).name
+						local node1 = node_ok(s, "air").name -- minetest.get_node(s).name
+						local ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
-						and node1 ~= "ignore" then
+						and node1 ~= "ignore"
+						and ndef1
+						and not ndef1.groups.level
+						and not ndef1.groups.unbreakable then
+
 							minetest.set_node(s, {name = "air"})
 							minetest.add_item(s, ItemStack(node1))
+
 						end
 					end
 
@@ -972,19 +983,29 @@ function smart_mobs(self, s, p, dist, dtime)
 
 					if not minetest.is_protected(p1, "") then
 
-						local node1 = minetest.get_node(p1).name
+						local node1 = node_ok(p1, "air").name -- minetest.get_node(p1).name
+						local ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
-						and node1 ~= "ignore" then
+						and node1 ~= "ignore"
+						and ndef1
+						and not ndef1.groups.level
+						and not ndef1.groups.unbreakable then
+
 							minetest.add_item(p1, ItemStack(node1))
 							minetest.set_node(p1, {name = "air"})
 						end
 
 						p1.y = p1.y + 1
-						node1 = minetest.get_node(p1).name
+						node1 = node_ok(p1, "air").name -- minetest.get_node(p1).name
+						ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
-						and node1 ~= "ignore" then
+						and node1 ~= "ignore"
+						and ndef1
+						and not ndef1.groups.level
+						and not ndef1.groups.unbreakable then
+
 							minetest.add_item(p1, ItemStack(node1))
 							minetest.set_node(p1, {name = "air"})
 						end
