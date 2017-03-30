@@ -1,5 +1,5 @@
 
--- Mobs Api (29th March 2017)
+-- Mobs Api (30th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -933,10 +933,10 @@ function smart_mobs(self, s, p, dist, dtime)
 			 -- lets make way by digging/building if not accessible
 			if self.pathfinding == 2 then
 
-				 -- add block and remove one block above so
-				 -- there is room to jump if needed
+				-- is player higher than mob?
 				if s.y < p1.y then
 
+					-- build upwards
 					if not minetest.is_protected(s, "") then
 
 						local ndef1 = minetest.registered_nodes[self.standing_in]
@@ -952,9 +952,10 @@ function smart_mobs(self, s, p, dist, dtime)
 					-- assume mob is 2 blocks high so it digs above its head
 					s.y = s.y + sheight
 
+					-- remove one block above to make room to jump
 					if not minetest.is_protected(s, "") then
 
-						local node1 = node_ok(s, "air").name -- minetest.get_node(s).name
+						local node1 = node_ok(s, "air").name
 						local ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
@@ -983,7 +984,7 @@ function smart_mobs(self, s, p, dist, dtime)
 
 					if not minetest.is_protected(p1, "") then
 
-						local node1 = node_ok(p1, "air").name -- minetest.get_node(p1).name
+						local node1 = node_ok(p1, "air").name
 						local ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
@@ -997,7 +998,7 @@ function smart_mobs(self, s, p, dist, dtime)
 						end
 
 						p1.y = p1.y + 1
-						node1 = node_ok(p1, "air").name -- minetest.get_node(p1).name
+						node1 = node_ok(p1, "air").name
 						ndef1 = minetest.registered_nodes[node1]
 
 						if node1 ~= "air"
