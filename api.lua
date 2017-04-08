@@ -1,5 +1,5 @@
 
--- Mobs Api (30th March 2017)
+-- Mobs Api (8th April 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -41,7 +41,7 @@ local atann = math.atan
 local random = math.random
 local floor = math.floor
 local atan = function(x)
-	if x ~= x then
+	if not x or x ~= x then
 		--error("atan bassed NaN")
 		return 0
 	else
@@ -104,7 +104,7 @@ end
 -- move mob in facing direction
 set_velocity = function(self, v)
 
-	local yaw = self.object:getyaw() + self.rotate
+	local yaw = (self.object:getyaw() or 0) + self.rotate
 
 	self.object:setvelocity({
 		x = sin(yaw) * -v,
@@ -120,6 +120,19 @@ get_velocity = function(self)
 	local v = self.object:getvelocity()
 
 	return (v.x * v.x + v.z * v.z) ^ 0.5
+end
+
+
+-- set yaw
+set_yaw = function(self, yaw)
+
+	if not yaw or yaw ~= yaw then
+		yaw = 0
+	end
+
+	self:setyaw(yaw)
+
+	return yaw
 end
 
 
@@ -146,7 +159,7 @@ set_animation = function(self, anim)
 end
 
 
--- get distance
+-- this is a faster way to calculate distance
 local get_distance = function(a, b)
 
 	local x, y, z = a.x - b.x, a.y - b.y, a.z - b.z
@@ -195,9 +208,18 @@ function line_of_sight(self, pos1, pos2, stepsize)
 
 		-- Moves the analyzed pos
 		local d = get_distance(pos1, pos2)
+
 		npos1.x = ((pos2.x - pos1.x) / d * stepsize) + pos1.x
 		npos1.y = ((pos2.y - pos1.y) / d * stepsize) + pos1.y
 		npos1.z = ((pos2.z - pos1.z) / d * stepsize) + pos1.z
+
+		-- NaN checks
+		if d == 0
+		or npos.x ~= npos.x
+		or npos.y ~= npos.y
+		or npos.z ~= npos.z then
+			return false
+		end
 
 		ad = ad + stepsize
 
@@ -221,7 +243,7 @@ local function flight_check(self, pos_w)
 	local nod = self.standing_in
 
 	if type(self.fly_in) == "string"
-	and ( nod == self.fly_in or nod == self.fly_in:gsub("_source", "_flowing") ) then
+	and (nod == self.fly_in or nod == self.fly_in:gsub("_source", "_flowing")) then
 
 		return true
 
@@ -329,7 +351,7 @@ function check_for_death(self)
 	-- drop items when dead
 	local obj
 	local pos = self.object:getpos()
-	self.drops = self.drops or {} -- error check
+	self.drops = self.drops or {} -- nil check
 
 	for n = 1, #self.drops do
 
@@ -606,15 +628,6 @@ do_jump = function(self)
 	end
 
 	return false
-end
-
-
--- this is a faster way to calculate distance
-local get_distance = function(a, b)
-
-	local x, y, z = a.x - b.x, a.y - b.y, a.z - b.z
-
-	return square(x * x + y * y + z * z)
 end
 
 
@@ -1242,7 +1255,8 @@ local follow_flop = function(self)
 
 				if p.x > s.x then yaw = yaw + pi end
 
-				self.object:setyaw(yaw)
+--				self.object:setyaw(yaw)
+				yaw = set_yaw(self.object, yaw)
 
 				-- anyone but standing npc's can move along
 				if dist > self.reach
@@ -1346,7 +1360,8 @@ local do_states = function(self, dtime)
 				yaw = (random(0, 360) - 180) / 180 * pi
 			end
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 		end
 
 		set_velocity(self, 0)
@@ -1419,7 +1434,8 @@ local do_states = function(self, dtime)
 					if lp.x > s.x then yaw = yaw + pi end
 
 						-- look towards land and jump/move in that direction
-						self.object:setyaw(yaw)
+--						self.object:setyaw(yaw)
+						yaw = set_yaw(self.object, yaw)
 						do_jump(self)
 						set_velocity(self, self.walk_velocity)
 				else
@@ -1438,14 +1454,16 @@ local do_states = function(self, dtime)
 				if lp.x > s.x then yaw = yaw + pi end
 			end
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
 
 			yaw = random() * 2 * pi
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 		end
 
 		-- stand for great fall in front
@@ -1525,7 +1543,8 @@ local do_states = function(self, dtime)
 
 			if p.x > s.x then yaw = yaw + pi end
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 
 			if dist > self.reach then
 
@@ -1685,7 +1704,8 @@ local do_states = function(self, dtime)
 
 			if p.x > s.x then yaw = yaw + pi end
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 
 			-- move towards enemy if beyond mob reach
 			if dist > self.reach then
@@ -1784,7 +1804,8 @@ local do_states = function(self, dtime)
 
 			if p.x > s.x then yaw = yaw + pi end
 
-			self.object:setyaw(yaw)
+--			self.object:setyaw(yaw)
+			yaw = set_yaw(self.object, yaw)
 
 			set_velocity(self, 0)
 
@@ -2060,7 +2081,8 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			yaw = yaw + pi
 		end
 
-		self.object:setyaw(yaw)
+--		self.object:setyaw(yaw)
+		yaw = set_yaw(self.object, yaw)
 		self.state = "runaway"
 		self.runaway_timer = 0
 		self.following = nil
@@ -2241,7 +2263,8 @@ local mob_activate = function(self, staticdata, def)
 
 	-- set anything changed above
 	self.object:set_properties(self)
-	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
+--	self.object:setyaw((random(0, 360) - 180) / 180 * pi)
+	set_yaw(self.object, (random(0, 360) - 180) / 180 * pi)
 	update_tag(self)
 end
 
