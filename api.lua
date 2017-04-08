@@ -215,9 +215,9 @@ function line_of_sight(self, pos1, pos2, stepsize)
 
 		-- NaN checks
 		if d == 0
-		or npos.x ~= npos.x
-		or npos.y ~= npos.y
-		or npos.z ~= npos.z then
+		or npos1.x ~= npos1.x
+		or npos1.y ~= npos1.y
+		or npos1.z ~= npos1.z then
 			return false
 		end
 
