@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.23 (12th November 2016)
+	Minetest Farming Redo Mod 1.24 (8th March 2017)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -502,6 +502,7 @@ local can_refill_plant = {
 	["farming:rhubarb_1"] = "farming:rhubarb",
 	["farming:cocoa_1"] = "farming:cocoa_beans",
 	["farming:barley_1"] = "farming:seed_barley",
+	["farming:hemp_1"] = "farming:seed_hemp",
 }
 
 function farming.refill_plant(player, plantname, index)
@@ -711,6 +712,7 @@ dofile(farming.path.."/rhubarb.lua")
 dofile(farming.path.."/beanpole.lua")
 dofile(farming.path.."/grapes.lua")
 dofile(farming.path.."/barley.lua")
+dofile(farming.path.."/hemp.lua")
 dofile(farming.path.."/donut.lua")
 dofile(farming.path.."/mapgen.lua")
 dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility

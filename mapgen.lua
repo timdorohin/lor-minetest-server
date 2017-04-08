@@ -55,6 +55,25 @@ function farming.register_mgv7_decorations()
 	register_plant("grapebush", 25, 45, "", -1)
 end
 
+minetest.register_decoration({
+	deco_type = "simple",
+	place_on = {"default:dirt_with_grass", "default:dirt_with_rainforest_litter"},
+	sidelen = 16,
+	noise_params = {
+		offset = 0,
+		scale = 0.06,
+		spread = {x = 100, y = 100, z = 100},
+		seed = 420,
+		octaves = 3,
+		persist = 0.6
+	},
+	y_min = 5,
+	y_max = 35,
+	decoration = "farming:hemp_7",
+	spawn_by = "group:tree",
+	num_spawn_by = 1,
+})
+
 -- detect mapgen
 local mg_name = minetest.get_mapgen_params().mgname
 
