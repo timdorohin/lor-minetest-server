@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.24 (8th March 2017)
+	Minetest Farming Redo Mod 1.24 (8th April 2017)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
