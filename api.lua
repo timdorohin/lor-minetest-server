@@ -1,5 +1,5 @@
 
--- Mobs Api (8th April 2017)
+-- Mobs Api (13th March 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -2037,7 +2037,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 		-- knock back effect (only on full punch)
 		if self.knock_back > 0
-		and tflp > punch_interval then
+		and tflp >= punch_interval then
 
 			local v = self.object:getvelocity()
 			local r = 1.4 - min(punch_interval, 1.4)
@@ -2407,7 +2407,7 @@ function mobs:register_mob(name, def)
 
 minetest.register_entity(name, {
 
-	stepheight = def.stepheight or 0.6,
+	stepheight = def.stepheight or 1.1, -- was 0.6
 	name = name,
 	type = def.type,
 	attack_type = def.attack_type,
@@ -2417,7 +2417,7 @@ minetest.register_entity(name, {
 	order = def.order or "",
 	on_die = def.on_die,
 	do_custom = def.do_custom,
-	jump_height = def.jump_height or 6,
+	jump_height = def.jump_height or 4, -- was 6
 	drawtype = def.drawtype, -- DEPRECATED, use rotate instead
 	rotate = math.rad(def.rotate or 0), --  0=front, 90=side, 180=back, 270=side2
 	lifetimer = def.lifetimer or 180, -- 3 minutes
