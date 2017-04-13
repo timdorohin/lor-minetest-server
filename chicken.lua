@@ -60,10 +60,16 @@ mobs:register_mob("mobs_animal:chicken", {
 		mobs:capture_mob(self, clicker, 30, 50, 80, false, nil)
 	end,
 
-	do_custom = function(self)
+	do_custom = function(self, dtime)
+
+		self.egg_timer = (self.egg_timer or 0) + dtime
+		if self.egg_timer < 10 then
+			return
+		end
+		self.egg_timer = 0
 
 		if self.child
-		or math.random(1, 5000) > 1 then
+		or math.random(1, 100) > 1 then
 			return
 		end
 
@@ -127,43 +133,42 @@ mobs:register_arrow("mobs_animal:egg_entity", {
 
 	hit_node = function(self, pos, node)
 
-		local num = math.random(1, 10)
-
-		if num == 1 then
-
-			pos.y = pos.y + 1
-
-			local nod = minetest.get_node_or_nil(pos)
-
-			if not nod
-			or not minetest.registered_nodes[nod.name]
-			or minetest.registered_nodes[nod.name].walkable == true then
-				return
-			end
-
-			local mob = minetest.add_entity(pos, "mobs_animal:chicken")
-			local ent2 = mob:get_luaentity()
-
-			mob:set_properties({
-				textures = ent2.child_texture[1],
-				visual_size = {
-					x = ent2.base_size.x / 2,
-					y = ent2.base_size.y / 2
-				},
-				collisionbox = {
-					ent2.base_colbox[1] / 2,
-					ent2.base_colbox[2] / 2,
-					ent2.base_colbox[3] / 2,
-					ent2.base_colbox[4] / 2,
-					ent2.base_colbox[5] / 2,
-					ent2.base_colbox[6] / 2
-				},
-			})
-
-			ent2.child = true
-			ent2.tamed = true
-			ent2.owner = self.playername
+		if math.random(1, 10) > 1 then
+			return
 		end
+
+		pos.y = pos.y + 1
+
+		local nod = minetest.get_node_or_nil(pos)
+
+		if not nod
+		or not minetest.registered_nodes[nod.name]
+		or minetest.registered_nodes[nod.name].walkable == true then
+			return
+		end
+
+		local mob = minetest.add_entity(pos, "mobs_animal:chicken")
+		local ent2 = mob:get_luaentity()
+
+		mob:set_properties({
+			textures = ent2.child_texture[1],
+			visual_size = {
+				x = ent2.base_size.x / 2,
+				y = ent2.base_size.y / 2
+			},
+			collisionbox = {
+				ent2.base_colbox[1] / 2,
+				ent2.base_colbox[2] / 2,
+				ent2.base_colbox[3] / 2,
+				ent2.base_colbox[4] / 2,
+				ent2.base_colbox[5] / 2,
+				ent2.base_colbox[6] / 2
+			},
+		})
+
+		ent2.child = true
+		ent2.tamed = true
+		ent2.owner = self.playername
 	end
 })
 
