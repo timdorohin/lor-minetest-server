@@ -1,5 +1,5 @@
 
--- Mobs Api (13th March 2017)
+-- Mobs Api (19th April 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -257,6 +257,8 @@ local function flight_check(self, pos_w)
 			end
 		end
 	end
+
+	return false
 end
 
 
