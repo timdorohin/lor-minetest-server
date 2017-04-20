@@ -1,5 +1,5 @@
 
--- Mobs Api (19th April 2017)
+-- Mobs Api (20th April 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -197,9 +197,11 @@ function line_of_sight(self, pos1, pos2, stepsize)
 	-- Actual Distance (ad) traveled
 	local ad = 0
 
-	-- It continues to advance in the line of sight in search of a real obstruction.
+	-- It continues to advance in the line of sight in search of a real
+	-- obstruction which counts as 'normal' nodebox.
 	while minetest.registered_nodes[nn]
-	and minetest.registered_nodes[nn].walkable == false do
+	and (minetest.registered_nodes[nn].walkable == false
+	or minetest.registered_nodes[nn].drawtype == "nodebox") do
 
 		-- Check if you can still move forward
 		if td < ad + stepsize then
