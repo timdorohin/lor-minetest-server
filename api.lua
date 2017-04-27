@@ -3157,31 +3157,29 @@ end
 function mobs:protect(self, clicker)
 
 	local name = clicker:get_player_name()
+	local tool = clicker:get_wielded_item()
+
+	if tool:get_name() ~= "mobs:protector" then
+		return false
+	end
 
 	if self.tamed == false then
 		minetest.chat_send_player(name, S("Not tamed!"))
-		return false
+		return true -- false
 	end
 
 	if self.protected == true then
 		minetest.chat_send_player(name, S("Already protected!"))
-		return false
+		return true -- false
 	end
 
-	local tool = clicker:get_wielded_item()
+	tool:take_item() -- take 1 protection rune
+	clicker:set_wielded_item(tool)
 
-	if tool:get_name() == "mobs:protector" then
+	self.protected = true
+	minetest.chat_send_player(name, S("Protected!"))
 
-		tool:take_item() -- take 1 protection rune
-		clicker:set_wielded_item(tool)
-
-		self.protected = true
-		minetest.chat_send_player(name, S("Protected!"))
-
-		return true
-	end
-
-	return false
+	return true
 end
 
 
