@@ -48,12 +48,9 @@ mobs:register_mob("mobs_animal:pumba", {
 	},
 	on_rightclick = function(self, clicker)
 
-		if mobs:feed_tame(self, clicker, 8, true, true) then
-			return
-		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 0, 5, 50, false, nil)
+		if mobs:feed_tame(self, clicker, 8, true, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
 	end,
 })
 

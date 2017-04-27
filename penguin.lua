@@ -50,12 +50,9 @@ mobs:register_mob("mobs_animal:penguin", {
 	on_rightclick = function(self, clicker)
 
 		-- feed or tame
-		if mobs:feed_tame(self, clicker, 4, false, true) then
-			return
-		end
-
-		mobs:protect(self, clicker)
-		mobs:capture_mob(self, clicker, 5, 50, 80, false, nil)
+		if mobs:feed_tame(self, clicker, 4, false, true) then return end
+		if mobs:protect(self, clicker) then return end
+		if mobs:capture_mob(self, clicker, 5, 50, 80, false, nil) then return end
 	end,
 })
 
