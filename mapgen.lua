@@ -1,5 +1,11 @@
+
 -- decoration function
-local function register_plant(name, min, max, spawnby, num)
+local function register_plant(name, min, max, spawnby, num, enabled)
+
+	if enabled ~= true then
+		return
+	end
+
 	minetest.register_decoration({
 		deco_type = "simple",
 		place_on = {"default:dirt_with_grass"},
@@ -20,41 +26,34 @@ local function register_plant(name, min, max, spawnby, num)
 	})
 end
 
-function farming.register_mgv6_decorations()
-	register_plant("potato_3", 15, 40, "", -1)
-	register_plant("tomato_7", 5, 20, "", -1)
-	register_plant("carrot_8", 1, 30, "group:water", 1)
-	register_plant("cucumber_4", 1, 20, "group:water", 1)
-	register_plant("corn_7", 12, 22, "", -1)
-	register_plant("corn_8", 10, 20, "", -1)
-	register_plant("coffee_5", 20, 45, "", -1)
-	register_plant("melon_8", 1, 20, "group:water", 1)
-	register_plant("pumpkin_8", 1, 20, "group:water", 1)
-	register_plant("raspberry_4", 3, 10, "", -1)
-	register_plant("rhubarb_3", 3, 15, "", -1)
-	register_plant("blueberry_4", 3, 10, "", -1)
-	register_plant("beanbush", 18, 35, "", -1)
-	register_plant("grapebush", 25, 45, "", -1)
+
+-- add crops to mapgen
+register_plant("potato_3", 15, 40, "", -1, farming.potato)
+register_plant("tomato_7", 5, 20, "", -1, farming.tomato)
+register_plant("corn_7", 12, 22, "", -1, farming.corn)
+register_plant("coffee_5", 20, 45, "", -1, farming.coffee)
+register_plant("raspberry_4", 3, 10, "", -1, farming.raspberry)
+register_plant("rhubarb_3", 3, 15, "", -1, farming.rhubarb)
+register_plant("blueberry_4", 3, 10, "", -1, farming.blueberry)
+register_plant("beanbush", 18, 35, "", -1, farming.beans)
+register_plant("grapebush", 25, 45, "", -1, farming.grapes)
+
+
+if minetest.get_mapgen_params().mgname == "v6" then
+
+	register_plant("carrot_8", 1, 30, "group:water", 1, farming.carrot)
+	register_plant("cucumber_4", 1, 20, "group:water", 1, farming.cucumber)
+	register_plant("melon_8", 1, 20, "group:water", 1, farming.melon)
+	register_plant("pumpkin_8", 1, 20, "group:water", 1, farming.pumpkin)
+else
+	-- v7 maps have a beach so plants growing near water is limited to 6 high
+	register_plant("carrot_8", 1, 6, "", -1, farming.carrot)
+	register_plant("cucumber_4", 1, 6, "", -1, farming.cucumber)
+	register_plant("melon_8", 1, 6, "", -1, farming.melon)
+	register_plant("pumpkin_8", 1, 6, "", -1, farming.pumpkin)
 end
 
--- v7 maps have a beach so plants growing near water is limited to 6 high
-function farming.register_mgv7_decorations()
-	register_plant("potato_3", 15, 40, "", -1)
-	register_plant("tomato_7", 5, 20, "", -1)
-	register_plant("carrot_8", 1, 6, "", -1)
-	register_plant("cucumber_4", 1, 6, "", -1)
-	register_plant("corn_7", 12, 22, "", -1)
-	register_plant("corn_8", 10, 20, "", -1)
-	register_plant("coffee_5", 20, 45, "", -1)
-	register_plant("melon_8", 1, 6, "", -1)
-	register_plant("pumpkin_8", 1, 6, "", -1)
-	register_plant("raspberry_4", 3, 10, "", -1)
-	register_plant("rhubarb_3", 3, 15, "", -1)
-	register_plant("blueberry_4", 3, 10, "", -1)
-	register_plant("beanbush", 18, 35, "", -1)
-	register_plant("grapebush", 25, 45, "", -1)
-end
-
+if farming.hemp then
 minetest.register_decoration({
 	deco_type = "simple",
 	place_on = {"default:dirt_with_grass", "default:dirt_with_rainforest_litter"},
@@ -73,12 +72,4 @@ minetest.register_decoration({
 	spawn_by = "group:tree",
 	num_spawn_by = 1,
 })
-
--- detect mapgen
-local mg_name = minetest.get_mapgen_params().mgname
-
-if mg_name == "v6" then
-	farming.register_mgv6_decorations()
-else
-	farming.register_mgv7_decorations()
 end

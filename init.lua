@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.24 (8th April 2017)
+	Minetest Farming Redo Mod 1.24 (28th April 2017)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -689,31 +689,71 @@ farming.register_plant = function(name, def)
 	return r
 end
 
--- load crops
 
+-- default settings
+farming.carrot = true
+farming.potato = true
+farming.tomato = true
+farming.cucumber = true
+farming.corn = true
+farming.coffee = true
+farming.coffee = true
+farming.melon = true
+farming.sugar = true
+farming.pumpkin = true
+farming.cocoa = true
+farming.raspberry = true
+farming.blueberry = true
+farming.rhubarb = true
+farming.beans = true
+farming.grapes = true
+farming.barley = true
+farming.hemp = true
+farming.donuts = true
+
+
+-- Load new global settings if found inside mod folder
+local input = io.open(farming.path.."/farming.conf", "r")
+if input then
+	dofile(farming.path .. "/farming.conf")
+	input:close()
+	input = nil
+end
+
+-- load new world-specific settings if found inside world folder
+local worldpath = minetest.get_worldpath()
+local input = io.open(worldpath.."/farming.conf", "r")
+if input then
+	dofile(worldpath .. "/farming.conf")
+	input:close()
+	input = nil
+end
+
+
+-- load crops
 dofile(farming.path.."/soil.lua")
 dofile(farming.path.."/hoes.lua")
 dofile(farming.path.."/grass.lua")
 dofile(farming.path.."/wheat.lua")
 dofile(farming.path.."/cotton.lua")
-dofile(farming.path.."/carrot.lua")
-dofile(farming.path.."/potato.lua")
-dofile(farming.path.."/tomato.lua")
-dofile(farming.path.."/cucumber.lua")
-dofile(farming.path.."/corn.lua")
-dofile(farming.path.."/coffee.lua")
-dofile(farming.path.."/melon.lua")
-dofile(farming.path.."/sugar.lua")
-dofile(farming.path.."/pumpkin.lua")
-dofile(farming.path.."/cocoa.lua")
-dofile(farming.path.."/raspberry.lua")
-dofile(farming.path.."/blueberry.lua")
-dofile(farming.path.."/rhubarb.lua")
-dofile(farming.path.."/beanpole.lua")
-dofile(farming.path.."/grapes.lua")
-dofile(farming.path.."/barley.lua")
-dofile(farming.path.."/hemp.lua")
-dofile(farming.path.."/donut.lua")
+if farming.carrot then dofile(farming.path.."/carrot.lua") end
+if farming.potato then dofile(farming.path.."/potato.lua") end
+if farming.tomato then dofile(farming.path.."/tomato.lua") end
+if farming.cucumber then dofile(farming.path.."/cucumber.lua") end
+if farming.corn then dofile(farming.path.."/corn.lua") end
+if farming.coffee then dofile(farming.path.."/coffee.lua") end
+if farming.melon then dofile(farming.path.."/melon.lua") end
+if farming.sugar then dofile(farming.path.."/sugar.lua") end
+if farming.pumpkin then dofile(farming.path.."/pumpkin.lua") end
+if farming.cocoa then dofile(farming.path.."/cocoa.lua") end
+if farming.raspberry then dofile(farming.path.."/raspberry.lua") end
+if farming.blueberry then dofile(farming.path.."/blueberry.lua") end
+if farming.rhubarb then dofile(farming.path.."/rhubarb.lua") end
+if farming.beans then dofile(farming.path.."/beanpole.lua") end
+if farming.grapes then dofile(farming.path.."/grapes.lua") end
+if farming.barley then dofile(farming.path.."/barley.lua") end
+if farming.hemp then dofile(farming.path.."/hemp.lua") end
+if farming.donuts then dofile(farming.path.."/donut.lua") end
 dofile(farming.path.."/mapgen.lua")
 dofile(farming.path.."/compatibility.lua") -- Farming Plus compatibility
 dofile(farming.path.."/lucky_block.lua")
