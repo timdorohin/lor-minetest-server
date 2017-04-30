@@ -32,7 +32,7 @@ minetest.register_craft({
 
 -- ethanol (thanks to JKMurray for this idea)
 minetest.register_node("farming:bottle_ethanol", {
-	description = "Bottle of Ethanol",
+	description = S("Bottle of Ethanol"),
 	drawtype = "plantlike",
 	tiles = {"farming_bottle_ethanol.png"},
 	inventory_image = "farming_bottle_ethanol.png",
