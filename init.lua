@@ -1,5 +1,5 @@
 --[[
-	Minetest Farming Redo Mod 1.24 (28th April 2017)
+	Farming Redo Mod 1.25 (6th May 2017)
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -14,38 +14,6 @@ farming.select = {
 	fixed = {-0.5, -0.5, -0.5, 0.5, -5/16, 0.5}
 }
 
-farming.DEBUG = false
--- farming.DEBUG = {}  -- Uncomment to turn on profiling code/functions
-
-local DEBUG_abm_runs   = 0
-local DEBUG_abm_time   = 0
-local DEBUG_timer_runs = 0
-local DEBUG_timer_time = 0
-
-if farming.DEBUG then
-
-	function farming.DEBUG.reset_times()
-		DEBUG_abm_runs = 0
-		DEBUG_abm_time = 0
-		DEBUG_timer_runs = 0
-		DEBUG_timer_time = 0
-	end
-
-	function farming.DEBUG.report_times()
-
-		local abm_n     = DEBUG_abm_runs
-		local abm_dt    = DEBUG_abm_time
-		local abm_avg   = (abm_n > 0 and abm_dt / abm_n) or 0
-		local timer_n   = DEBUG_timer_runs
-		local timer_dt  = DEBUG_timer_time
-		local timer_avg = (timer_n > 0 and timer_dt / timer_n) or 0
-		local dt = abm_dt + timer_dt
-
-		print("ABM ran for "..abm_dt.."µs over "..abm_n.." runs: "..abm_avg.."µs/run")
-		print("Timer ran for "..timer_dt.."µs over "..timer_n.." runs: "..timer_avg.."µs/run")
-		print("Total farming time: "..dt.."µs")
-	end
-end
 
 local statistics = dofile(farming.path.."/statistics.lua")
 
@@ -353,23 +321,6 @@ end)
 
 local abm_func = farming.handle_growth
 
-if farming.DEBUG then
-
-	local normal_abm_func = abm_func
-
-	abm_func = function(...)
-
-		local t0 = minetest.get_us_time()
-		local r = { normal_abm_func(...) }
-		local t1 = minetest.get_us_time()
-
-		DEBUG_abm_runs = DEBUG_abm_runs + 1
-		DEBUG_abm_time = DEBUG_abm_time + (t1 - t0)
-
-		return unpack(r)
-	end
-end
-
 -- Just in case a growing type or added node is missed (also catches existing
 -- nodes added to map before timers were incorporated).
 
@@ -399,8 +350,7 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 
 	if stages.plant_name == "farming:cocoa" then
 
-		if not minetest.find_node_near(pos, 1,
-			{"default:jungletree", "moretrees:jungletree_leaves_green"}) then
+		if not minetest.find_node_near(pos, 1, {"default:jungletree"}) then
 
 			return true
 		end
@@ -463,23 +413,6 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	end
 
 	return growth ~= max_growth
-end
-
-if farming.DEBUG then
-
-	local timer_func = farming.plant_growth_timer;
-
-	farming.plant_growth_timer = function(pos, elapsed, node_name)
-
-		local t0 = minetest.get_us_time()
-		local r = { timer_func(pos, elapsed, node_name) }
-		local t1 = minetest.get_us_time()
-
-		DEBUG_timer_runs = DEBUG_timer_runs + 1
-		DEBUG_timer_time = DEBUG_timer_time + (t1 - t0)
-
-		return unpack(r)
-	end
 end
 
 -- refill placed plant by crabman (26/08/2015)
@@ -596,7 +529,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	end
 end
 
--- Function to register plants (for compatibility)
+-- Function to register plants (default farming compatibility)
 
 farming.register_plant = function(name, def)
 
@@ -681,7 +614,7 @@ farming.register_plant = function(name, def)
 			sounds = default.node_sound_leaves_defaults(),
 		})
 
---		register_plant_node(node_name)
+		register_plant_node(node_name)
 	end
 
 	-- Return info
