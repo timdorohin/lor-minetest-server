@@ -9,6 +9,7 @@ mobs:register_mob("mobs_animal:pumba", {
 	passive = false,
 	attack_type = "dogfight",
 	group_attack = true,
+	owner_loyal = true,
 	reach = 2,
 	damage = 2,
 	hp_min = 5,

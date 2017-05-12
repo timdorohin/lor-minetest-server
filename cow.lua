@@ -47,7 +47,7 @@ mobs:register_mob("mobs_animal:cow", {
 		punch_end = 100,
 	},
 	follow = "farming:wheat",
-	view_range = 7,
+	view_range = 8,
 	replace_rate = 10,
 --	replace_what = {"default:grass_3", "default:grass_4", "default:grass_5", "farming:wheat_8"},
 	replace_what = {
