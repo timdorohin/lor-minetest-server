@@ -33,6 +33,7 @@ mobs:register_mob("mobs_animal:chicken", {
 	runaway = true,
 	drops = {
 		{name = "mobs:chicken_raw", chance = 1, min = 2, max = 2},
+		{name = "mobs:chicken_feather", chance = 3, min = 1, max = 2},
 	},
 	water_damage = 1,
 	lava_damage = 5,
@@ -248,7 +249,7 @@ minetest.register_node(":mobs:egg", {
 
 -- fried egg
 minetest.register_craftitem(":mobs:chicken_egg_fried", {
-description = S("Fried Egg"),
+	description = S("Fried Egg"),
 	inventory_image = "mobs_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
 })
@@ -277,4 +278,10 @@ minetest.register_craft({
 	type  =  "cooking",
 	recipe  = "mobs:chicken_raw",
 	output = "mobs:chicken_cooked",
+})
+
+-- feather
+minetest.register_craftitem(":mobs:chicken_feather", {
+	description = S("Feather"),
+	inventory_image = "mobs_chicken_feather.png",
 })
