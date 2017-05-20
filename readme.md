@@ -7,7 +7,7 @@ Bee
 
 Bunny
 
-- Bunnies appear in green grass areas (prairie biome in ethereal) and can be tamed with 4 carrots. Can also be picked up and placed in inventory and gives 1-2 meat when killed.
+- Bunnies appear in green grass areas (prairie biome in ethereal) and can be tamed with 4 carrots or grass. Can also be picked up and placed in inventory and gives 1-2 meat when killed.
 
 Chicken
 
@@ -19,7 +19,7 @@ Cow
 
 Kitten
 
-- Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x raw fish (found in ethereal) and tamed.
+- Found on green grass these cute cats walk around and can be picked up and placed in inventory as pets or right-clicked with 4x live rats or raw fish (found in ethereal) and tamed.
 
 Rat
 

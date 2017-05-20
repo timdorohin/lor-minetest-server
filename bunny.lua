@@ -42,7 +42,7 @@ mobs:register_mob("mobs_animal:bunny", {
 		punch_start = 16,
 		punch_end = 24,
 	},
-	follow = {"farming:carrot", "farming_plus:carrot_item"},
+	follow = {"farming:carrot", "farming_plus:carrot_item", "default:grass_1"},
 	view_range = 8,
 	replace_rate = 10,
 	replace_what = {"farming:carrot_7", "farming:carrot_8", "farming_plus:carrot"},
