@@ -320,7 +320,7 @@ end
 -- drop items
 function item_drop(self, cooked)
 
-	local obj, ent, item, num
+	local obj, item, num
 	local pos = self.object:getpos()
 
 	self.drops = self.drops or {} -- nil check
@@ -345,9 +345,8 @@ function item_drop(self, cooked)
 
 			-- add item if it exists
 			obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
-			ent = obj:get_luaentity()
 
-			if ent then
+			if obj and obj:get_luaentity() then
 
 				obj:setvelocity({
 					x = random(-10, 10) / 9,
