@@ -1,8 +1,9 @@
 
--- Mobs Api (12th May 2017)
+-- Mobs Api (27th May 2017)
 
 mobs = {}
 mobs.mod = "redo"
+mobs.version = "20170527"
 
 
 -- Intllib
@@ -316,13 +317,60 @@ function update_tag(self)
 end
 
 
+-- drop items
+function item_drop(self, cooked)
+
+	local obj, ent, item, num
+	local pos = self.object:getpos()
+
+	self.drops = self.drops or {} -- nil check
+
+	for n = 1, #self.drops do
+
+		if random(1, self.drops[n].chance) == 1 then
+
+			num = random(self.drops[n].min, self.drops[n].max)
+			item = self.drops[n].name
+
+			-- cook items when true
+			if cooked then
+
+				local output = minetest.get_craft_result({
+					method = "cooking", width = 1, items = {item}})
+
+				if output and output.item and not output.item:is_empty() then
+					item = output.item:get_name()
+				end
+			end
+
+			-- add item if it exists
+			obj = minetest.add_item(pos, ItemStack(item .. " " .. num))
+			ent = obj:get_luaentity()
+
+			if ent then
+
+				obj:setvelocity({
+					x = random(-10, 10) / 9,
+					y = 6,
+					z = random(-10, 10) / 9,
+				})
+			else
+				obj:remove() -- item does not exist
+			end
+		end
+	end
+
+	self.drops = {}
+end
+
+
 -- check if mob is dead or only hurt
-function check_for_death(self)
+function check_for_death(self, cause)
 
 	-- has health actually changed?
-	if self.health == self.old_health then
-		return
-	end
+--	if self.health == self.old_health then
+--		return
+--	end
 
 	self.old_health = self.health
 
@@ -352,28 +400,10 @@ function check_for_death(self)
 		return false
 	end
 
-	-- drop items when dead
-	local obj
-	local pos = self.object:getpos()
-	self.drops = self.drops or {} -- nil check
-
-	for n = 1, #self.drops do
-
-		if random(1, self.drops[n].chance) == 1 then
-
-			obj = minetest.add_item(pos,
-				ItemStack(self.drops[n].name .. " "
-					.. random(self.drops[n].min, self.drops[n].max)))
-
-			if obj then
-
-				obj:setvelocity({
-					x = random(-10, 10) / 9,
-					y = 6,
-					z = random(-10, 10) / 9,
-				})
-			end
-		end
+	if cause == "lava" then
+		item_drop(self, true)
+	else
+		item_drop(self, nil)
 	end
 
 	mob_sound(self, self.sounds.death)
@@ -511,6 +541,8 @@ do_env_damage = function(self)
 		self.health = self.health - self.light_damage
 
 		effect(pos, 5, "tnt_smoke.png")
+
+		if check_for_death(self, "light") then return end
 	end
 
 	-- what is mob standing in?
@@ -539,6 +571,8 @@ do_env_damage = function(self)
 
 			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
 
+			if check_for_death(self, "water") then return end
+
 		-- lava or fire
 		elseif self.lava_damage ~= 0
 		and (nodef.groups.lava
@@ -548,6 +582,8 @@ do_env_damage = function(self)
 			self.health = self.health - self.lava_damage
 
 			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
+
+			if check_for_death(self, "lava") then return end
 
 		-- damage_per_second node check
 --		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
@@ -560,7 +596,7 @@ do_env_damage = function(self)
 		end
 	end
 
-	check_for_death(self)
+	check_for_death(self, "")
 end
 
 
@@ -1835,6 +1871,8 @@ local do_states = function(self, dtime)
 					vec.z = vec.z * (v / amount)
 
 					obj:setvelocity(vec)
+				else
+					obj:remove() -- arrow entity does not exist
 				end
 			end
 		end
@@ -1893,7 +1931,7 @@ local falling = function(self, pos)
 
 				effect(pos, 5, "tnt_smoke.png", 1, 2, 2, nil)
 
-				if check_for_death(self) then
+				if check_for_death(self, "fall") then
 					return
 				end
 			end
@@ -2017,9 +2055,15 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		-- do damage
 		self.health = self.health - floor(damage)
 
-		-- exit here if dead
-		if check_for_death(self) then
-			return
+		-- exit here if dead, special item check
+		if weapon:get_name() == "mobs:pick_lava" then
+			if check_for_death(self, "lava") then
+				return
+			end
+		else
+			if check_for_death(self, "hit") then
+				return
+			end
 		end
 
 		--[[ add healthy afterglow when hit (can cause hit lag with larger textures)
