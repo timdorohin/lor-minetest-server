@@ -74,7 +74,7 @@ local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
 
 -- play sound
-mob_sound = function(self, sound)
+local mob_sound = function(self, sound)
 
 	if sound then
 		minetest.sound_play(sound, {
@@ -87,7 +87,7 @@ end
 
 
 -- attack player/mob
-do_attack = function(self, player)
+local do_attack = function(self, player)
 
 	if self.state == "attack" then
 		return
@@ -103,7 +103,7 @@ end
 
 
 -- move mob in facing direction
-set_velocity = function(self, v)
+local set_velocity = function(self, v)
 
 	local yaw = (self.object:getyaw() or 0) + self.rotate
 
@@ -116,7 +116,7 @@ end
 
 
 -- get overall speed of mob
-get_velocity = function(self)
+local get_velocity = function(self)
 
 	local v = self.object:getvelocity()
 
@@ -125,7 +125,7 @@ end
 
 
 -- set yaw
-set_yaw = function(self, yaw)
+local set_yaw = function(self, yaw)
 
 	if not yaw or yaw ~= yaw then
 		yaw = 0
@@ -138,7 +138,7 @@ end
 
 
 -- set defined animation
-set_animation = function(self, anim)
+local set_animation = function(self, anim)
 
 	if not self.animation then return end
 
@@ -160,6 +160,12 @@ set_animation = function(self, anim)
 end
 
 
+-- above function exported for mount.lua
+function mobs:set_animation(anim)
+	set_animation(self, anim)
+end
+
+
 -- this is a faster way to calculate distance
 local get_distance = function(a, b)
 
@@ -170,7 +176,7 @@ end
 
 
 -- check line of sight (BrunoMine)
-function line_of_sight(self, pos1, pos2, stepsize)
+local line_of_sight = function(self, pos1, pos2, stepsize)
 
 	stepsize = stepsize or 1
 
@@ -241,7 +247,7 @@ end
 
 
 -- are we flying in what we are suppose to? (taikedz)
-local function flight_check(self, pos_w)
+local flight_check = function(self, pos_w)
 
 	local nod = self.standing_in
 
@@ -266,7 +272,7 @@ end
 
 
 -- particle effects
-function effect(pos, amount, texture, min_size, max_size, radius, gravity)
+local effect = function(pos, amount, texture, min_size, max_size, radius, gravity)
 
 	radius = radius or 2
 	min_size = min_size or 0.5
@@ -292,7 +298,7 @@ end
 
 
 -- update nametag colour
-function update_tag(self)
+local update_tag = function(self)
 
 	local col = "#00FF00"
 	local qua = self.hp_max / 4
@@ -318,7 +324,7 @@ end
 
 
 -- drop items
-function item_drop(self, cooked)
+local item_drop = function(self, cooked)
 
 	local obj, item, num
 	local pos = self.object:getpos()
@@ -364,12 +370,7 @@ end
 
 
 -- check if mob is dead or only hurt
-function check_for_death(self, cause)
-
-	-- has health actually changed?
---	if self.health == self.old_health then
---		return
---	end
+local check_for_death = function(self, cause)
 
 	self.old_health = self.health
 
@@ -406,6 +407,8 @@ function check_for_death(self, cause)
 	end
 
 	mob_sound(self, self.sounds.death)
+
+	local pos = self.object:getpos()
 
 	-- execute custom death function
 	if self.on_die then
@@ -444,7 +447,7 @@ end
 
 
 -- check if within physical map limits (-30911 to 30927)
-function within_limits(pos, radius)
+local within_limits = function(pos, radius)
 
 	if  (pos.x - radius) > -30913
 	and (pos.x + radius) <  30928
@@ -460,7 +463,7 @@ end
 
 
 -- is mob facing a cliff
-local function is_at_cliff(self)
+local is_at_cliff = function(self)
 
 	if self.fear_height == 0 then -- 0 for no falling protection!
 		return false
@@ -485,7 +488,7 @@ end
 
 
 -- get node but use fallback for nil or unknown
-local function node_ok(pos, fallback)
+local node_ok = function(pos, fallback)
 
 	fallback = fallback or "default:dirt"
 
@@ -504,7 +507,7 @@ end
 
 
 -- environmental damage (water, lava, fire, light)
-do_env_damage = function(self)
+local do_env_damage = function(self)
 
 	-- feed/tame text timer (so mob 'full' messages dont spam chat)
 	if self.htimer > 0 then
@@ -585,13 +588,13 @@ do_env_damage = function(self)
 			if check_for_death(self, "lava") then return end
 
 		-- damage_per_second node check
---		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
+		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
 
---			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
+			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
 
---			self.health = self.health - dps
+			self.health = self.health - dps
 
---			effect(pos, 5, "tnt_smoke.png")
+			effect(pos, 5, "tnt_smoke.png")
 		end
 	end
 
@@ -600,7 +603,7 @@ end
 
 
 -- jump if facing a solid node (not fences or gates)
-do_jump = function(self)
+local do_jump = function(self)
 
 	if not self.jump
 	or self.jump_height == 0
@@ -671,7 +674,7 @@ end
 
 
 -- blast damage to entities nearby (modified from TNT mod)
-function entity_physics(pos, radius)
+local entity_physics = function(pos, radius)
 
 	radius = radius * 2
 
@@ -698,7 +701,7 @@ end
 
 
 -- should mob follow what I'm holding ?
-function follow_holding(self, clicker)
+local follow_holding = function(self, clicker)
 
 	if mobs.invis[clicker:get_player_name()] then
 		return false
@@ -728,7 +731,7 @@ end
 
 
 -- find two animals of same type and breed if nearby and horny
-local function breed(self)
+local breed = function(self)
 
 	-- child takes 240 seconds before growing into adult
 	if self.child == true then
@@ -863,7 +866,7 @@ end
 
 
 -- find and replace what mob is looking for (grass, wheat etc.)
-function replace(self, pos)
+local replace = function(self, pos)
 
 	if not self.replace_rate
 	or not self.replace_what
@@ -906,7 +909,7 @@ end
 
 
 -- check if daytime and also if mob is docile during daylight hours
-function day_docile(self)
+local day_docile = function(self)
 
 	if self.docile_by_day == false then
 
@@ -922,7 +925,7 @@ end
 
 
 -- path finding and smart mob routine by rnd
-function smart_mobs(self, s, p, dist, dtime)
+local smart_mobs = function(self, s, p, dist, dtime)
 
 	local s1 = self.path.lastpos
 
@@ -1199,7 +1202,7 @@ local npc_attack = function(self)
 
 		if obj and obj.type == "monster" then
 
-			p = obj.object:getpos()
+			local p = obj.object:getpos()
 
 			dist = get_distance(p, s)
 
@@ -1900,7 +1903,8 @@ local falling = function(self, pos)
 	end
 
 	-- in water then float up
-	if minetest.registered_nodes[node_ok(pos).name].groups.liquid then
+--	if minetest.registered_nodes[node_ok(pos).name].groups.liquid then
+	if minetest.registered_nodes[node_ok(pos).name].groups.water then
 
 		if self.floats == 1 then
 
