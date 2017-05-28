@@ -1,9 +1,9 @@
 
--- Mobs Api (27th May 2017)
+-- Mobs Api (28th May 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170527"
+mobs.version = "20170528"
 
 
 -- Intllib
@@ -550,7 +550,7 @@ local do_env_damage = function(self)
 	-- what is mob standing in?
 	pos.y = pos.y + self.collisionbox[2] + 0.1 -- foot level
 	self.standing_in = node_ok(pos, "air").name
-	--print ("standing in " .. self.standing_in)
+--	print ("standing in " .. self.standing_in)
 
 	-- don't fall when on ignore, just stand still
 	if self.standing_in == "ignore" then
@@ -566,26 +566,30 @@ local do_env_damage = function(self)
 		pos.y = pos.y + 1
 
 		-- water
-		if self.water_damage ~= 0
-		and nodef.groups.water then
+		if nodef.groups.water then
 
-			self.health = self.health - self.water_damage
+			if self.water_damage ~= 0 then
 
-			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
+				self.health = self.health - self.water_damage
 
-			if check_for_death(self, "water") then return end
+				effect(pos, 5, "bubble.png", nil, nil, 1, nil)
+
+				if check_for_death(self, "water") then return end
+			end
 
 		-- lava or fire
-		elseif self.lava_damage ~= 0
-		and (nodef.groups.lava
+		elseif (nodef.groups.lava
 		or self.standing_in == "fire:basic_flame"
 		or self.standing_in == "fire:permanent_flame") then
 
-			self.health = self.health - self.lava_damage
+			if self.lava_damage ~= 0 then
 
-			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
+				self.health = self.health - self.lava_damage
 
-			if check_for_death(self, "lava") then return end
+				effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
+
+				if check_for_death(self, "lava") then return end
+			end
 
 		-- damage_per_second node check
 		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
@@ -2878,6 +2882,8 @@ function mobs:register_arrow(name, def)
 		rotate = def.rotate,
 		automatic_face_movement_dir = def.rotate
 			and (def.rotate - (pi / 180)) or false,
+
+		on_activate = def.on_activate or nil,
 
 		on_step = def.on_step or function(self, dtime)
 
