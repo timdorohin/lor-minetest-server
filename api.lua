@@ -372,6 +372,11 @@ end
 -- check if mob is dead or only hurt
 local check_for_death = function(self, cause)
 
+	-- has health actually changed?
+	if self.health == self.old_health and self.health > 0 then
+		return
+	end
+
 	self.old_health = self.health
 
 	-- still got some health? play hurt sound
