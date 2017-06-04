@@ -1,9 +1,9 @@
 
--- Mobs Api (1st June 2017)
+-- Mobs Api (4th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170601"
+mobs.version = "20170604"
 
 
 -- Intllib
@@ -359,7 +359,7 @@ local item_drop = function(self, cooked)
 					y = 6,
 					z = random(-10, 10) / 9,
 				})
-			else
+			elseif obj then
 				obj:remove() -- item does not exist
 			end
 		end
