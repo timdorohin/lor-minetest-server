@@ -1,5 +1,5 @@
 
-MOB API (12th May 2017)
+MOB API (10th June 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -70,6 +70,7 @@ This functions registers a new mob as a Minetest entity.
         'water_damage' the damage per second if the mob is in water
         'lava_damage' the damage per second if the mob is in lava
         'light_damage' the damage per second if the mob is in light
+        'suffocation' health value mob loses when inside a solid node
         'fall_damage' will mob be hurt when falling from height
         'fall_speed' speed mob falls (default: -10 and has to be lower than -2)
         'fear_height' when mob walks near a drop then anything over this value makes it stop and turn back (default is 0 to disable)

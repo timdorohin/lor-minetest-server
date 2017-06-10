@@ -1,9 +1,9 @@
 
--- Mobs Api (4th June 2017)
+-- Mobs Api (10th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170604"
+mobs.version = "20170610"
 
 
 -- Intllib
@@ -511,7 +511,7 @@ local node_ok = function(pos, fallback)
 end
 
 
--- environmental damage (water, lava, fire, light)
+-- environmental damage (water, lava, fire, light etc.)
 local do_env_damage = function(self)
 
 	-- feed/tame text timer (so mob 'full' messages dont spam chat)
@@ -563,48 +563,57 @@ local do_env_damage = function(self)
 		--print ("--- stopping on ignore")
 	end
 
-	if self.water_damage ~= 0
-	or self.lava_damage ~= 0 then
+	local nodef = minetest.registered_nodes[self.standing_in]
 
-		local nodef = minetest.registered_nodes[self.standing_in]
+	pos.y = pos.y + 1 -- for particle effect position
 
-		pos.y = pos.y + 1
+	-- water
+	if self.water_damage
+	and nodef.groups.water then
 
-		-- water
-		if nodef.groups.water then
+		if self.water_damage ~= 0 then
 
-			if self.water_damage ~= 0 then
+			self.health = self.health - self.water_damage
 
-				self.health = self.health - self.water_damage
+			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
 
-				effect(pos, 5, "bubble.png", nil, nil, 1, nil)
-
-				if check_for_death(self, "water") then return end
-			end
-
-		-- lava or fire
-		elseif (nodef.groups.lava
-		or self.standing_in == "fire:basic_flame"
-		or self.standing_in == "fire:permanent_flame") then
-
-			if self.lava_damage ~= 0 then
-
-				self.health = self.health - self.lava_damage
-
-				effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
-
-				if check_for_death(self, "lava") then return end
-			end
-
-		-- damage_per_second node check
-		elseif minetest.registered_nodes[self.standing_in].damage_per_second ~= 0 then
-
-			local dps = minetest.registered_nodes[self.standing_in].damage_per_second
-
-			self.health = self.health - dps
-
-			effect(pos, 5, "tnt_smoke.png")
+			if check_for_death(self, "water") then return end
 		end
+
+	-- lava or fire
+	elseif self.lava_damage
+	and (nodef.groups.lava
+	or self.standing_in == "fire:basic_flame"
+	or self.standing_in == "fire:permanent_flame") then
+
+		if self.lava_damage ~= 0 then
+
+			self.health = self.health - self.lava_damage
+
+			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
+
+			if check_for_death(self, "lava") then return end
+		end
+
+	-- damage_per_second node check
+	elseif nodef.damage_per_second ~= 0 then
+
+		self.health = self.health - nodef.damage_per_second
+
+		effect(pos, 5, "tnt_smoke.png")
+
+		if check_for_death(self, "dps") then return end
+	end
+
+	--- suffocation inside solid node
+	if self.suffocation ~= 0
+	and nodef.walkable == true
+	and nodef.groups.disable_suffocation ~= 1
+	and nodef.drawtype == "normal" then
+
+		self.health = self.health - self.suffocation
+
+		if check_for_death(self, "suffocation") then return end
 	end
 
 	check_for_death(self, "")
@@ -2500,6 +2509,7 @@ minetest.register_entity(name, {
 	light_damage = def.light_damage or 0,
 	water_damage = def.water_damage or 0,
 	lava_damage = def.lava_damage or 0,
+	suffocation = def.suffocation or 2,
 	fall_damage = def.fall_damage or 1,
 	fall_speed = def.fall_speed or -10, -- must be lower than -2 (default: -10)
 	drops = def.drops or {},
