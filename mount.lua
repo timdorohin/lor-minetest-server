@@ -1,7 +1,7 @@
 
 -- lib_mount by Blert2112 (edited by TenPlus1)
 
-local enable_crash = true
+local enable_crash = false
 local crash_threshold = 6.5 -- ignored if enable_crash=false
 
 ------------------------------------------------------------------------------
