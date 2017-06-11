@@ -553,7 +553,7 @@ local do_env_damage = function(self)
 	end
 
 	-- what is mob standing in?
-	pos.y = pos.y + self.collisionbox[2] + 0.1 -- foot level
+	pos.y = pos.y + self.collisionbox[2] + 0.25 -- foot level
 	self.standing_in = node_ok(pos, "air").name
 --	print ("standing in " .. self.standing_in)
 
