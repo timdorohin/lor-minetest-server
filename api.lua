@@ -1,9 +1,9 @@
 
--- Mobs Api (10th June 2017)
+-- Mobs Api (11th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170610"
+mobs.version = "20170611"
 
 
 -- Intllib
@@ -1135,6 +1135,7 @@ local monster_attack = function(self)
 
 	if self.type ~= "monster"
 	or not damage_enabled
+	or creative
 	or self.state == "attack"
 	or day_docile(self) then
 		return
