@@ -1,9 +1,9 @@
 
--- Mobs Api (11th June 2017)
+-- Mobs Api (16th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170611"
+mobs.version = "20170616"
 
 
 -- Intllib
@@ -2134,14 +2134,13 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 		local lp = hitter:getpos()
 		local s = self.object:getpos()
-
 		local vec = {
 			x = lp.x - s.x,
 			y = lp.y - s.y,
 			z = lp.z - s.z
 		}
 
-		local yaw = atan(vec.z / vec.x) + 3 * pi / 2
+		local yaw = (atan(vec.z / vec.x) + 3 * pi / 2) - self.rotate
 
 		if lp.x > s.x then
 			yaw = yaw + pi
@@ -2506,7 +2505,7 @@ minetest.register_entity(name, {
 	view_range = def.view_range or 5,
 	walk_velocity = def.walk_velocity or 1,
 	run_velocity = def.run_velocity or 2,
-	damage = max(1, (def.damage or 0) * difficulty),
+	damage = max(0, (def.damage or 0) * difficulty),
 	light_damage = def.light_damage or 0,
 	water_damage = def.water_damage or 0,
 	lava_damage = def.lava_damage or 0,
