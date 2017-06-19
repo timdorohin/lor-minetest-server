@@ -1,9 +1,9 @@
 
--- Mobs Api (18th June 2017)
+-- Mobs Api (19th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170618"
+mobs.version = "20170619"
 
 
 -- Intllib
@@ -2253,7 +2253,7 @@ local mob_staticdata = function(self)
 	end
 
 	if use_cmi then
-		self.serialized_cmi_components = cmi.serialize_components(self.cmi_components)
+		self.serialized_cmi_components = cmi.serialize_components(self._cmi_components)
 	end
 
 	local tmp = {}
@@ -2265,7 +2265,7 @@ local mob_staticdata = function(self)
 		if  t ~= "function"
 		and t ~= "nil"
 		and t ~= "userdata"
-		and _ ~= "cmi_components" then
+		and _ ~= "_cmi_components" then
 			tmp[_] = self[_]
 		end
 	end
@@ -2378,7 +2378,7 @@ local mob_activate = function(self, staticdata, def, dtime)
 	update_tag(self)
 
 	if use_cmi then
-		self.cmi_components = cmi.activate_components(self.serialized_cmi_components)
+		self._cmi_components = cmi.activate_components(self.serialized_cmi_components)
 		cmi.notify_activate(self.object, dtime)
 	end
 end
@@ -2611,7 +2611,7 @@ minetest.register_entity(name, {
 	attack_animals = def.attack_animals or false,
 	specific_attack = def.specific_attack,
 	owner_loyal = def.owner_loyal,
-	cmi_is_mob = true,
+	_cmi_is_mob = true,
 
 	on_blast = def.on_blast or do_tnt,
 
