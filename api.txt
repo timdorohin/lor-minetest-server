@@ -1,5 +1,5 @@
 
-MOB API (10th June 2017)
+MOB API (23rd June 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -127,6 +127,8 @@ can be added to the mob definition under pre-defined mob animation names like:
       'punch_start', 'punch_end', 'punch_speed' when mob attacks
       'punch2_start', 'punch2_end', 'punch2_speed' when mob attacks (alternative)
       'die_start', 'die_end', 'die_speed' when mob dies
+      '*_loop' bool value to determine if any set animation loops e.g (die_loop = false)
+      defaults to true if not set
 also  'speed_normal' for compatibility with older mobs for animation speed (deprecated)
 
 

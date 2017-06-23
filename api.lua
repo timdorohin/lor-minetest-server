@@ -1,9 +1,9 @@
 
--- Mobs Api (19th June 2017)
+-- Mobs Api (23rd June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170619"
+mobs.version = "20170623"
 
 
 -- Intllib
@@ -157,9 +157,9 @@ local set_animation = function(self, anim)
 
 	self.object:set_animation({
 		x = self.animation[anim .. "_start"],
-		y = self.animation[anim .. "_end"]
-	}, self.animation[anim .. "_speed"] or self.animation.speed_normal or 15)
-
+		y = self.animation[anim .. "_end"]},
+		self.animation[anim .. "_speed"] or self.animation.speed_normal or 15,
+		0, self.animation[anim .. "_loop"] ~= false)
 end
 
 
