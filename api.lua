@@ -731,7 +731,7 @@ local entity_physics = function(pos, radius)
 		objs[n]:punch(objs[n], 1.0, {
 			full_punch_interval = 1.0,
 			damage_groups = {fleshy = damage},
-		}, nil)
+		}, pos) -- was nil
 	end
 end
 
