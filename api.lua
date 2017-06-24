@@ -1,9 +1,9 @@
 
--- Mobs Api (23rd June 2017)
+-- Mobs Api (24th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170623"
+mobs.version = "20170624"
 
 
 -- Intllib
@@ -329,6 +329,9 @@ end
 -- drop items
 local item_drop = function(self, cooked)
 
+	-- no drops for child mobs
+	if self.child then return end
+
 	local obj, item, num
 	local pos = self.object:getpos()
 
@@ -566,8 +569,14 @@ local do_env_damage = function(self)
 		if check_for_death(self, "light", {type = "light"}) then return end
 	end
 
+	local y_level = self.collisionbox[2]
+
+	if self.child then
+		y_level = self.collisionbox[2] * 0.5
+	end
+
 	-- what is mob standing in?
-	pos.y = pos.y + self.collisionbox[2] + 0.25 -- foot level
+	pos.y = pos.y + y_level + 0.25 -- foot level
 	self.standing_in = node_ok(pos, "air").name
 --	print ("standing in " .. self.standing_in)
 
