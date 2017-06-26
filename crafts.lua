@@ -40,20 +40,22 @@ minetest.register_craft({
 	cooktime = 5,
 })
 
--- magic lasso
-minetest.register_tool("mobs:magic_lasso", {
+-- lasso
+minetest.register_tool("mobs:lasso", {
 	description = S("Magic Lasso (right-click animal to put in inventory)"),
 	inventory_image = "mobs_magic_lasso.png",
 })
 
 minetest.register_craft({
-	output = "mobs:magic_lasso",
+	output = "mobs:lasso",
 	recipe = {
-		{"farming:string", "default:gold_lump", "farming:string"},
-		{"default:gold_lump", "default:diamondblock", "default:gold_lump"},
-		{"farming:string", "default:gold_lump", "farming:string"},
+		{"farming:string", "", "farming:string"},
+		{"", "default:diamond", ""},
+		{"farming:string", "", "farming:string"},
 	}
 })
+
+minetest.register_alias("mobs:magic_lasso", "mobs:lasso")
 
 -- net
 minetest.register_tool("mobs:net", {
