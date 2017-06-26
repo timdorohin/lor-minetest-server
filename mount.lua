@@ -10,9 +10,23 @@ local crash_threshold = 6.5 -- ignored if enable_crash=false
 -- Helper functions
 --
 
+local node_ok = function(pos, fallback)
+
+	fallback = fallback or "default:dirt"
+
+	local node = minetest.get_node_or_nil(pos)
+
+	if node and minetest.registered_nodes[node.name] then
+		return node
+	end
+
+	return {name = fallback}
+end
+
+
 local function node_is(pos)
 
-	local node = minetest.get_node(pos)
+	local node = node_ok(pos)
 
 	if node.name == "air" then
 		return "air"
@@ -26,7 +40,7 @@ local function node_is(pos)
 		return "liquid"
 	end
 
-	if minetest.get_item_group(node.name, "walkable") ~= 0 then
+	if minetest.registered_nodes[node.name].walkable == true then
 		return "walkable"
 	end
 
