@@ -42,7 +42,7 @@ minetest.register_craft({
 
 -- lasso
 minetest.register_tool("mobs:lasso", {
-	description = S("Magic Lasso (right-click animal to put in inventory)"),
+	description = S("Lasso (right-click animal to put in inventory)"),
 	inventory_image = "mobs_magic_lasso.png",
 })
 

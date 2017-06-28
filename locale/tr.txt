@@ -26,7 +26,7 @@ Nametag = İsim etiketi
 Leather = Deri
 Raw Meat = Çiğ et
 Meat = Et
-Magic Lasso (right-click animal to put in inventory) = Sihirli kement (hayvana sağ tıklayarak envantere koy)
+Magic Lasso (right-click animal to put in inventory) = Kement (hayvana sağ tıklayarak envantere koy)
 Net (right-click animal to put in inventory) = Ağ (hayvana sağ tıklayarak envantere koy)
 Steel Shears (right-click to shear) = Çelik makas (sağ tıklayarak kes)
 

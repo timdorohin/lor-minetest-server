@@ -1,9 +1,9 @@
 
--- Mobs Api (24th June 2017)
+-- Mobs Api (28th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170624"
+mobs.version = "20170628"
 
 
 -- Intllib
@@ -1942,14 +1942,17 @@ local falling = function(self, pos)
 	-- floating in water (or falling)
 	local v = self.object:getvelocity()
 
-	-- going up then apply gravity
-	if v.y > 0.1 then
+	if v.y > self.fall_speed then
 
+		-- fall downwards
 		self.object:setacceleration({
 			x = 0,
 			y = self.fall_speed,
 			z = 0
 		})
+	else
+		-- stop accelerating once max fall speed hit
+		self.object:setacceleration({x = 0, y = 0, z = 0})
 	end
 
 	-- in water then float up
@@ -1965,14 +1968,8 @@ local falling = function(self, pos)
 			})
 		end
 	else
-		-- fall downwards
-		self.object:setacceleration({
-			x = 0,
-			y = self.fall_speed,
-			z = 0
-		})
 
-		-- fall damage
+		-- fall damage onto solid ground
 		if self.fall_damage == 1
 		and self.object:getvelocity().y == 0 then
 
