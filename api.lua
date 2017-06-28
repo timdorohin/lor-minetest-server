@@ -3051,14 +3051,18 @@ function mobs:register_arrow(name, def)
 end
 
 
--- register spawn eggs
+-- Register spawn eggs
+
+-- Note: This also introduces the “spawn_egg” group:
+-- * spawn_egg=1: Spawn egg (generic mob, no metadata)
+-- * spawn_egg=2: Spawn egg (captured/tamed mob, metadata)
 function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
-	local grp = {}
+	local grp = {spawn_egg = 1}
 
 	-- do NOT add this egg to creative inventory (e.g. dungeon master)
 	if creative and no_creative == true then
-		grp = {not_in_creative_inventory = 1}
+		grp.not_in_creative_inventory = 1
 	end
 
 	local invimg = background
@@ -3073,7 +3077,7 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 
 		description = desc .. " (Tamed)",
 		inventory_image = invimg,
-		groups = {not_in_creative_inventory = 1},
+		groups = {spawn_egg = 2, not_in_creative_inventory = 1},
 		stack_max = 1,
 
 		on_place = function(itemstack, placer, pointed_thing)
