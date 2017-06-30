@@ -1,9 +1,9 @@
 
--- Mobs Api (28th June 2017)
+-- Mobs Api (30th June 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170628"
+mobs.version = "20170630"
 
 
 -- Intllib
@@ -1145,7 +1145,7 @@ local specific_attack = function(list, what)
 		return true
 	end
 
-	-- is found entity on list to attack?
+	-- found entity on list to attack?
 	for no = 1, #list do
 
 		if list[no] == what then
@@ -1469,7 +1469,7 @@ local do_states = function(self, dtime)
 				self.state = "walk"
 				set_animation(self, "walk")
 
-				-- fly up/down randombly for flying mobs
+				-- fly up/down randomly for flying mobs
 				if self.fly and random(1, 100) <= self.walk_chance then
 
 					local v = self.object:getvelocity()
@@ -1548,7 +1548,8 @@ local do_states = function(self, dtime)
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
 
-			yaw = random() * 2 * pi
+			--yaw = random() * 2 * pi
+			yaw = (random(0, 360) - 180) / 180 * pi
 
 			yaw = set_yaw(self.object, yaw)
 		end
@@ -3195,7 +3196,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 	-- are we using hand, net or lasso to pick up mob?
 	if tool:get_name() ~= ""
 	and tool:get_name() ~= "mobs:net"
-	and tool:get_name() ~= "mobs:magic_lasso" then
+	and tool:get_name() ~= "mobs:lasso" then
 		return false
 	end
 
@@ -3233,7 +3234,7 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 
 			clicker:set_wielded_item(tool)
 
-		elseif tool:get_name() == "mobs:magic_lasso" then
+		elseif tool:get_name() == "mobs:lasso" then
 
 			chance = chance_lasso
 
