@@ -305,6 +305,8 @@ This function allows an attached player to fly the mob around using directional 
     'move_animation' string containing name of pre-defined animation e.g. "walk" or "fly" etc.
     'stand_animation' string containing name of pre-defined animation e.g. "stand" or "blink" etc.
 
+    Note: animation names above are from the pre-defined animation lists inside mob registry without extensions.
+
 
 mobs:set_animation(self, name)
 

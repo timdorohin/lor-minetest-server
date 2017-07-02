@@ -3163,7 +3163,8 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 					return
 				end
 
-				if ent.type ~= "monster" then
+				if ent.type ~= "monster"
+				and not placer:get_player_control().sneak then
 					-- set owner and tame if not monster
 					ent.owner = placer:get_player_name()
 					ent.tamed = true
