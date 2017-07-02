@@ -1943,9 +1943,18 @@ local falling = function(self, pos)
 	-- floating in water (or falling)
 	local v = self.object:getvelocity()
 
-	if v.y > self.fall_speed then
+	if v.y > 0 then
 
-		-- fall downwards
+		-- apply gravity when moving up
+		self.object:setacceleration({
+			x = 0,
+			y = -10,
+			z = 0
+		})
+
+	elseif v.y <= 0 and v.y > self.fall_speed then
+
+		-- fall downwards at set speed
 		self.object:setacceleration({
 			x = 0,
 			y = self.fall_speed,
