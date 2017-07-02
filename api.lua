@@ -3153,13 +3153,13 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 					mob:remove()
 					return
 				end
---[[
+
 				if ent.type ~= "monster" then
 					-- set owner and tame if not monster
 					ent.owner = placer:get_player_name()
 					ent.tamed = true
 				end
-]]
+
 				-- if not in creative then take item
 				if not creative then
 					itemstack:take_item()
