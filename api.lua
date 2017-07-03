@@ -1,9 +1,9 @@
 
--- Mobs Api (2nd July 2017)
+-- Mobs Api (3rd July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170630"
+mobs.version = "20170703"
 
 
 -- Intllib
@@ -275,12 +275,13 @@ end
 
 
 -- particle effects
-local effect = function(pos, amount, texture, min_size, max_size, radius, gravity)
+local effect = function(pos, amount, texture, min_size, max_size, radius, gravity, glow)
 
 	radius = radius or 2
 	min_size = min_size or 0.5
 	max_size = max_size or 1
 	gravity = gravity or -10
+	glow = glow or 0
 
 	minetest.add_particlespawner({
 		amount = amount,
@@ -296,6 +297,7 @@ local effect = function(pos, amount, texture, min_size, max_size, radius, gravit
 		minsize = min_size,
 		maxsize = max_size,
 		texture = texture,
+		glow = glow,
 	})
 end
 
@@ -3292,8 +3294,13 @@ function mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, 
 
 			self.object:remove()
 
+			mob_sound(self, "default_place_node_hard")
+
+
 		else
 			minetest.chat_send_player(name, S("Missed!"))
+
+			mob_sound(self, "swing")
 		end
 	end
 
@@ -3321,11 +3328,20 @@ function mobs:protect(self, clicker)
 		return true -- false
 	end
 
-	tool:take_item() -- take 1 protection rune
-	clicker:set_wielded_item(tool)
+	if not creative then
+		tool:take_item() -- take 1 protection rune
+		clicker:set_wielded_item(tool)
+	end
 
 	self.protected = true
-	minetest.chat_send_player(name, S("Protected!"))
+--	minetest.chat_send_player(name, S("Protected!"))
+
+	local pos = self.object:getpos()
+	pos.y = pos.y + self.collisionbox[2] + 0.5
+
+	effect(self.object:getpos(), 25, "mobs_protect_particle.png", 0.5, 4, 2, 15)
+
+	mob_sound(self, "spell")
 
 	return true
 end
