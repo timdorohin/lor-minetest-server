@@ -944,12 +944,23 @@ local replace = function(self, pos)
 
 -- print ("replace node = ".. minetest.get_node(pos).name, pos.y)
 
-		minetest.set_node(pos, {name = with})
+		local oldnode = {name = what}
+		local newnode = {name = with}
+		local on_replace_return
 
-		-- when cow/sheep eats grass, replace wool and milk
-		if self.gotten == true then
-			self.gotten = false
-			self.object:set_properties(self)
+		if self.on_replace then
+			on_replace_return = self.on_replace(self, pos, oldnode, newnode)
+		end
+
+		if on_replace_return ~= false then
+
+			minetest.set_node(pos, {name = with})
+
+			-- when cow/sheep eats grass, replace wool and milk
+			if self.gotten == true then
+				self.gotten = false
+				self.object:set_properties(self)
+			end
 		end
 	end
 end
@@ -2599,6 +2610,7 @@ minetest.register_entity(name, {
 	replace_what = def.replace_what,
 	replace_with = def.replace_with,
 	replace_offset = def.replace_offset or 0,
+	on_replace = def.on_replace,
 	timer = 0,
 	env_damage_timer = 0, -- only used when state = "attack"
 	tamed = false,

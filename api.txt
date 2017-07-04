@@ -1,5 +1,5 @@
 
-MOB API (2nd July 2017)
+MOB API (4th July 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -105,12 +105,21 @@ This functions registers a new mob as a Minetest entity.
             'explode' sound when exploding
             'distance' maximum distance sounds are heard from (default is 10)
 
-Mobs can look for specific nodes as they walk and replace them to mimic eating
+Mobs can look for specific nodes as they walk and replace them to mimic eating.
 
         'replace_what' group if items to replace e.g. {"farming:wheat_8", "farming:carrot_8"}
         'replace_with' replace with what e.g. "air" or in chickens case "mobs:egg"
         'replace_rate' how random should the replace rate be (typically 10)
         'replace_offset' +/- value to check specific node to replace
+       	'on_replace(self, pos, oldnode, newnode)' gets called when mob is about to replace a node
+	    self: ObjectRef of mob
+	    pos: Position of node to replace
+	    oldnode: Current node
+	    newnode: What the node will become after replacing
+
+	    If false is returned, the mob will not replace the node.
+
+	    By default, replacing sets self.gotten to true and resets the object properties.
 
 The 'replace_what' has been updated to use tables for what, with and y_offset e.g.
 
