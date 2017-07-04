@@ -1,4 +1,4 @@
-Creative Commons License sounds from Freesound.org
+Creative Commons sounds from Freesound.org
 
-swing.ogg by qubodup
-spell.ogg by littletobotsoundfactory
+mobs_swing.ogg by qubodup
+mobs_spell.ogg by littletobotsoundfactory
