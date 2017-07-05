@@ -1,9 +1,9 @@
 
--- Mobs Api (4th July 2017)
+-- Mobs Api (5th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170704"
+mobs.version = "20170705"
 
 
 -- Intllib
@@ -1684,7 +1684,8 @@ local do_states = function(self, dtime)
 
 						self.object:remove()
 
-						effect(pos, 15, "tnt_smoke.png")
+--						effect(pos, 15, "tnt_smoke.png")
+						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 
 						-- hurt player/mobs caught in blast area
 						entity_physics(pos, radius)
@@ -2891,6 +2892,12 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 	local p = {}
 	local pr = PseudoRandom(os.time())
 
+	if smoke > 0 then
+		--(pos, amount, texture, min_size, max_size, radius, gravity, glow)
+		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+	end
+
+
 	for z = -radius, radius do
 	for y = -radius, radius do
 	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
@@ -2929,9 +2936,9 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 				else
 					minetest.set_node(p, {name = "air"})
 
-					if smoke > 0 then
-						effect(p, 2, "tnt_smoke.png")
-					end
+--					if smoke > 0 then
+--						effect(p, 2, "tnt_smoke.png")
+--					end
 				end
 			end
 		end
