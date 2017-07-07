@@ -1,9 +1,9 @@
 
--- Mobs Api (5th July 2017)
+-- Mobs Api (7th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170705"
+mobs.version = "20170707"
 
 
 -- Intllib
@@ -3045,16 +3045,12 @@ function mobs:register_arrow(name, def)
 					end
 
 					local entity = player:get_luaentity()
-						and player:get_luaentity().name or ""
 
-					if self.hit_mob
+					if entity
+					and self.hit_mob
 					and tostring(player) ~= self.owner_id
-					and entity ~= self.object:get_luaentity().name
-					and entity ~= "__builtin:item"
-					and entity ~= "__builtin:falling_node"
-					and entity ~= "gauges:hp_bar"
-					and entity ~= "signs:text"
-					and entity ~= "itemframes:item" then
+					and entity.name ~= self.object:get_luaentity().name
+					and entity._cmi_is_mob == true then
 
 						self.hit_mob(self, player)
 
