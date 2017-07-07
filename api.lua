@@ -3048,9 +3048,9 @@ function mobs:register_arrow(name, def)
 
 					if entity
 					and self.hit_mob
+					and entity._cmi_is_mob == true
 					and tostring(player) ~= self.owner_id
-					and entity.name ~= self.object:get_luaentity().name
-					and entity._cmi_is_mob == true then
+					and entity.name ~= self.object:get_luaentity().name then
 
 						self.hit_mob(self, player)
 
