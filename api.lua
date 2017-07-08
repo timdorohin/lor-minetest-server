@@ -2866,10 +2866,6 @@ end
 -- set content id's
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
-local c_obsidian = minetest.get_content_id("default:obsidian")
-local c_brick = minetest.get_content_id("default:obsidianbrick")
-local c_chest = minetest.get_content_id("default:chest_locked")
-local c_fire = minetest.get_content_id("fire:basic_flame")
 
 -- explosion (cannot break protected or unbreakable nodes)
 function mobs:explosion(pos, radius, fire, smoke, sound)
@@ -2921,11 +2917,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 
 		if (x * x) + (y * y) + (z * z) <= (radius * radius) + pr:next(-radius, radius)
 		and data[vi] ~= c_air
-		and data[vi] ~= c_ignore
-		and data[vi] ~= c_obsidian
-		and data[vi] ~= c_brick
-		and data[vi] ~= c_chest
-		and data[vi] ~= c_fire then
+		and data[vi] ~= c_ignore then
 
 			local n = node_ok(p).name
 			local on_blast = minetest.registered_nodes[n].on_blast
