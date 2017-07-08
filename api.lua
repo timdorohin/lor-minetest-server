@@ -1683,33 +1683,21 @@ local do_states = function(self, dtime)
 
 					local pos = self.object:getpos()
 					local radius = self.explosion_radius or 1
-					local fire = self.explosion_fire or 1
-					local smoke = self.explosion_smoke or 1
+					local damage_radius = radius
 
 					-- dont damage anything if area protected or next to water
 					if minetest.find_node_near(pos, 1, {"group:water"})
 					or minetest.is_protected(pos, "") then
 
-						mob_sound(self, self.sounds.explode)
-
-						self.object:remove()
-
---						effect(pos, 15, "tnt_smoke.png")
-						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
-
-						-- hurt player/mobs caught in blast area
-						entity_physics(pos, radius)
-
-						return
+						damage_radius = 0
 					end
-
-					pos.y = pos.y - 1
-
-					mobs:explosion(pos, radius, fire, smoke, self.sounds.explode)
 
 					self.object:remove()
 
-					entity_physics(pos, radius)
+					tnt.boom(pos, {
+						radius = radius,
+						damage_radius = damage_radius,
+					})
 
 					return
 				end
@@ -2632,8 +2620,6 @@ minetest.register_entity(name, {
 	pathfinding = def.pathfinding,
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
-	explosion_fire = def.explosion_fire,
-	explosion_smoke = def.explosion_smoke,
 	custom_attack = def.custom_attack,
 	double_melee_attack = def.double_melee_attack,
 	dogshoot_switch = def.dogshoot_switch,
@@ -2860,101 +2846,6 @@ function mobs:spawn(def)
 
 	mobs:spawn_specific(name, nodes, neighbors, min_light, max_light, interval,
 		chance, active_object_count, min_height, max_height, day_toggle, on_spawn)
-end
-
-
--- set content id's
-local c_air = minetest.get_content_id("air")
-local c_ignore = minetest.get_content_id("ignore")
-
--- explosion (cannot break protected or unbreakable nodes)
-function mobs:explosion(pos, radius, fire, smoke, sound)
-
-	radius = radius or 0
-	fire = fire or 0
-	smoke = smoke or 0
-
-	-- if area protected or near map limits then no blast damage
-	if minetest.is_protected(pos, "")
-	or not within_limits(pos, radius) then
-		return
-	end
-
-	-- explosion sound
-	if sound
-	and sound ~= "" then
-
-		minetest.sound_play(sound, {
-			pos = pos,
-			gain = 1.0,
-			max_hear_distance = 16
-		})
-	end
-
-	pos = vector.round(pos) -- voxelmanip doesn't work properly unless pos is rounded ?!?!
-
-	local vm = VoxelManip()
-	local minp, maxp = vm:read_from_map(vector.subtract(pos, radius), vector.add(pos, radius))
-	local a = VoxelArea:new({MinEdge = minp, MaxEdge = maxp})
-	local data = vm:get_data()
-	local p = {}
-	local pr = PseudoRandom(os.time())
-
-	if smoke > 0 then
-		--(pos, amount, texture, min_size, max_size, radius, gravity, glow)
-		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
-	end
-
-
-	for z = -radius, radius do
-	for y = -radius, radius do
-	local vi = a:index(pos.x + (-radius), pos.y + y, pos.z + z)
-	for x = -radius, radius do
-
-		p.x = pos.x + x
-		p.y = pos.y + y
-		p.z = pos.z + z
-
-		if (x * x) + (y * y) + (z * z) <= (radius * radius) + pr:next(-radius, radius)
-		and data[vi] ~= c_air
-		and data[vi] ~= c_ignore then
-
-			local n = node_ok(p).name
-			local on_blast = minetest.registered_nodes[n].on_blast
-
-			if on_blast then
-
-				on_blast(p)
-
-			elseif minetest.registered_nodes[n].groups.unbreakable == 1 then
-
-				-- do nothing
-			else
-
-				-- after effects
-				if fire > 0
-				and (minetest.registered_nodes[n].groups.flammable
-				or random(1, 100) < 60) then
-
-					-- Set fire (if node is present)
-					if minetest.registered_nodes[node_fire] then
-						minetest.set_node(p, {name = node_fire})
-					end
-				else
-					minetest.set_node(p, {name = "air"})
-
---					if smoke > 0 then
---						effect(p, 2, "tnt_smoke.png")
---					end
-				end
-			end
-		end
-
-		vi = vi + 1
-
-	end
-	end
-	end
 end
 
 
