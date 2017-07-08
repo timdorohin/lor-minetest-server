@@ -1694,10 +1694,15 @@ local do_states = function(self, dtime)
 
 					self.object:remove()
 
-					tnt.boom(pos, {
-						radius = radius,
-						damage_radius = damage_radius,
-					})
+					if minetest.get_modpath("tnt") then
+
+						tnt.boom(pos, {
+							radius = radius,
+							damage_radius = damage_radius,
+						})
+					else
+						entity_physics(pos, damage_radius)
+					end
 
 					return
 				end
