@@ -1,9 +1,9 @@
 
--- Mobs Api (7th July 2017)
+-- Mobs Api (8th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170707"
+mobs.version = "20170708"
 
 
 -- Intllib
@@ -64,6 +64,13 @@ local enable_pathfinding = true
 local stuck_timeout = 3 -- how long before mob gets stuck in place and starts searching
 local stuck_path_timeout = 10 -- how long will mob follow path before giving up
 
+-- default nodes
+local node_fire = "fire:basic_flame"
+local node_permanent_flame = "fire:permanent_flame"
+local node_ice = "default:ice"
+local node_snowblock = "default:snowblock"
+local node_snow = "default:snow"
+mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
 
 -- play sound
 local mob_sound = function(self, sound)
@@ -242,9 +249,10 @@ end
 local flight_check = function(self, pos_w)
 
 	local nod = self.standing_in
+	local def = minetest.registered_nodes[nod]
 
 	if type(self.fly_in) == "string"
-	and (nod == self.fly_in or nod == self.fly_in:gsub("_source", "_flowing")) then
+	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
 
 		return true
 
@@ -252,7 +260,7 @@ local flight_check = function(self, pos_w)
 
 		for _,fly_in in pairs(self.fly_in) do
 
-			if nod == fly_in or nod == fly_in:gsub("_source", "_flowing") then
+			if nod == fly_in or def.liquid_alternative_flowing ~= "" then
 
 				return true
 			end
@@ -507,7 +515,7 @@ end
 -- get node but use fallback for nil or unknown
 local node_ok = function(pos, fallback)
 
-	fallback = fallback or "default:dirt"
+	fallback = fallback or mobs.fallback_node
 
 	local node = minetest.get_node_or_nil(pos)
 
@@ -598,8 +606,8 @@ local do_env_damage = function(self)
 	-- lava or fire
 	elseif self.lava_damage
 	and (nodef.groups.lava
-	or self.standing_in == "fire:basic_flame"
-	or self.standing_in == "fire:permanent_flame") then
+	or self.standing_in == node_fire
+	or self.standing_in == node_permanent_flame) then
 
 		if self.lava_damage ~= 0 then
 
@@ -681,7 +689,7 @@ local do_jump = function(self)
 	})
 
 	-- thin blocks that do not need to be jumped
-	if nod.name == "default:snow" then
+	if nod.name == node_snow then
 		return false
 	end
 
@@ -1049,7 +1057,7 @@ local smart_mobs = function(self, s, p, dist, dtime)
 
 						if ndef1 and (ndef1.buildable_to or ndef1.groups.liquid) then
 
-								minetest.set_node(s, {name = "default:dirt"})
+								minetest.set_node(s, {name = mobs.fallback_node})
 						end
 					end
 
@@ -1511,7 +1519,7 @@ local do_states = function(self, dtime)
 				and minetest.registered_nodes[self.standing_in].groups.water) then
 
 				lp = minetest.find_node_near(s, 5, {"group:soil", "group:stone",
-					"group:sand", "default:ice", "default:snowblock"})
+					"group:sand", node_ice, node_snowblock})
 
 				-- did we find land?
 				if lp then
@@ -1675,6 +1683,8 @@ local do_states = function(self, dtime)
 
 					local pos = self.object:getpos()
 					local radius = self.explosion_radius or 1
+					local fire = self.explosion_fire or 1
+					local smoke = self.explosion_smoke or 1
 
 					-- dont damage anything if area protected or next to water
 					if minetest.find_node_near(pos, 1, {"group:water"})
@@ -1695,7 +1705,7 @@ local do_states = function(self, dtime)
 
 					pos.y = pos.y - 1
 
-					mobs:explosion(pos, radius, 1, 1, self.sounds.explode)
+					mobs:explosion(pos, radius, fire, smoke, self.sounds.explode)
 
 					self.object:remove()
 
@@ -2622,6 +2632,8 @@ minetest.register_entity(name, {
 	pathfinding = def.pathfinding,
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
+	explosion_fire = def.explosion_fire,
+	explosion_smoke = def.explosion_smoke,
 	custom_attack = def.custom_attack,
 	double_melee_attack = def.double_melee_attack,
 	dogshoot_switch = def.dogshoot_switch,
@@ -2920,7 +2932,7 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 
 			if on_blast then
 
-				return on_blast(p)
+				on_blast(p)
 
 			elseif minetest.registered_nodes[n].groups.unbreakable == 1 then
 
@@ -2930,9 +2942,12 @@ function mobs:explosion(pos, radius, fire, smoke, sound)
 				-- after effects
 				if fire > 0
 				and (minetest.registered_nodes[n].groups.flammable
-				or random(1, 100) <= 30) then
+				or random(1, 100) < 60) then
 
-					minetest.set_node(p, {name = "fire:basic_flame"})
+					-- Set fire (if node is present)
+					if minetest.registered_nodes[node_fire] then
+						minetest.set_node(p, {name = node_fire})
+					end
 				else
 					minetest.set_node(p, {name = "air"})
 

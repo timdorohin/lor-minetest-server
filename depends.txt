@@ -1,4 +1,6 @@
 default
+dye?
+farming?
 invisibility?
 intllib?
 lucky_block?
