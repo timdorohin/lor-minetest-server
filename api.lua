@@ -2973,6 +2973,23 @@ function mobs:register_arrow(name, def)
 end
 
 
+function mobs:explosion(pos, radius)
+
+	if minetest.get_modpath("tnt") and tnt and tnt.boom then
+
+		tnt.boom(pos, {
+			radius = radius,
+			damage_radius = radius,
+--			sound = self.sounds.explode,
+		})
+	else
+		mob_sound(self, self.sounds.explode)
+		entity_physics(pos, radius)
+		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+	end
+end
+
+
 -- Register spawn eggs
 
 -- Note: This also introduces the “spawn_egg” group:
