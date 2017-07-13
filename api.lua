@@ -48,7 +48,7 @@ local damage_enabled = minetest.setting_getbool("enable_damage")
 local peaceful_only = minetest.setting_getbool("only_peaceful_mobs")
 local disable_blood = minetest.setting_getbool("mobs_disable_blood")
 local creative = minetest.setting_getbool("creative_mode")
-local spawn_protected = tonumber(minetest.setting_get("mobs_spawn_protected")) or 1
+local spawn_protected = minetest.setting_getbool("mobs_spawn_protected") ~= false
 local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
@@ -2772,7 +2772,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			end
 
 			-- mobs cannot spawn in protected areas when enabled
-			if spawn_protected == 1
+			if not spawn_protected
 			and minetest.is_protected(pos, "") then
 --print ("--- inside protected area", name)
 				return
