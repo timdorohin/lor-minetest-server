@@ -1,5 +1,5 @@
 
-MOB API (8th July 2017)
+MOB API (13th July 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -229,15 +229,14 @@ This function registers a spawn egg which can be used by admin to properly spawn
     'no_creative' when set to true this stops spawn egg appearing in creative mode for destructive mobs like Dungeon Masters
 
 
-mobs:explosion(pos, radius, fire, smoke) -- DEPRECATED!!!  use tnt mod's tnt.boom function instead
+mobs:explosion(pos, radius) -- DEPRECATED!!!  use mobs:boom() instead
 
-This function generates an explosion which removes nodes in a specific radius and replace them with fire or air. Protection nodes, obsidian and locked chests will not be destroyed although a normal chest will drop it's contents.
+mobs:boom(self, pos, radius)
+This function generates an explosion which removes nodes in a specific radius and damages any entity caught inside the blast radius.  Protection will limit node destruction but not entity damage.
 
+    'self' mob entity
     'pos' centre position of explosion
     'radius' radius of explosion (typically set to 3)
-    'fire' should fire appear in explosion (1=yes, 0=no)
-    'smoke' should smoke appear in explosion (1=yes, 0=no)
-    'sound' sound played when mob explodes
 
 
 mobs:capture_mob(self, clicker, chance_hand, chance_net, chance_lasso, force_take, replacewith)

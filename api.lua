@@ -1,9 +1,9 @@
 
--- Mobs Api (9th July 2017)
+-- Mobs Api (13th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170709"
+mobs.version = "20170713"
 
 
 -- Intllib
@@ -1694,7 +1694,8 @@ local do_states = function(self, dtime)
 
 					self.object:remove()
 
-					if minetest.get_modpath("tnt") and tnt and tnt.boom then
+					if minetest.get_modpath("tnt") and tnt and tnt.boom
+					and not minetest.is_protected(pos, "") then
 
 						tnt.boom(pos, {
 							radius = radius,
@@ -2973,14 +2974,24 @@ function mobs:register_arrow(name, def)
 end
 
 
+-- compatibility function
 function mobs:explosion(pos, radius)
+	local self = {sounds = {}}
+	self.sounds.explode = "tnt_explode"
+	mobs:boom(self, pos, radius)
+end
 
-	if minetest.get_modpath("tnt") and tnt and tnt.boom then
+
+-- make explosion with protection and tnt mod check
+function mobs:boom(self, pos, radius)
+
+	if minetest.get_modpath("tnt") and tnt and tnt.boom
+	and not minetest.is_protected(pos, "") then
 
 		tnt.boom(pos, {
 			radius = radius,
 			damage_radius = radius,
---			sound = self.sounds.explode,
+			sound = self.sounds.explode,
 		})
 	else
 		mob_sound(self, self.sounds.explode)
