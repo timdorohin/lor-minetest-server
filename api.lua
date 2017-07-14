@@ -1,9 +1,9 @@
 
--- Mobs Api (13th July 2017)
+-- Mobs Api (14th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170713"
+mobs.version = "20170714"
 
 
 -- Intllib
@@ -1703,7 +1703,13 @@ local do_states = function(self, dtime)
 							sound = self.sounds.explode,
 						})
 					else
-						mob_sound(self, self.sounds.explode)
+
+						minetest.sound_play(self.sounds.explode, {
+							pos = pos,
+							gain = 1.0,
+							max_hear_distance = self.sounds.distance or 32
+						})
+
 						entity_physics(pos, damage_radius)
 						effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 					end
@@ -2994,7 +3000,12 @@ function mobs:boom(self, pos, radius)
 			sound = self.sounds.explode,
 		})
 	else
-		mob_sound(self, self.sounds.explode)
+		minetest.sound_play(self.sounds.explode, {
+			pos = pos,
+			gain = 1.0,
+			max_hear_distance = self.sounds.distance or 32
+		})
+
 		entity_physics(pos, radius)
 		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
 	end
