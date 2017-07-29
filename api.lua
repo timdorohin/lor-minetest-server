@@ -1433,7 +1433,7 @@ end
 local do_states = function(self, dtime)
 
 	local yaw = self.object:get_yaw() or 0
-print ("---- yaw", yaw)
+
 	if self.state == "stand" then
 
 		if random(1, 4) == 1 then
