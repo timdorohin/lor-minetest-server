@@ -1,9 +1,9 @@
 
--- Mobs Api (26th July 2017)
+-- Mobs Api (30th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170726"
+mobs.version = "20170730"
 
 
 -- Intllib
@@ -439,6 +439,10 @@ local check_for_death = function(self, cause, cmi_cause)
 	and self.animation.die_start
 	and self.animation.die_end then
 
+		local frames = self.animation.die_end - self.animation.die_start
+		local speed = self.animation.die_speed or 15
+		local length = max(frames / speed, 0)
+
 		self.attack = nil
 		self.v_start = false
 		self.timer = 0
@@ -448,7 +452,7 @@ local check_for_death = function(self, cause, cmi_cause)
 		set_velocity(self, 0)
 		set_animation(self, "die")
 
-		minetest.after(2, function(self)
+		minetest.after(length, function(self)
 
 			if use_cmi then
 				cmi.notify_die(self.object, cmi_cause)
