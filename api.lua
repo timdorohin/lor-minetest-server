@@ -139,7 +139,8 @@ end
 -- set defined animation
 local set_animation = function(self, anim)
 
-	if not self.animation then return end
+	if not self.animation
+	or not anim then return end
 
 	self.animation.current = self.animation.current or ""
 
@@ -586,7 +587,6 @@ local do_env_damage = function(self)
 	-- don't fall when on ignore, just stand still
 	if self.standing_in == "ignore" then
 		self.object:setvelocity({x = 0, y = 0, z = 0})
-		--print ("--- stopping on ignore")
 	end
 
 	local nodef = minetest.registered_nodes[self.standing_in]
@@ -706,7 +706,7 @@ local do_jump = function(self)
 
 		local v = self.object:getvelocity()
 
-		v.y = self.jump_height -- + 1
+		v.y = self.jump_height
 
 		set_animation(self, "jump") -- only when defined
 
@@ -1432,8 +1432,8 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
-	local yaw = 0
-
+	local yaw = self.object:get_yaw() or 0
+print ("---- yaw", yaw)
 	if self.state == "stand" then
 
 		if random(1, 4) == 1 then
@@ -1462,7 +1462,9 @@ local do_states = function(self, dtime)
 
 				if lp.x > s.x then yaw = yaw + pi end
 			else
-				yaw = (random(0, 360) - 180) / 180 * pi
+--				yaw = (random(0, 360) - 180) / 180 * pi
+
+				yaw = yaw + random(-0.5, 0.5)
 			end
 
 			yaw = set_yaw(self.object, yaw)
@@ -1542,7 +1544,9 @@ local do_states = function(self, dtime)
 						do_jump(self)
 						set_velocity(self, self.walk_velocity)
 				else
-					yaw = (random(0, 360) - 180) / 180 * pi
+--					yaw = (random(0, 360) - 180) / 180 * pi
+
+					yaw = yaw + random(-0.5, 0.5)
 				end
 
 			else
@@ -1563,7 +1567,9 @@ local do_states = function(self, dtime)
 		elseif random(1, 100) <= 30 then
 
 			--yaw = random() * 2 * pi
-			yaw = (random(0, 360) - 180) / 180 * pi
+--			yaw = (random(0, 360) - 180) / 180 * pi
+
+			yaw = yaw + random(-0.5, 0.5)
 
 			yaw = set_yaw(self.object, yaw)
 		end
