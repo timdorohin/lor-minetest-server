@@ -1,9 +1,9 @@
 
--- Mobs Api (3rd August 2017)
+-- Mobs Api (30th July 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170803"
+mobs.version = "20170730"
 
 
 -- Intllib
@@ -139,8 +139,7 @@ end
 -- set defined animation
 local set_animation = function(self, anim)
 
-	if not self.animation
-	or not anim then return end
+	if not self.animation then return end
 
 	self.animation.current = self.animation.current or ""
 
@@ -587,6 +586,7 @@ local do_env_damage = function(self)
 	-- don't fall when on ignore, just stand still
 	if self.standing_in == "ignore" then
 		self.object:setvelocity({x = 0, y = 0, z = 0})
+		--print ("--- stopping on ignore")
 	end
 
 	local nodef = minetest.registered_nodes[self.standing_in]
@@ -706,7 +706,7 @@ local do_jump = function(self)
 
 		local v = self.object:getvelocity()
 
-		v.y = self.jump_height
+		v.y = self.jump_height -- + 1
 
 		set_animation(self, "jump") -- only when defined
 
@@ -1255,9 +1255,9 @@ local npc_attack = function(self)
 		return
 	end
 
-	local p, sp, obj, min_player
 	local s = self.object:getpos()
 	local min_dist = self.view_range + 1
+	local obj, min_player = nil, nil
 	local objs = minetest.get_objects_inside_radius(s, self.view_range)
 
 	for n = 1, #objs do
@@ -1266,7 +1266,7 @@ local npc_attack = function(self)
 
 		if obj and obj.type == "monster" then
 
-			p = obj.object:getpos()
+			local p = obj.object:getpos()
 
 			dist = get_distance(p, s)
 
@@ -1432,7 +1432,7 @@ end
 -- execute current state (stand, walk, run, attacks)
 local do_states = function(self, dtime)
 
-	local yaw = self.object:get_yaw() or 0
+	local yaw = 0
 
 	if self.state == "stand" then
 
@@ -1462,9 +1462,7 @@ local do_states = function(self, dtime)
 
 				if lp.x > s.x then yaw = yaw + pi end
 			else
---				yaw = (random(0, 360) - 180) / 180 * pi
-
-				yaw = yaw + random(-0.5, 0.5)
+				yaw = (random(0, 360) - 180) / 180 * pi
 			end
 
 			yaw = set_yaw(self.object, yaw)
@@ -1544,9 +1542,7 @@ local do_states = function(self, dtime)
 						do_jump(self)
 						set_velocity(self, self.walk_velocity)
 				else
---					yaw = (random(0, 360) - 180) / 180 * pi
-
-					yaw = yaw + random(-0.5, 0.5)
+					yaw = (random(0, 360) - 180) / 180 * pi
 				end
 
 			else
@@ -1567,9 +1563,7 @@ local do_states = function(self, dtime)
 		elseif random(1, 100) <= 30 then
 
 			--yaw = random() * 2 * pi
---			yaw = (random(0, 360) - 180) / 180 * pi
-
-			yaw = yaw + random(-0.5, 0.5)
+			yaw = (random(0, 360) - 180) / 180 * pi
 
 			yaw = set_yaw(self.object, yaw)
 		end
