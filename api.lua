@@ -528,7 +528,7 @@ local node_ok = function(pos, fallback)
 		return node
 	end
 
-	return {name = fallback}
+	return minetest.registered_nodes[fallback] -- {name = fallback}
 end
 
 
