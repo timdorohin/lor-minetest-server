@@ -1080,7 +1080,8 @@ local smart_mobs = function(self, s, p, dist, dtime)
 						and node1 ~= "ignore"
 						and ndef1
 						and not ndef1.groups.level
-						and not ndef1.groups.unbreakable then
+						and not ndef1.groups.unbreakable
+						and not ndef1.groups.liquid then
 
 							minetest.set_node(s, {name = "air"})
 							minetest.add_item(s, ItemStack(node1))
@@ -1109,7 +1110,8 @@ local smart_mobs = function(self, s, p, dist, dtime)
 						and node1 ~= "ignore"
 						and ndef1
 						and not ndef1.groups.level
-						and not ndef1.groups.unbreakable then
+						and not ndef1.groups.unbreakable
+						and not ndef1.groups.liquid then
 
 							minetest.add_item(p1, ItemStack(node1))
 							minetest.set_node(p1, {name = "air"})
@@ -1123,7 +1125,8 @@ local smart_mobs = function(self, s, p, dist, dtime)
 						and node1 ~= "ignore"
 						and ndef1
 						and not ndef1.groups.level
-						and not ndef1.groups.unbreakable then
+						and not ndef1.groups.unbreakable
+						and not ndef1.groups.liquid then
 
 							minetest.add_item(p1, ItemStack(node1))
 							minetest.set_node(p1, {name = "air"})
