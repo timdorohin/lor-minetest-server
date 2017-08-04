@@ -1018,7 +1018,7 @@ local smart_mobs = function(self, s, p, dist, dtime)
 		-- round position to center of node to avoid stuck in walls
 		-- also adjust height for player models!
 		s.x = floor(s.x + 0.5)
-		s.y = floor(s.y + 0.5) - sheight
+--		s.y = floor(s.y + 0.5) - sheight
 		s.z = floor(s.z + 0.5)
 
 		local ssight, sground = minetest.line_of_sight(s, {
