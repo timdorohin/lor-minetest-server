@@ -1,9 +1,9 @@
 
--- Mobs Api (3rd August 2017)
+-- Mobs Api (4th August 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170803"
+mobs.version = "20170804"
 
 
 -- Intllib
@@ -53,6 +53,14 @@ local remove_far = minetest.setting_getbool("remove_far_mobs")
 local difficulty = tonumber(minetest.setting_get("mob_difficulty")) or 1.0
 local show_health = minetest.setting_getbool("mob_show_health") ~= false
 local max_per_block = tonumber(minetest.setting_get("max_objects_per_block") or 99)
+
+-- Peaceful mode message so players will know there are no monsters
+if peaceful_only then
+	minetest.register_on_joinplayer(function(player)
+		minetest.chat_send_player(player:get_player_name(),
+			S("** Peaceful Mode Active - No Monsters Will Spawn"))
+	end)
+end
 
 -- calculate aoc range for mob count
 local aosrb = tonumber(minetest.setting_get("active_object_send_range_blocks"))
