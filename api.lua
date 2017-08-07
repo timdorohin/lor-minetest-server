@@ -1,9 +1,9 @@
 
--- Mobs Api (4th August 2017)
+-- Mobs Api (7th August 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170804"
+mobs.version = "20170807"
 
 
 -- Intllib
@@ -259,6 +259,8 @@ local flight_check = function(self, pos_w)
 
 	local nod = self.standing_in
 	local def = minetest.registered_nodes[nod]
+
+	if not def then return false end -- nil check
 
 	if type(self.fly_in) == "string"
 	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
