@@ -1,9 +1,9 @@
 
--- Mobs Api (11th August 2017)
+-- Mobs Api (12th August 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170811"
+mobs.version = "20170812"
 
 
 -- Intllib
@@ -3039,6 +3039,7 @@ function mobs:boom(self, pos, radius)
 			radius = radius,
 			damage_radius = radius,
 			sound = self.sounds.explode,
+			explode_center = true,
 		})
 	else
 		minetest.sound_play(self.sounds.explode, {
