@@ -12,7 +12,7 @@ local function register_plant(name, min, max, spawnby, num, enabled)
 		sidelen = 16,
 		noise_params = {
 			offset = 0,
-			scale = 0.006,
+			scale = farming.rarety, -- 0.006,
 			spread = {x = 100, y = 100, z = 100},
 			seed = 329,
 			octaves = 3,
@@ -60,7 +60,7 @@ minetest.register_decoration({
 	sidelen = 16,
 	noise_params = {
 		offset = 0,
-		scale = 0.06,
+		scale = farming.rarety, -- 0.06,
 		spread = {x = 100, y = 100, z = 100},
 		seed = 420,
 		octaves = 3,

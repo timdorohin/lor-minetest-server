@@ -1,5 +1,5 @@
 --[[
-	Farming Redo Mod 1.25 (6th May 2017)
+	Farming Redo Mod
 	by TenPlus1
 	NEW growing routine by prestidigitator
 	auto-refill by crabman77
@@ -646,6 +646,7 @@ farming.grapes = true
 farming.barley = true
 farming.hemp = true
 farming.donuts = true
+farming.rarety = 0.006
 
 
 -- Load new global settings if found inside mod folder
