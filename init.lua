@@ -563,6 +563,7 @@ farming.register_plant = function(name, def)
 		walkable = false,
 		sunlight_propagates = true,
 		selection_box = farming.select,
+place_param2 = def.place_param2 or nil,
 
 		on_place = function(itemstack, placer, pointed_thing)
 			return farming.place_seed(itemstack, placer,
@@ -606,6 +607,8 @@ farming.register_plant = function(name, def)
 			waving = 1,
 			tiles = {mname .. "_" .. pname .. "_" .. i .. ".png"},
 			paramtype = "light",
+paramtype2 = def.paramtype2 or nil,
+place_param2 = def.place_param2 or nil,
 			walkable = false,
 			buildable_to = true,
 			drop = drop,
