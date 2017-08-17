@@ -19,12 +19,7 @@ local statistics = dofile(farming.path.."/statistics.lua")
 
 -- Intllib
 
-local S
-if minetest.get_modpath("intllib") then
-	S = intllib.Getter()
-else
-	S = function(s) return s end
-end
+local S = dofile(farming.path.."/intllib.lua")
 farming.intllib = S
 
 -- Utility Functions
