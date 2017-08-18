@@ -24,17 +24,44 @@ minetest.register_node("farming:seed_cotton", {
 minetest.register_craftitem("farming:cotton", {
 	description = S("Cotton"),
 	inventory_image = "farming_cotton.png",
+	groups = {flammable = 4},
 })
 
-minetest.register_alias("farming:string", "farming:cotton")
+minetest.register_craftitem("farming:string", {
+	description = S("String"),
+	inventory_image = "farming_string.png",
+	groups = {flammable = 2},
+})
 
 -- cotton to wool
 minetest.register_craft({
 	output = "wool:white",
 	recipe = {
-		{"farming:string", "farming:string"},
-		{"farming:string", "farming:string"},
+		{"farming:cotton", "farming:cotton"},
+		{"farming:cotton", "farming:cotton"},
 	}
+})
+
+-- cotton to string
+minetest.register_craft({
+	output = "farming:string 2",
+	recipe = {
+		{"farming:cotton"},
+		{"farming:cotton"},
+	}
+})
+
+-- can be used as fuel
+minetest.register_craft({
+	type = "fuel",
+	recipe = "farming:string",
+	burntime = 1,
+})
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "farming:cotton",
+	burntime = 1,
 })
 
 -- cotton definition
@@ -105,9 +132,9 @@ crop_def.tiles = {"farming_cotton_8.png"}
 crop_def.groups.growing = 0
 crop_def.drop = {
 	items = {
-		{items = {"farming:string"}, rarity = 1},
-		{items = {"farming:string"}, rarity = 2},
-		{items = {"farming:string"}, rarity = 3},
+		{items = {"farming:cotton"}, rarity = 1},
+		{items = {"farming:cotton"}, rarity = 2},
+		{items = {"farming:cotton"}, rarity = 3},
 		{items = {"farming:seed_cotton"}, rarity = 1},
 		{items = {"farming:seed_cotton"}, rarity = 2},
 		{items = {"farming:seed_cotton"}, rarity = 3},

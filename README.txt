@@ -13,7 +13,7 @@ This mod works by adding your new plant to the {growing=1} group and numbering t
 
 Changelog:
 
-1.27 - Added meshoptions to api and wheat plants, added farming.rarity setting to spawn more/less crops on map
+1.27 - Added meshoptions to api and wheat plants, added farming.rarity setting to spawn more/less crops on map, have separate cotton/string items (4x cotton = 1x wool, 2x cotton = 2x string)
 1.26 - Added support for [toolranks] mod when using hoe's
 1.25 - Added check for farming.conf setting file to disable specific crops globally (inside mod folder) or world specific (inside world folder)
 1.24 - Added Hemp which can be crafted into fibre, paper, string, rope and oil.
@@ -60,6 +60,9 @@ Created by PilzAdam (License: WTFPL):
   farming_soil_wet.png
   farming_soil_wet_side.png
   farming_string.png
+
+Created by Napiophelios (CC BY-SA 3.0):
+  farming_cotton.png
 
 Created by Calinou (License: CC BY-SA):
   farming_tool_bronzehoe.png
