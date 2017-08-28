@@ -15,6 +15,13 @@ farming.select = {
 }
 
 
+local creative_mode_cache = minetest.setting_getbool("creative_mode")
+
+function is_creative(name)
+	return creative_mode_cache or minetest.check_player_privs(name, {creative = true})
+end
+
+
 local statistics = dofile(farming.path.."/statistics.lua")
 
 -- Intllib
@@ -110,8 +117,8 @@ end
 
 local STAGE_LENGTH_AVG = 160.0
 local STAGE_LENGTH_DEV = STAGE_LENGTH_AVG / 6
-local MIN_LIGHT = 13
-local MAX_LIGHT = 1000
+--local MIN_LIGHT = 13
+--local MAX_LIGHT = 1000
 
 --- Determines plant name and stage from node.
  --
@@ -346,7 +353,6 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	if stages.plant_name == "farming:cocoa" then
 
 		if not minetest.find_node_near(pos, 1, {"default:jungletree"}) then
-
 			return true
 		end
 	else
@@ -365,6 +371,10 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 		return true
 	end
 
+--------
+local MIN_LIGHT = minetest.registered_nodes[node_name].minlight or 13
+local MAX_LIGHT = minetest.registered_nodes[node_name].maxlight or 14
+--print ("---", MIN_LIGHT, MAX_LIGHT)
 	if max_growth == 1 or lambda < 2.0 then
 
 		local light = (minetest.get_node_light(light_pos) or 0)
@@ -503,7 +513,8 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 		minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
-		if not minetest.setting_getbool("creative_mode") then
+--		if not minetest.setting_getbool("creative_mode") then
+		if not is_creative(placer:get_player_name()) then
 
 			itemstack:take_item()
 
@@ -542,6 +553,14 @@ farming.register_plant = function(name, def)
 
 	if not def.steps then
 		return nil
+	end
+
+	if not def.minlight then
+		def.minlight = 1
+	end
+
+	if not def.maxlight then
+		def.maxlight = 14
 	end
 
 	-- Register seed
@@ -610,6 +629,8 @@ place_param2 = def.place_param2 or nil,
 			selection_box = farming.select,
 			groups = g,
 			sounds = default.node_sound_leaves_defaults(),
+			minlight = def.minlight,
+			maxlight = def.maxlight,
 		})
 
 		register_plant_node(node_name)
