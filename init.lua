@@ -592,6 +592,7 @@ farming.rhubarb = true
 farming.beans = true
 farming.grapes = true
 farming.barley = true
+farming.chili = true
 farming.hemp = true
 farming.donuts = true
 farming.rarety = 0.006
@@ -641,6 +642,7 @@ if farming.rhubarb then dofile(farming.path.."/rhubarb.lua") end
 if farming.beans then dofile(farming.path.."/beanpole.lua") end
 if farming.grapes then dofile(farming.path.."/grapes.lua") end
 if farming.barley then dofile(farming.path.."/barley.lua") end
+if farming.chili then dofile(farming.path.."/chili.lua") end
 if farming.hemp then dofile(farming.path.."/hemp.lua") end
 if farming.donuts then dofile(farming.path.."/donut.lua") end
 
