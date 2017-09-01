@@ -1,5 +1,5 @@
 
--- Mobs Api (12th August 2017)
+-- Mobs Api (1st September 2017)
 
 mobs = {}
 mobs.mod = "redo"
@@ -569,11 +569,11 @@ local do_env_damage = function(self)
 		return
 	end
 
-	-- daylight above ground
+	-- too bright a light harms mob (was daylight above ground)
 	if self.light_damage ~= 0
-	and pos.y > 0
-	and self.time_of_day > 0.2
-	and self.time_of_day < 0.8
+--	and pos.y > 0
+--	and self.time_of_day > 0.2
+--	and self.time_of_day < 0.8
 	and (minetest.get_node_light(pos) or 0) > 12 then
 
 		self.health = self.health - self.light_damage
