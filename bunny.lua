@@ -74,7 +74,22 @@ mobs:register_mob("mobs_animal:bunny", {
 			return
 		end
 	end,
+	on_spawn = function(self)
 
+		local pos = self.object:getpos() ; pos.y = pos.y - 1
+
+		-- snow bunny
+		if minetest.find_node_near(pos, 2, {"default:snow", "default:snowblock"}) then
+			self.base_texture = {"mobs_bunny_white.png"}
+			self.object:set_properties({textures = self.base_texture})
+		-- desert bunny
+		elseif minetest.find_node_near(pos, 2, {"default:desert_sand", "default:desert_stone"}) then
+			self.base_texture = {"mobs_bunny_brown.png"}
+			self.object:set_properties({textures = self.base_texture})
+		end
+
+		return true -- run only once, false/nil runs every activation
+	end,
 	attack_type = "dogfight",
 	damage = 5,
 })
