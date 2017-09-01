@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170812"
+mobs.version = "20170901"
 
 
 -- Intllib
