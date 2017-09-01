@@ -2449,6 +2449,13 @@ local mob_activate = function(self, staticdata, def, dtime)
 	update_tag(self)
 	set_animation(self, "stand")
 
+	-- run on_spawn function if found
+	if self.on_spawn and not self.on_spawn_run then
+		if self.on_spawn(self) then
+			self.on_spawn_run = true --  if true, set flag to run once only
+		end
+	end
+
 	if use_cmi then
 		self._cmi_components = cmi.activate_components(self.serialized_cmi_components)
 		cmi.notify_activate(self.object, dtime)
@@ -2686,6 +2693,8 @@ minetest.register_entity(name, {
 	owner_loyal = def.owner_loyal,
 	facing_fence = false,
 	_cmi_is_mob = true,
+
+	on_spawn = def.on_spawn,
 
 	on_blast = def.on_blast or do_tnt,
 

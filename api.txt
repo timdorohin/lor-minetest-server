@@ -1,5 +1,5 @@
 
-MOB API (13th July 2017)
+MOB API (1st September 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -94,6 +94,7 @@ This functions registers a new mob as a Minetest entity.
         'shoot_interval' the minimum shoot interval
         'shoot_offset' +/- value to position arrow/fireball when fired
         'reach' how far a reach this mob has, default is 3
+        'on_spawn' is a custom function that runs on mob spawn with 'self' as variable, return true at end of function to run onyl once.
         'sounds' this is a table with sounds of the mob
             'random' random sounds during gameplay
             'war_cry' sound when starting to attack player
