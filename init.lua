@@ -321,7 +321,7 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 	end
 
 	local MIN_LIGHT = minetest.registered_nodes[node_name].minlight or 13
-	local MAX_LIGHT = minetest.registered_nodes[node_name].maxlight or 14
+	local MAX_LIGHT = minetest.registered_nodes[node_name].maxlight or 15
 	--print ("---", MIN_LIGHT, MAX_LIGHT)
 
 	if max_growth == 1 or lambda < 2.0 then
@@ -483,7 +483,7 @@ farming.register_plant = function(name, def)
 	def.description = def.description or S("Seed")
 	def.inventory_image = def.inventory_image or "unknown_item.png"
 	def.minlight = def.minlight or 13
-	def.maxlight = def.maxlight or 14
+	def.maxlight = def.maxlight or 15
 
 	-- Register seed
 	minetest.register_node(":" .. mname .. ":seed_" .. pname, {
