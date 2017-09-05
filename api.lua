@@ -1,9 +1,9 @@
 
--- Mobs Api (1st September 2017)
+-- Mobs Api (5th September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170901"
+mobs.version = "20170905"
 
 
 -- Intllib
@@ -2442,6 +2442,11 @@ local mob_activate = function(self, staticdata, def, dtime)
 	self.collisionbox = colbox
 	self.visual_size = vis_size
 	self.standing_in = ""
+
+	-- check existing nametag
+	if not self.nametag then
+		self.nametag = def.nametag
+	end
 
 	-- set anything changed above
 	self.object:set_properties(self)
