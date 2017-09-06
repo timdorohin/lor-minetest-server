@@ -59,7 +59,7 @@ mobs:alias_mob("mobs:bee", "mobs_animal:bee")
 minetest.register_craftitem(":mobs:honey", {
 	description = S("Honey"),
 	inventory_image = "mobs_honey_inv.png",
-	on_use = minetest.item_eat(6),
+	on_use = minetest.item_eat(4),
 })
 
 -- beehive (when placed spawns bee)
