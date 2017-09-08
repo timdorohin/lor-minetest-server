@@ -1,9 +1,9 @@
 
--- Mobs Api (5th September 2017)
+-- Mobs Api (8th September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170905"
+mobs.version = "20170908"
 
 
 -- Intllib
@@ -1963,12 +1963,13 @@ local do_states = function(self, dtime)
 
 				p.y = p.y + (self.collisionbox[2] + self.collisionbox[5]) / 2
 
-				local obj = minetest.add_entity(p, self.arrow)
-				local ent = obj:get_luaentity()
+				if minetest.registered_entities[self.arrow] then
 
-				if ent then
+					local obj = minetest.add_entity(p, self.arrow)
+					local ent = obj:get_luaentity()
 					local amount = (vec.x * vec.x + vec.y * vec.y + vec.z * vec.z) ^ 0.5
 					local v = ent.velocity or 1 -- or set to default
+
 					ent.switch = 1
 					ent.owner_id = tostring(self.object) -- add unique owner id to arrow
 
@@ -1979,8 +1980,6 @@ local do_states = function(self, dtime)
 					vec.z = vec.z * (v / amount)
 
 					obj:setvelocity(vec)
-				else
-					obj:remove() -- arrow entity does not exist
 				end
 			end
 		end
@@ -2871,12 +2870,14 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 			-- spawn mob half block higher than ground
 			pos.y = pos.y - 0.5
 
-			local mob = minetest.add_entity(pos, name)
+			if minetest.registered_entities[name] then
 
-			if mob and mob:get_luaentity() then
---				print ("[mobs] Spawned " .. name .. " at "
---				.. minetest.pos_to_string(pos) .. " on "
---				.. node.name .. " near " .. neighbors[1])
+				minetest.add_entity(pos, name)
+--[[
+				print ("[mobs] Spawned " .. name .. " at "
+				.. minetest.pos_to_string(pos) .. " on "
+				.. node.name .. " near " .. neighbors[1])
+]]
 				if on_spawn and not on_spawn(mob, pos) then
 					return
 				end
@@ -2884,7 +2885,6 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 				minetest.log("warning", string.format("[mobs] %s failed to spawn at %s",
 					name, minetest.pos_to_string(pos)))
 			end
-
 		end
 	})
 end
@@ -3112,19 +3112,18 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			and within_limits(pos, 0)
 			and not minetest.is_protected(pos, placer:get_player_name()) then
 
+				if not minetest.registered_entities[mob] then
+					return
+				end
+
 				pos.y = pos.y + 1
 
 				local data = itemstack:get_metadata()
 				local mob = minetest.add_entity(pos, mob, data)
 				local ent = mob:get_luaentity()
 
-				if not ent then
-					mob:remove()
-					return
-				end
-
+				-- set owner if not a monster
 				if ent.type ~= "monster" then
-					-- set owner and tame if not monster
 					ent.owner = placer:get_player_name()
 					ent.tamed = true
 				end
@@ -3160,19 +3159,18 @@ function mobs:register_egg(mob, desc, background, addegg, no_creative)
 			and within_limits(pos, 0)
 			and not minetest.is_protected(pos, placer:get_player_name()) then
 
+				if not minetest.registered_entities[mob] then
+					return
+				end
+
 				pos.y = pos.y + 1
 
 				local mob = minetest.add_entity(pos, mob)
 				local ent = mob:get_luaentity()
 
-				if not ent then
-					mob:remove()
-					return
-				end
-
+				-- don't set owner if monster or sneak pressed
 				if ent.type ~= "monster"
 				and not placer:get_player_control().sneak then
-					-- set owner and tame if not monster
 					ent.owner = placer:get_player_name()
 					ent.tamed = true
 				end
@@ -3521,7 +3519,9 @@ function mobs:alias_mob(old_name, new_name)
 
 			local pos = self.object:getpos()
 
-			minetest.add_entity(pos, new_name)
+			if minetest.registered_entities[new_name] then
+				minetest.add_entity(pos, new_name)
+			end
 
 			self.object:remove()
 		end
