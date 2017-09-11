@@ -13,7 +13,7 @@ This mod works by adding your new plant to the {growing=1} group and numbering t
 
 Changelog:
 
-1.28 - Added chili peppers and bowl of chili, optimized code and fixed a few bugs
+1.28 - Added chili peppers and bowl of chili, optimized code and fixed a few bugs, added porridge
 1.27 - Added meshoptions to api and wheat plants, added farming.rarity setting to spawn more/less crops on map, have separate cotton/string items (4x cotton = 1x wool, 2x cotton = 2x string)
 1.26 - Added support for [toolranks] mod when using hoe's
 1.25 - Added check for farming.conf setting file to disable specific crops globally (inside mod folder) or world specific (inside world folder)
