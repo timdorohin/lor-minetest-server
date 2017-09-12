@@ -64,7 +64,8 @@ minetest.after(0, function()
 		recipe = {
 			"farming:barley", "farming:barley", "farming:wheat",
 			"farming:wheat", "mobs:bucket_milk"
-		}
+		},
+		replacements = {{"mobs:bucket_milk", "bucket:bucket_empty"}}
 	})
 else
 	minetest.register_craft({
@@ -73,7 +74,8 @@ else
 		recipe = {
 			"farming:barley", "farming:barley", "farming:wheat",
 			"farming:wheat", "bucket:bucket_water"
-		}
+		},
+		replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
 	})
 	end
 end)
