@@ -78,13 +78,20 @@ mobs:register_mob("mobs_animal:bunny", {
 
 		local pos = self.object:getpos() ; pos.y = pos.y - 1
 
-		-- snow bunny
-		if minetest.find_node_near(pos, 2, {"default:snow", "default:snowblock"}) then
+		-- white snowy bunny
+		if minetest.find_node_near(pos, 1,
+				{"default:snow", "default:snowblock", "default:dirt_with_snow"}) then
 			self.base_texture = {"mobs_bunny_white.png"}
 			self.object:set_properties({textures = self.base_texture})
-		-- desert bunny
-		elseif minetest.find_node_near(pos, 2, {"default:desert_sand", "default:desert_stone"}) then
+		-- brown desert bunny
+		elseif minetest.find_node_near(pos, 1,
+				{"default:desert_sand", "default:desert_stone"}) then
 			self.base_texture = {"mobs_bunny_brown.png"}
+			self.object:set_properties({textures = self.base_texture})
+		-- grey stone bunny
+		elseif minetest.find_node_near(pos, 1,
+				{"default:stone", "default:gravel"}) then
+			self.base_texture = {"mobs_bunny_grey.png"}
 			self.object:set_properties({textures = self.base_texture})
 		end
 
