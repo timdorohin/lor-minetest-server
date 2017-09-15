@@ -1,9 +1,9 @@
 
--- Mobs Api (8th September 2017)
+-- Mobs Api (15th September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170908"
+mobs.version = "20170915"
 
 
 -- Intllib
@@ -814,12 +814,17 @@ local breed = function(self)
 				collisionbox = self.base_colbox,
 			})
 
-			-- jump when fully grown so not to fall into ground
-			self.object:setvelocity({
-				x = 0,
-				y = self.jump_height,
-				z = 0
-			})
+			-- custom function when child grows up
+			if self.on_grown then
+				self.on_grown(self)
+			else
+				-- jump when fully grown so as not to fall into ground
+				self.object:setvelocity({
+					x = 0,
+					y = self.jump_height,
+					z = 0
+				})
+			end
 		end
 
 		return
@@ -838,7 +843,7 @@ local breed = function(self)
 		end
 	end
 
-	-- find another same animal who is also horny and mate if close enough
+	-- find another same animal who is also horny and mate if nearby
 	if self.horny == true
 	and self.hornytimer <= 40 then
 
@@ -892,14 +897,27 @@ local breed = function(self)
 				-- spawn baby
 				minetest.after(5, function()
 
+					-- custom breed function
+					if self.on_breed then
+
+						-- when false skip going any further
+						if self.on_breed(self, ent) == false then
+								return
+						end
+					else
+						effect(pos, 15, "tnt_smoke.png", 1, 2, 2, 15, 5)
+					end
+
 					local mob = minetest.add_entity(pos, self.name)
 					local ent2 = mob:get_luaentity()
 					local textures = self.base_texture
 
+					-- using specific child texture (if found)
 					if self.child_texture then
 						textures = self.child_texture[1]
 					end
 
+					-- and resize to half height
 					mob:set_properties({
 						textures = textures,
 						visual_size = {
@@ -915,6 +933,7 @@ local breed = function(self)
 							self.base_colbox[6] * .5,
 						},
 					})
+					-- that is tamed and owned by parents' owner
 					ent2.child = true
 					ent2.tamed = true
 					ent2.owner = self.owner
@@ -2059,6 +2078,15 @@ end
 -- deal damage and effects when mob punched
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
+	-- custom punch function
+	if self.do_punch then
+
+		-- when false skip going any further
+		if self.do_punch(self, hitter, tflp, tool_caps, dir) == false then
+			return
+		end
+	end
+
 	-- mob health check
 	if self.health <= 0 then
 		return
@@ -2157,12 +2185,12 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			local s = random(0, #weapon:get_definition().sounds)
 
 			minetest.sound_play(weapon:get_definition().sounds[s], {
-				object = hitter,
+				object = self.object, --hitter,
 				max_hear_distance = 8
 			})
 		else
 			minetest.sound_play("default_punch", {
-				object = hitter,
+				object = self.object, --hitter,
 				max_hear_distance = 5
 			})
 		end
@@ -2704,7 +2732,13 @@ minetest.register_entity(name, {
 
 	on_step = mob_step,
 
+	do_punch = def.do_punch,
+
 	on_punch = mob_punch,
+
+	on_breed = def.on_breed,
+
+	on_grown = def.on_grown,
 
 	on_activate = function(self, staticdata, dtime)
 		return mob_activate(self, staticdata, def, dtime)
