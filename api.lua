@@ -1,9 +1,9 @@
 
--- Mobs Api (15th September 2017)
+-- Mobs Api (17th September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170915"
+mobs.version = "20170917"
 
 
 -- Intllib
@@ -17,7 +17,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 -- Invisibility mod check
 mobs.invis = {}
-if rawget(_G, "invisibility") then
+if minetest.global_exists("invisibility") then
 	mobs.invis = invisibility
 end
 
@@ -2546,10 +2546,6 @@ local mob_step = function(self, dtime)
 	if self.pause_timer > 0 then
 
 		self.pause_timer = self.pause_timer - dtime
-
-		if self.pause_timer < 1 then
-			self.pause_timer = 0
-		end
 
 		return
 	end
