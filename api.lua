@@ -643,7 +643,7 @@ local do_env_damage = function(self)
 		if check_for_death(self, "dps", {type = "environment",
 				pos = pos, node = self.standing_in}) then return end
 	end
-
+--[[
 	--- suffocation inside solid node
 	if self.suffocation ~= 0
 	and nodef.walkable == true
@@ -655,7 +655,7 @@ local do_env_damage = function(self)
 		if check_for_death(self, "suffocation", {type = "environment",
 				pos = pos, node = self.standing_in}) then return end
 	end
-
+]]
 	check_for_death(self, "", {type = "unknown"})
 end
 
