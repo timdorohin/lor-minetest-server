@@ -89,9 +89,9 @@ This mod is free software.
 
 ### Textures
 
-* `hbhunger_icon.png`—PilzAdam ([WTFPL](http://www.wtfpl.net/txt/copying/)), modified by BlockMen
-* `hbhunger_bgicon.png`—PilzAdam (WTFPL), modified by BlockMen
-* `hbhunger_bar.png—Wuzzy` (WTFPL)
+* `hbhunger_icon.png`—PilzAdam ([MIT License](https://opensource.org/licenses/MIT)), modified by BlockMen
+* `hbhunger_bgicon.png`—PilzAdam (MIT License), modified by BlockMen
+* `hbhunger_bar.png—Wuzzy` (MIT License)
 * `hbhunger_icon_health_poison.png`—celeron55 ([CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/)), modified by BlockMen, modified again by Wuzzy
-* Everything else: WTFPL, by BlockMen and Wuzzy
+* Everything else: MIT License, by BlockMen and Wuzzy
 
