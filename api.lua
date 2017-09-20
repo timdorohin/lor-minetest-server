@@ -1,9 +1,9 @@
 
--- Mobs Api (17th September 2017)
+-- Mobs Api (20th September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170917"
+mobs.version = "20170920"
 
 
 -- Intllib
@@ -2249,13 +2249,20 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			-- direction error check
 			dir = dir or {x = 0, y = 0, z = 0}
 
+			-- check if tool already has specific knockback value
+			if tool_capabilities.damage_groups["knockback"] then
+				kb = tool_capabilities.damage_groups["knockback"]
+			else
+				kb = kb * 2
+			end
+
 			self.object:setvelocity({
 				x = dir.x * kb,
 				y = up,
 				z = dir.z * kb
 			})
 
-			self.pause_timer = r
+			self.pause_timer = 0.25 -- r
 		end
 	end -- END if damage
 
