@@ -155,8 +155,8 @@ function mobs.attach(entity, player)
 		default.player_set_animation(player, "sit" , 30)
 	end)
 
-	--player:set_look_yaw(entity.object:getyaw() - rot_view)
-	player:set_look_horizontal(entity.object:getyaw() - rot_view)
+	--player:set_look_yaw(entity.object:get_yaw() - rot_view)
+	player:set_look_horizontal(entity.object:get_yaw() - rot_view)
 end
 
 
@@ -355,7 +355,7 @@ function mobs.drive(entity, moving_anim, stand_anim, can_fly, dtime)
 		end
 	end
 
-	new_velo = get_velocity(v, entity.object:getyaw() - rot_view, velo.y)
+	new_velo = get_velocity(v, entity.object:get_yaw() - rot_view, velo.y)
 	new_acce.y = new_acce.y + acce_y
 
 	entity.object:setvelocity(new_velo)

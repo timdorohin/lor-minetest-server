@@ -1,9 +1,9 @@
 
--- Mobs Api (20th September 2017)
+-- Mobs Api (21st September 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170920"
+mobs.version = "20170921"
 
 
 -- Intllib
@@ -112,7 +112,7 @@ end
 -- move mob in facing direction
 local set_velocity = function(self, v)
 
-	local yaw = (self.object:getyaw() or 0) + self.rotate
+	local yaw = (self.object:get_yaw() or 0) + self.rotate
 
 	self.object:setvelocity({
 		x = sin(yaw) * -v,
@@ -509,7 +509,7 @@ local is_at_cliff = function(self)
 		return false
 	end
 
-	local yaw = self.object:getyaw()
+	local yaw = self.object:get_yaw()
 	local dir_x = -sin(yaw) * (self.collisionbox[4] + 0.5)
 	local dir_z = cos(yaw) * (self.collisionbox[4] + 0.5)
 	local pos = self.object:getpos()
@@ -680,7 +680,7 @@ self.facing_fence = false
 	end
 
 	local pos = self.object:getpos()
-	local yaw = self.object:getyaw()
+	local yaw = self.object:get_yaw()
 
 	-- what is mob standing on?
 	pos.y = pos.y + self.collisionbox[2] - 0.2
@@ -1129,7 +1129,7 @@ local smart_mobs = function(self, s, p, dist, dtime)
 
 				else -- dig 2 blocks to make door toward player direction
 
-					local yaw1 = self.object:getyaw() + pi / 2
+					local yaw1 = self.object:get_yaw() + pi / 2
 					local p1 = {
 						x = s.x + cos(yaw1),
 						y = s.y,
