@@ -2909,14 +2909,17 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 
 			if minetest.registered_entities[name] then
 
-				minetest.add_entity(pos, name)
+				local mob = minetest.add_entity(pos, name)
 --[[
 				print ("[mobs] Spawned " .. name .. " at "
 				.. minetest.pos_to_string(pos) .. " on "
 				.. node.name .. " near " .. neighbors[1])
 ]]
-				if on_spawn and not on_spawn(mob, pos) then
-					return
+				if on_spawn then
+
+					local ent = mob:get_luaentity()
+
+					on_spawn(ent, pos)
 				end
 			else
 				minetest.log("warning", string.format("[mobs] %s failed to spawn at %s",
