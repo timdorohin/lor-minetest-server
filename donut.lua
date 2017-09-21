@@ -12,7 +12,7 @@ minetest.register_craft({
 	output = "farming:donut 3",
 	recipe = {
 		{'', 'farming:wheat', ''},
-		{'farming:wheat', '', 'farming:wheat'},
+		{'farming:wheat', 'farming:sugar', 'farming:wheat'},
 		{'', 'farming:wheat', ''},
 	}
 })
