@@ -145,6 +145,7 @@ can be added to the mob definition under pre-defined mob animation names like:
       'fly_start', 'fly_end', 'fly_speed' when mob flies
       'punch_start', 'punch_end', 'punch_speed' when mob attacks
       'punch2_start', 'punch2_end', 'punch2_speed' when mob attacks (alternative)
+      'shoot_start', 'shoot_end', shoot_speed' when mob shoots
       'die_start', 'die_end', 'die_speed' when mob dies
       '*_loop' bool value to determine if any set animation loops e.g (die_loop = false)
       defaults to true if not set
