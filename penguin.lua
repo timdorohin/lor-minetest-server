@@ -42,7 +42,7 @@ mobs:register_mob("mobs_animal:penguin", {
 		fly_end = 95,
 		-- 50-70 is slide/water idle
 	},
-	fly_in = "default:water_source",
+	fly_in = {"default:water_source", "default:water_flowing"},
 	floats = 0,
 	follow = {"ethereal:fish_raw", "mobs_fish:clownfish", "mobs_fish:tropical"},
 	view_range = 5,
