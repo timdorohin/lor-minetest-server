@@ -1,9 +1,9 @@
 
--- Mobs Api (21st September 2017)
+-- Mobs Api (4th October 2017)
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20170921"
+mobs.version = "20171004"
 
 
 -- Intllib
@@ -263,7 +263,8 @@ local flight_check = function(self, pos_w)
 	if not def then return false end -- nil check
 
 	if type(self.fly_in) == "string"
-	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
+	and nod == self.fly_in then
+--	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
 
 		return true
 
@@ -271,11 +272,19 @@ local flight_check = function(self, pos_w)
 
 		for _,fly_in in pairs(self.fly_in) do
 
-			if nod == fly_in or def.liquid_alternative_flowing ~= "" then
+			--if nod == fly_in or def.liquid_alternative_flowing ~= "" then
+			if nod == fly_in then
 
 				return true
 			end
 		end
+	end
+
+	-- this stops mobs getting stuck inside stairs and plantlike nodes
+	if def.drawtype ~= "airlike"
+	and def.drawtype ~= "liquid"
+	and def.drawtype ~= "flowingliquid" then
+		return true
 	end
 
 	return false
