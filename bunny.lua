@@ -59,7 +59,7 @@ mobs:register_mob("mobs_animal:bunny", {
 
 		if item:get_name() == "mobs:lava_orb" then
 
-			if not minetest.setting_getbool("creative_mode") then
+			if not mobs.is_creative(clicker:get_player_name()) then
 				item:take_item()
 				clicker:set_wielded_item(item)
 			end
