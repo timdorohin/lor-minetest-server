@@ -41,7 +41,7 @@ mobs:register_mob("mobs_animal:rat", {
 
 		self.rat_timer = 0
 
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 
 		print("rat pos", pos.x, pos.y, pos.z, dtime)
 

@@ -76,7 +76,7 @@ mobs:register_mob("mobs_animal:bunny", {
 	end,
 	on_spawn = function(self)
 
-		local pos = self.object:getpos() ; pos.y = pos.y - 1
+		local pos = self.object:get_pos() ; pos.y = pos.y - 1
 
 		-- white snowy bunny
 		if minetest.find_node_near(pos, 1,

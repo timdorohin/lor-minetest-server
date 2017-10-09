@@ -71,7 +71,7 @@ mobs:register_mob("mobs_animal:chicken", {
 			return
 		end
 
-		local pos = self.object:getpos()
+		local pos = self.object:get_pos()
 
 		minetest.add_item(pos, "mobs:egg")
 
@@ -179,7 +179,7 @@ local egg_VELOCITY = 19
 -- shoot egg
 local mobs_shoot_egg = function (item, player, pointed_thing)
 
-	local playerpos = player:getpos()
+	local playerpos = player:get_pos()
 
 	minetest.sound_play("default_place_node_hard", {
 		pos = playerpos,

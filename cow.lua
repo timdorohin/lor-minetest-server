@@ -87,7 +87,7 @@ mobs:register_mob("mobs_animal:cow", {
 			if inv:room_for_item("main", {name = "mobs:bucket_milk"}) then
 				clicker:get_inventory():add_item("main", "mobs:bucket_milk")
 			else
-				local pos = self.object:getpos()
+				local pos = self.object:get_pos()
 				pos.y = pos.y + 0.5
 				minetest.add_item(pos, {name = "mobs:bucket_milk"})
 			end
