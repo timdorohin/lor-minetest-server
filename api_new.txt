@@ -1,5 +1,5 @@
 
-Mobs Redo API (last updated 25th Sep 2017)
+Mobs Redo API (last updated 13th Oct 2017)
 ==========================================
 
 Welcome to the world of mobs in minetest and hopefully an easy guide to defining
@@ -87,6 +87,8 @@ functions needed for the mob to work properly which contains the following:
                          when inside view_range.
       'explode'          causes mob to explode when inside reach.
    'explosion_radius'    has the radius of the explosion which defaults to 1.
+   'explosion_timer'     number of seconds before mob explodes while still
+                         inside view range.
    'arrow'               holds the pre-defined arrow object to shoot when
                          attacking.
    'dogshoot_switch'     allows switching between attack types by using timers

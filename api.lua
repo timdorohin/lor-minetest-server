@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20171009"
+mobs.version = "20171013"
 
 
 -- Intllib
@@ -1685,7 +1685,7 @@ local do_states = function(self, dtime)
 		or self.attack:get_hp() <= 0
 		or (self.attack:is_player() and mobs.invis[ self.attack:get_player_name() ]) then
 
-			--print(" ** stop attacking **", dist, self.view_range)
+--			print(" ** stop attacking **", dist, self.view_range)
 			self.state = "stand"
 			set_velocity(self, 0)
 			set_animation(self, "stand")
@@ -1710,29 +1710,28 @@ local do_states = function(self, dtime)
 
 			yaw = set_yaw(self.object, yaw)
 
-			if dist > self.reach then
+			-- start timer when inside reach
+			if dist < self.reach and not self.v_start then
+				self.v_start = true
+				self.timer = 0
+				self.blinktimer = 0
+--				print ("=== explosion timer started", self.explosion_timer)
+			end
 
-				if not self.v_start then
-
-					self.v_start = true
-					set_velocity(self, self.run_velocity)
-					self.timer = 0
-					self.blinktimer = 0
-				else
-					self.timer = 0
-					self.blinktimer = 0
-
-					set_velocity(self, self.run_velocity)
-				end
-
-				if self.animation and self.animation.run_start then
-					set_animation(self, "run")
-				else
-					set_animation(self, "walk")
-				end
-			else
+			-- walk right up to player when timer active
+			if dist < 1.5 and self.v_start then
 				set_velocity(self, 0)
-				set_animation(self, "punch")
+			else
+				set_velocity(self, self.run_velocity)
+			end
+
+			if self.animation and self.animation.run_start then
+				set_animation(self, "run")
+			else
+				set_animation(self, "walk")
+			end
+
+			if self.v_start then
 
 				self.timer = self.timer + dtime
 				self.blinktimer = (self.blinktimer or 0) + dtime
@@ -1750,7 +1749,9 @@ local do_states = function(self, dtime)
 					self.blinkstatus = not self.blinkstatus
 				end
 
-				if self.timer > 3 then
+--				print ("=== explosion timer", self.timer)
+
+				if self.timer > self.explosion_timer then
 
 					local pos = self.object:get_pos()
 					local radius = self.explosion_radius or 1
@@ -2734,6 +2735,7 @@ minetest.register_entity(name, {
 	pathfinding = def.pathfinding,
 	immune_to = def.immune_to or {},
 	explosion_radius = def.explosion_radius,
+	explosion_timer = def.explosion_timer or 3,
 	custom_attack = def.custom_attack,
 	double_melee_attack = def.double_melee_attack,
 	dogshoot_switch = def.dogshoot_switch,

@@ -1,5 +1,5 @@
 
-MOB API (15th September 2017)
+MOB API (13th October 2017)
 
 The mob api is a function that can be called on by other mods to add new animals or monsters into minetest.
 
@@ -88,6 +88,7 @@ This functions registers a new mob as a Minetest entity.
         'custom_attack' when set this function is called instead of the normal mob melee attack, parameters are (self, to_attack)
         'double_melee_attack' if false then api will choose randomly between 'punch' and 'punch2' attack animations
         'explosion_radius' radius of explosion attack (defaults to 1)
+        'explosion_timer' number of seconds before mob explodes while still inside view range.
         'arrow' if the attack_type is "shoot" or "dogshoot" then the entity name of a pre-defined arrow is required, see below for arrow definition.
         'shoot_interval' the minimum shoot interval
         'shoot_offset' +/- value to position arrow/fireball when fired
