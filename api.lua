@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20171013"
+mobs.version = "20171018"
 
 
 -- Intllib
@@ -88,6 +88,7 @@ local node_snowblock = "default:snowblock"
 local node_snow = "default:snow"
 mobs.fallback_node = minetest.registered_aliases["mapgen_dirt"] or "default:dirt"
 
+
 -- play sound
 local mob_sound = function(self, sound)
 
@@ -130,7 +131,7 @@ local set_velocity = function(self, v)
 end
 
 
--- get overall speed of mob
+-- calculate mob velocity
 local get_velocity = function(self)
 
 	local v = self.object:getvelocity()
@@ -139,7 +140,7 @@ local get_velocity = function(self)
 end
 
 
--- set yaw
+-- set and return valid yaw
 local set_yaw = function(self, yaw)
 
 	if not yaw or yaw ~= yaw then
@@ -182,7 +183,7 @@ function mobs:set_animation(self, anim)
 end
 
 
--- this is a faster way to calculate distance
+-- calculate distance
 local get_distance = function(a, b)
 
 	local x, y, z = a.x - b.x, a.y - b.y, a.z - b.z
@@ -272,7 +273,6 @@ local flight_check = function(self, pos_w)
 
 	if type(self.fly_in) == "string"
 	and nod == self.fly_in then
---	and (nod == self.fly_in or def.liquid_alternative_flowing ~= "") then
 
 		return true
 
@@ -280,7 +280,6 @@ local flight_check = function(self, pos_w)
 
 		for _,fly_in in pairs(self.fly_in) do
 
-			--if nod == fly_in or def.liquid_alternative_flowing ~= "" then
 			if nod == fly_in then
 
 				return true
@@ -288,7 +287,7 @@ local flight_check = function(self, pos_w)
 		end
 	end
 
-	-- this stops mobs getting stuck inside stairs and plantlike nodes
+	-- stops mobs getting stuck inside stairs and plantlike nodes
 	if def.drawtype ~= "airlike"
 	and def.drawtype ~= "liquid"
 	and def.drawtype ~= "flowingliquid" then
@@ -299,7 +298,7 @@ local flight_check = function(self, pos_w)
 end
 
 
--- particle effects
+-- custom particle effects
 local effect = function(pos, amount, texture, min_size, max_size, radius, gravity, glow)
 
 	radius = radius or 2
@@ -438,6 +437,7 @@ local check_for_death = function(self, cause, cmi_cause)
 		return false
 	end
 
+	-- dropped cooked item if mob died in lava
 	if cause == "lava" then
 		item_drop(self, true)
 	else
@@ -586,7 +586,7 @@ local do_env_damage = function(self)
 		return
 	end
 
-	-- too bright a light harms mob (was daylight above ground)
+	-- bright light harms mob
 	if self.light_damage ~= 0
 --	and pos.y > 0
 --	and self.time_of_day > 0.2
@@ -687,7 +687,7 @@ local do_jump = function(self)
 		return false
 	end
 
-self.facing_fence = false
+	self.facing_fence = false
 
 	-- something stopping us while moving?
 	if self.state ~= "stand"
@@ -950,7 +950,7 @@ local breed = function(self)
 							self.base_colbox[6] * .5,
 						},
 					})
-					-- that is tamed and owned by parents' owner
+					-- tamed and owned by parents' owner
 					ent2.child = true
 					ent2.tamed = true
 					ent2.owner = self.owner
@@ -1517,8 +1517,6 @@ local do_states = function(self, dtime)
 
 				if lp.x > s.x then yaw = yaw + pi end
 			else
---				yaw = (random(0, 360) - 180) / 180 * pi
-
 				yaw = yaw + random(-0.5, 0.5)
 			end
 
@@ -1595,13 +1593,11 @@ local do_states = function(self, dtime)
 
 					if lp.x > s.x then yaw = yaw + pi end
 
-						-- look towards land and jump/move in that direction
-						yaw = set_yaw(self.object, yaw)
-						do_jump(self)
-						set_velocity(self, self.walk_velocity)
+					-- look towards land and jump/move in that direction
+					yaw = set_yaw(self.object, yaw)
+					do_jump(self)
+					set_velocity(self, self.walk_velocity)
 				else
---					yaw = (random(0, 360) - 180) / 180 * pi
-
 					yaw = yaw + random(-0.5, 0.5)
 				end
 
@@ -1621,9 +1617,6 @@ local do_states = function(self, dtime)
 
 		-- otherwise randomly turn
 		elseif random(1, 100) <= 30 then
-
-			--yaw = random() * 2 * pi
---			yaw = (random(0, 360) - 180) / 180 * pi
 
 			yaw = yaw + random(-0.5, 0.5)
 
@@ -2271,7 +2264,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			if tool_capabilities.damage_groups["knockback"] then
 				kb = tool_capabilities.damage_groups["knockback"]
 			else
-				kb = kb * 2
+				kb = kb * 1.5
 			end
 
 			self.object:setvelocity({
@@ -2280,7 +2273,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 				z = dir.z * kb
 			})
 
-			self.pause_timer = 0.25 -- r
+			self.pause_timer = 0.25
 		end
 	end -- END if damage
 
@@ -2401,8 +2394,9 @@ end
 -- activate mob and reload settings
 local mob_activate = function(self, staticdata, def, dtime)
 
-	-- remove monsters in peaceful mode, or when no data
-	if (self.type == "monster" and peaceful_only) then
+	-- remove monsters in peaceful mode
+	if self.type == "monster"
+	and peaceful_only then
 
 		self.object:remove()
 
@@ -2476,15 +2470,15 @@ local mob_activate = function(self, staticdata, def, dtime)
 		self.health = random (self.hp_min, self.hp_max)
 	end
 
-	-- rnd: pathfinding init
+	-- pathfinding init
 	self.path = {}
 	self.path.way = {} -- path to follow, table of positions
 	self.path.lastpos = {x = 0, y = 0, z = 0}
 	self.path.stuck = false
 	self.path.following = false -- currently following path?
 	self.path.stuck_timer = 0 -- if stuck for too long search for path
-	-- end init
 
+	-- mob defaults
 	self.object:set_armor_groups({immortal = 1, fleshy = self.armor})
 	self.old_y = self.object:get_pos().y
 	self.old_health = self.health
@@ -2703,7 +2697,6 @@ minetest.register_entity(name, {
 	attacks_monsters = def.attacks_monsters or false,
 	group_attack = def.group_attack or false,
 	passive = def.passive or false,
---	recovery_time = def.recovery_time or 0.5,
 	knock_back = def.knock_back or 3,
 	blood_amount = def.blood_amount or 5,
 	blood_texture = def.blood_texture or "mobs_blood.png",
@@ -3002,7 +2995,7 @@ function mobs:register_arrow(name, def)
 		automatic_face_movement_dir = def.rotate
 			and (def.rotate - (pi / 180)) or false,
 
-		on_activate = def.on_activate or nil,
+		on_activate = def.on_activate,
 
 		on_step = def.on_step or function(self, dtime)
 
@@ -3396,7 +3389,6 @@ function mobs:protect(self, clicker)
 	end
 
 	self.protected = true
---	minetest.chat_send_player(name, S("Protected!"))
 
 	local pos = self.object:get_pos()
 	pos.y = pos.y + self.collisionbox[2] + 0.5
