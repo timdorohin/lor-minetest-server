@@ -2099,9 +2099,9 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	end
 
 	-- mob health check
-	if self.health <= 0 then
-		return
-	end
+--	if self.health <= 0 then
+--		return
+--	end
 
 	-- error checking when mod profiling is enabled
 	if not tool_capabilities then
@@ -2505,6 +2505,11 @@ local mob_activate = function(self, staticdata, def, dtime)
 		if self.on_spawn(self) then
 			self.on_spawn_run = true --  if true, set flag to run once only
 		end
+	end
+
+	-- run after_activate
+	if def.after_activate then
+		def.after_activate(self, staticdata, def, dtime)
 	end
 
 	if use_cmi then
