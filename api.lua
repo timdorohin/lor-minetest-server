@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20171018"
+mobs.version = "20171112"
 
 
 -- Intllib
@@ -1079,11 +1079,11 @@ local smart_mobs = function(self, s, p, dist, dtime)
 		p1.y = floor(p1.y + 0.5)
 		p1.z = floor(p1.z + 0.5)
 
-		local dropheight = 10
+		local dropheight = 6
 		if self.fear_height ~= 0 then dropheight = self.fear_height end
 
---		self.path.way = minetest.find_path(s, p1, 16, 2, 6, "Dijkstra") -- "A*_noprefetch"
-		self.path.way = minetest.find_path(s, p1, 16, self.stepheight, dropheight, "Dijkstra")
+--		self.path.way = minetest.find_path(s, p1, 16, 2, 6, "Dijkstra")
+		self.path.way = minetest.find_path(s, p1, 16, self.stepheight, dropheight, "A*_noprefetch")
 
 		-- attempt to unstick mob that is "daydreaming"
 		self.object:setpos({
