@@ -5,6 +5,7 @@ local S = mobs.intllib
 -- Warthog by KrupnoPavel
 
 mobs:register_mob("mobs_animal:pumba", {
+stepheight = 0.6,
 	type = "animal",
 	passive = false,
 	attack_type = "dogfight",
@@ -15,7 +16,7 @@ mobs:register_mob("mobs_animal:pumba", {
 	hp_min = 5,
 	hp_max = 15,
 	armor = 200,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 0.95, 0.4},
 	visual = "mesh",
 	mesh = "mobs_pumba.x",
 	textures = {

@@ -5,6 +5,7 @@ local S = mobs.intllib
 -- Chicken by JK Murray
 
 mobs:register_mob("mobs_animal:chicken", {
+stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	hp_min = 5,

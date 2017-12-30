@@ -5,6 +5,7 @@ local S = mobs.intllib
 -- Kitten by Jordach / BFD
 
 mobs:register_mob("mobs_animal:kitten", {
+stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	hp_min = 5,

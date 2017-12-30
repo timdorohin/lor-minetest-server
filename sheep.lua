@@ -26,6 +26,7 @@ local all_colours = {
 for _, col in ipairs(all_colours) do
 
 	mobs:register_mob("mobs_animal:sheep_"..col[1], {
+stepheight = 0.6,
 		type = "animal",
 		passive = true,
 		hp_min = 8,

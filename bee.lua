@@ -39,6 +39,9 @@ mobs:register_mob("mobs_animal:bee", {
 	on_rightclick = function(self, clicker)
 		mobs:capture_mob(self, clicker, 50, 90, 0, true, "mobs_animal:bee")
 	end,
+--	after_activate = function(self, staticdata, def, dtime)
+--		print ("------", self.name, dtime, self.health)
+--	end,
 })
 
 mobs:spawn({

@@ -13,7 +13,7 @@ mobs:register_mob("mobs_animal:cow", {
 	hp_min = 5,
 	hp_max = 20,
 	armor = 200,
-	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1, 0.4},
+	collisionbox = {-0.4, -0.01, -0.4, 0.4, 1.2, 0.4},
 	visual = "mesh",
 	mesh = "mobs_cow.x",
 	textures = {

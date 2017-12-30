@@ -5,6 +5,7 @@ local S = mobs.intllib
 -- Penguin by D00Med
 
 mobs:register_mob("mobs_animal:penguin", {
+stepheight = 0.6,
 	type = "animal",
 	passive = true,
 	reach = 1,
