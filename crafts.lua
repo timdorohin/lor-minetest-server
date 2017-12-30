@@ -121,3 +121,18 @@ minetest.register_craft({
 		{"mobs:leather", "default:steel_ingot", "mobs:leather"},
 	}
 })
+
+-- mob fence (looks like normal fence but collision is 2 high)
+default.register_fence("mobs:fence_wood", {
+	description = S("Mob Fence"),
+	texture = "default_wood.png",
+	material = "default:fence_wood",
+	groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2},
+	sounds = default.node_sound_wood_defaults(),
+	collision_box = {
+		type = "fixed",
+		fixed = {
+			{-0.5, -0.5, -0.5, 0.5, 1.9, 0.5},
+		},
+	},
+})
