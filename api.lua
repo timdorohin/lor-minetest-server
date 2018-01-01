@@ -2835,7 +2835,7 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		nodenames = nodes,
 		neighbors = neighbors,
 		interval = interval,
-		chance = min(1, (chance * mob_chance_multiplier)),
+		chance = max(1, (chance * mob_chance_multiplier)),
 		catch_up = false,
 
 		action = function(pos, node, active_object_count, active_object_count_wider)
