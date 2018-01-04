@@ -2862,7 +2862,8 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 		action = function(pos, node, active_object_count, active_object_count_wider)
 
 			-- is mob actually registered?
-			if not mobs.spawning_mobs[name] then
+			if not mobs.spawning_mobs[name]
+			or not minetest.registered_entities[name] then
 --print ("--- mob doesn't exist", name)
 				return
 			end
@@ -2931,39 +2932,34 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 				return
 			end
 
-			-- are we spawning inside solid nodes?
-			if minetest.registered_nodes[node_ok(pos).name].walkable == true then
---print ("--- feet in block", name, node_ok(pos).name)
-				return
-			end
+			-- do we have enough height clearance to spawn mob?
+			local ent = minetest.registered_entities[name]
+			local height = max(0, math.ceil(ent.collisionbox[5] - ent.collisionbox[2]) - 1)
 
-			pos.y = pos.y + 1
+			for n = 0, height do
 
-			if minetest.registered_nodes[node_ok(pos).name].walkable == true then
---print ("--- head in block", name, node_ok(pos).name)
-				return
+				local pos2 = {x = pos.x, y = pos.y + n, z = pos.z}
+
+				if minetest.registered_nodes[node_ok(pos2).name].walkable == true then
+--print ("--- inside block", name, node_ok(pos2).name)
+					return
+				end
 			end
 
 			-- spawn mob half block higher than ground
-			pos.y = pos.y - 0.5
+			pos.y = pos.y + 0.5
 
-			if minetest.registered_entities[name] then
-
-				local mob = minetest.add_entity(pos, name)
+			local mob = minetest.add_entity(pos, name)
 --[[
-				print ("[mobs] Spawned " .. name .. " at "
-				.. minetest.pos_to_string(pos) .. " on "
-				.. node.name .. " near " .. neighbors[1])
+			print ("[mobs] Spawned " .. name .. " at "
+			.. minetest.pos_to_string(pos) .. " on "
+			.. node.name .. " near " .. neighbors[1])
 ]]
-				if on_spawn then
+			if on_spawn then
 
-					local ent = mob:get_luaentity()
+				local ent = mob:get_luaentity()
 
-					on_spawn(ent, pos)
-				end
-			else
-				minetest.log("warning", string.format("[mobs] %s failed to spawn at %s",
-					name, minetest.pos_to_string(pos)))
+				on_spawn(ent, pos)
 			end
 		end
 	})
