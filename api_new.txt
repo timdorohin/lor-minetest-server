@@ -140,8 +140,9 @@ functions needed for the mob to work properly which contains the following:
       'wielditem'      how it looks when player holds it in hand.
       'mesh'           uses separate object file to define mob.
    'visual_size'       has the size of the mob, defaults to {x = 1, y = 1}
-   'collision_box'     has the box in which mob can be interacted with e.g.
-                       {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
+   'collision_box'     has the box in which mob can be interacted with the
+                       world e.g. {-0.5, -0.5, -0.5, 0.5, 0.5, 0.5}
+   'selection_box'     has the box in which player can interact with mob
    'textures'          holds a table list of textures to be used for mob, or you
                        could use multiple lists inside another table for random
                        selection e.g. { {"texture1.png"}, {"texture2.png"} }

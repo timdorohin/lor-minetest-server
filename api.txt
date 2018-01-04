@@ -34,6 +34,7 @@ This functions registers a new mob as a Minetest entity.
         'nametag' string containing name of mob to display above entity
         'physical' same is in minetest.register_entity()
         'collisionbox' same is in minetest.register_entity()
+        'selectionbox' same is in minetest.register_entity()
         'visual' same is in minetest.register_entity()
         'visual_size' same is in minetest.register_entity()
         'textures' same is in minetest.register_entity()

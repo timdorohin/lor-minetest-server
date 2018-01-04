@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20171230"
+mobs.version = "20180104"
 
 
 -- Intllib
@@ -831,6 +831,7 @@ local breed = function(self)
 				mesh = self.base_mesh,
 				visual_size = self.base_size,
 				collisionbox = self.base_colbox,
+				selectionbox = self.base_selbox,
 			})
 
 			-- custom function when child grows up
@@ -950,6 +951,14 @@ local breed = function(self)
 							self.base_colbox[4] * .5,
 							self.base_colbox[5] * .5,
 							self.base_colbox[6] * .5,
+						},
+						selectionbox = {
+							self.base_selbox[1] * .5,
+							self.base_selbox[2] * .5,
+							self.base_selbox[3] * .5,
+							self.base_selbox[4] * .5,
+							self.base_selbox[5] * .5,
+							self.base_selbox[6] * .5,
 						},
 					})
 					-- tamed and owned by parents' owner
@@ -2426,6 +2435,7 @@ local mob_activate = function(self, staticdata, def, dtime)
 		self.base_mesh = def.mesh
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
+		self.base_selbox = self.selectionbox
 	end
 
 	-- set texture, model and size
@@ -2433,6 +2443,7 @@ local mob_activate = function(self, staticdata, def, dtime)
 	local mesh = self.base_mesh
 	local vis_size = self.base_size
 	local colbox = self.base_colbox
+	local selbox = self.base_selbox
 
 	-- specific texture if gotten
 	if self.gotten == true
@@ -2466,6 +2477,14 @@ local mob_activate = function(self, staticdata, def, dtime)
 			self.base_colbox[5] * .5,
 			self.base_colbox[6] * .5
 		}
+		selbox = {
+			self.base_selbox[1] * .5,
+			self.base_selbox[2] * .5,
+			self.base_selbox[3] * .5,
+			self.base_selbox[4] * .5,
+			self.base_selbox[5] * .5,
+			self.base_selbox[6] * .5
+		}
 	end
 
 	if self.health == 0 then
@@ -2488,6 +2507,7 @@ local mob_activate = function(self, staticdata, def, dtime)
 	self.textures = textures
 	self.mesh = mesh
 	self.collisionbox = colbox
+	self.selectionbox = selbox
 	self.visual_size = vis_size
 	self.standing_in = ""
 
@@ -2677,6 +2697,7 @@ minetest.register_entity(name, {
 	hp_max = max(1, (def.hp_max or 10) * difficulty),
 	physical = true,
 	collisionbox = def.collisionbox,
+	selectionbox = def.selectionbox or def.collisionbox,
 	visual = def.visual,
 	visual_size = def.visual_size or {x = 1, y = 1},
 	mesh = def.mesh,
