@@ -2225,7 +2225,15 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 			pos.y = pos.y + (-self.collisionbox[2] + self.collisionbox[5]) * .5
 
-			effect(pos, self.blood_amount, self.blood_texture, nil, nil, 1, nil)
+			-- do we have a single blood texture or multiple?
+			if type(self.blood_texture) == "table" then
+
+				local blood = self.blood_texture[random(1, #self.blood_texture)]
+
+				effect(pos, self.blood_amount, blood, nil, nil, 1, nil)
+			else
+				effect(pos, self.blood_amount, self.blood_texture, nil, nil, 1, nil)
+			end
 		end
 
 		-- do damage

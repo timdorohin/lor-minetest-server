@@ -61,7 +61,8 @@ This functions registers a new mob as a Minetest entity.
         'immune_to' table holding special tool/item names and damage the incur e.g.
             {"default:sword_wood", 0}, {"default:gold_lump", -10} immune to sword, gold lump heals
         'blood_amount' number of droplets that appear when hit
-        'blood_texture' texture of blood droplets (default: "mobs_blood.png")
+        'blood_texture' texture of blood droplets (default: "mobs_blood.png") can be table with multiple textures also e.g. {"mobs_blood.png", "mobs_blood2.png"}
+        
         'drops' is list of tables with the following fields:
             'name' itemname e.g. default:stone
             'chance' the inverted chance (same as in abm) to get the item
