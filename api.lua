@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180104"
+mobs.version = "20180112"
 
 
 -- Intllib
@@ -3119,6 +3119,20 @@ function mobs:explosion(pos, radius)
 end
 
 
+-- no damage to nodes explosion
+function mobs:safe_boom(self, pos, radius)
+
+	minetest.sound_play(self.sounds and self.sounds.explode or "tnt_explode", {
+		pos = pos,
+		gain = 1.0,
+		max_hear_distance = self.sounds and self.sounds.distance or 32
+	})
+
+	entity_physics(pos, radius)
+	effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+end
+
+
 -- make explosion with protection and tnt mod check
 function mobs:boom(self, pos, radius)
 
@@ -3128,18 +3142,11 @@ function mobs:boom(self, pos, radius)
 		tnt.boom(pos, {
 			radius = radius,
 			damage_radius = radius,
-			sound = self.sounds.explode,
+			sound = self.sounds and self.sounds.explode,
 			explode_center = true,
 		})
 	else
-		minetest.sound_play(self.sounds.explode, {
-			pos = pos,
-			gain = 1.0,
-			max_hear_distance = self.sounds.distance or 32
-		})
-
-		entity_physics(pos, radius)
-		effect(pos, 32, "tnt_smoke.png", radius * 3, radius * 5, radius, 1, 0)
+		mobs:safe_boom(self, pos, radius)
 	end
 end
 
