@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180112"
+mobs.version = "20180113"
 
 
 -- Intllib
@@ -2366,6 +2366,8 @@ local mob_staticdata = function(self)
 	-- remove mob when out of range unless tamed
 	if remove_far
 	and self.remove_ok
+	and self.type ~= "npc"
+	and self.state ~= "attack"
 	and not self.tamed
 	and self.lifetimer < 20000 then
 
@@ -2444,6 +2446,11 @@ local mob_activate = function(self, staticdata, def, dtime)
 		self.base_size = self.visual_size
 		self.base_colbox = self.collisionbox
 		self.base_selbox = self.selectionbox
+	end
+
+	-- for current mobs that dont have this set
+	if not self.base_selbox then
+		self.base_selbox = self.selectionbox or self.base_colbox
 	end
 
 	-- set texture, model and size
