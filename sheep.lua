@@ -94,12 +94,14 @@ stepheight = 0.6,
 
 			local item = clicker:get_wielded_item()
 			local itemname = item:get_name()
+			local name = clicker:get_player_name()
 
 			--are we giving a haircut>
 			if itemname == "mobs:shears" then
 
 				if self.gotten ~= false
 				or self.child ~= false
+				or name ~= self.owner
 				or not minetest.get_modpath("wool") then
 					return
 				end
@@ -131,8 +133,6 @@ stepheight = 0.6,
 
 				return
 			end
-
-			local name = clicker:get_player_name()
 
 			--are we coloring?
 			if itemname:find("dye:") then
