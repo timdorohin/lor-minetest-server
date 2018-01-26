@@ -1358,6 +1358,113 @@ local npc_attack = function(self)
 end
 
 
+-- specific runaway
+local specific_runaway = function(list, what)
+
+	-- no list so do not run
+	if list == nil then
+		return false
+	end
+
+	-- found entity on list to attack?
+	for no = 1, #list do
+
+		if list[no] == what or list[no] == "player" then
+			return true
+		end
+	end
+
+	return false
+end
+
+
+-- find someone to runaway from
+local runaway_from = function(self)
+
+	if not self.runaway_from then
+		return
+	end
+
+	local s = self.object:get_pos()
+	local p, sp, dist
+	local player, obj, min_player
+	local type, name = "", ""
+	local min_dist = self.view_range + 1
+	local objs = minetest.get_objects_inside_radius(s, self.view_range)
+
+	for n = 1, #objs do
+
+		if objs[n]:is_player() then
+
+			if mobs.invis[ objs[n]:get_player_name() ] then
+
+				type = ""
+			else
+				player = objs[n]
+				type = "player"
+				name = "player"
+			end
+		else
+			obj = objs[n]:get_luaentity()
+
+			if obj then
+				player = obj.object
+				type = obj.type
+				name = obj.name or ""
+			end
+		end
+
+		-- find specific mob to runaway from
+		if name ~= "" and name ~= self.name
+		and specific_runaway(self.runaway_from, name) then
+
+			s = self.object:get_pos()
+			p = player:get_pos()
+			sp = s
+
+			-- aim higher to make looking up hills more realistic
+			p.y = p.y + 1
+			sp.y = sp.y + 1
+
+			dist = get_distance(p, s)
+
+			if dist < self.view_range then
+			-- field of view check goes here
+
+				-- choose closest player/mpb to runaway from
+				if line_of_sight(self, sp, p, 2) == true
+				and dist < min_dist then
+					min_dist = dist
+					min_player = player
+				end
+			end
+		end
+	end
+
+	-- attack player
+	if min_player then
+
+		local lp = player:get_pos()
+		local vec = {
+			x = lp.x - s.x,
+			y = lp.y - s.y,
+			z = lp.z - s.z
+		}
+
+		local yaw = (atan(vec.z / vec.x) + 3 * pi / 2) - self.rotate
+
+		if lp.x > s.x then
+			yaw = yaw + pi
+		end
+
+		yaw = set_yaw(self.object, yaw)
+		self.state = "runaway"
+		self.runaway_timer = 0
+		self.following = nil
+	end
+end
+
+
 -- follow player if owner or holding item, if fish outta water then flop
 local follow_flop = function(self)
 
@@ -2677,6 +2784,8 @@ local mob_step = function(self, dtime)
 
 	do_jump(self)
 
+	runaway_from(self)
+
 end
 
 
@@ -2789,6 +2898,7 @@ minetest.register_entity(name, {
 	dogshoot_count2_max = def.dogshoot_count2_max or (def.dogshoot_count_max or 5),
 	attack_animals = def.attack_animals or false,
 	specific_attack = def.specific_attack,
+	runaway_from = def.runaway_from,
 	owner_loyal = def.owner_loyal,
 	facing_fence = false,
 	_cmi_is_mob = true,

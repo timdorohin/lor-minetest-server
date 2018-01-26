@@ -102,6 +102,8 @@ functions needed for the mob to work properly which contains the following:
                          arrow/fireball appears on mob.
    'specific_attack'     has a table of entity names that mob can also attack
                          e.g. {"player", "mobs_animal:chicken"}.
+   'runaway_from'        contains a table with mob names to run away from, add
+                         "player" to list to runaway from player also.
    'blood_amount'        contains the number of blood droplets to appear when
                          mob is hit.
    'blood_texture'       has the texture name to use for droplets e.g.
