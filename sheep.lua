@@ -48,8 +48,9 @@ stepheight = 0.6,
 		run_velocity = 2,
 		runaway = true,
 		jump = true,
+		jump_height = 6,
 		drops = {
-			{name = "mobs:meat_raw", chance = 1, min = 1, max = 2},
+			{name = "mobs:mutton_raw", chance = 1, min = 1, max = 2},
 			--{name = "wool:"..col[1], chance = 1, min = 1, max = 1},
 		},
 		water_damage = 1,
@@ -206,3 +207,24 @@ mobs:spawn({
 
 
 mobs:alias_mob("mobs:sheep", "mobs_animal:sheep_white") -- compatibility
+
+-- raw mutton
+minetest.register_craftitem(":mobs:mutton_raw", {
+	description = S("Raw Mutton"),
+	inventory_image = "mobs_mutton_raw.png",
+	on_use = minetest.item_eat(2),
+})
+
+-- cooked mutton
+minetest.register_craftitem(":mobs:mutton_cooked", {
+	description = S("Cooked Mutton"),
+	inventory_image = "mobs_mutton_cooked.png",
+	on_use = minetest.item_eat(6),
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "mobs:mutton_cooked",
+	recipe = "mobs:mutton_raw",
+	cooktime = 5,
+})

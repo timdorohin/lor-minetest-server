@@ -27,6 +27,7 @@ mobs:register_mob("mobs_animal:cow", {
 	walk_velocity = 1,
 	run_velocity = 2,
 	jump = true,
+	jump_height = 6,
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 3},
 		{name = "mobs:leather", chance = 1, min = 1, max = 2},

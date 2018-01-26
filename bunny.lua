@@ -27,8 +27,10 @@ stepheight = 0.6,
 	run_velocity = 2,
 	runaway = true,
 	jump = true,
+	jump_height = 6,
 	drops = {
-		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:rabbit_raw", chance = 1, min = 1, max = 1},
+		{name = "mobs:rabbit_hide", chance = 1, min = 1, max = 1},
 	},
 	water_damage = 1,
 	lava_damage = 4,
@@ -123,3 +125,40 @@ mobs:register_egg("mobs_animal:bunny", S("Bunny"), "mobs_bunny_inv.png", 0)
 
 
 mobs:alias_mob("mobs:bunny", "mobs_animal:bunny") -- compatibility
+
+
+-- raw rabbit
+minetest.register_craftitem(":mobs:rabbit_raw", {
+	description = S("Raw Rabbit"),
+	inventory_image = "mobs_rabbit_raw.png",
+	on_use = minetest.item_eat(3),
+})
+
+-- cooked rabbit
+minetest.register_craftitem(":mobs:rabbit_cooked", {
+	description = S("Cooked Rabbit"),
+	inventory_image = "mobs_rabbit_cooked.png",
+	on_use = minetest.item_eat(5),
+})
+
+minetest.register_craft({
+	type = "cooking",
+	output = "mobs:rabbit_cooked",
+	recipe = "mobs:rabbit_raw",
+	cooktime = 5,
+})
+
+-- rabbit hide
+minetest.register_craftitem(":mobs:rabbit_hide", {
+	description = S("Rabbit Hide"),
+	inventory_image = "mobs_rabbit_hide.png",
+})
+
+minetest.register_craft({
+	output = "mobs:leather",
+	type = "shapeless",
+	recipe = {
+		"mobs:rabbit_hide", "mobs:rabbit_hide",
+		"mobs:rabbit_hide", "mobs:rabbit_hide"
+	}
+})
