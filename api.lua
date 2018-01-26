@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180122"
+mobs.version = "20180126"
 
 
 -- Intllib
@@ -53,8 +53,11 @@ end
 
 -- Load settings
 local damage_enabled = minetest.settings:get_bool("enable_damage")
+local mobs_spawn = minetest.settings:get_bool("mobs_spawn") ~= false
 local peaceful_only = minetest.settings:get_bool("only_peaceful_mobs")
 local disable_blood = minetest.settings:get_bool("mobs_disable_blood")
+local mobs_drop_items = minetest.settings:get_bool("mobs_drop_items") ~= false
+local mobs_griefing = minetest.settings:get_bool("mobs_griefing") ~= false
 local creative = minetest.settings:get_bool("creative_mode")
 local spawn_protected = minetest.settings:get_bool("mobs_spawn_protected") ~= false
 local remove_far = minetest.settings:get_bool("remove_far_mobs")
@@ -355,6 +358,9 @@ end
 
 -- drop items
 local item_drop = function(self, cooked)
+
+	-- no drops if disabled by setting
+	if not mobs_drop_items then return end
 
 	-- no drops for child mobs
 	if self.child then return end
@@ -981,7 +987,8 @@ end
 -- find and replace what mob is looking for (grass, wheat etc.)
 local replace = function(self, pos)
 
-	if not self.replace_rate
+	if not mobs_griefing
+	or not self.replace_rate
 	or not self.replace_what
 	or self.child == true
 	or self.object:getvelocity().y ~= 0
@@ -1114,7 +1121,7 @@ local smart_mobs = function(self, s, p, dist, dtime)
 			self.path.following = false
 
 			 -- lets make way by digging/building if not accessible
-			if self.pathfinding == 2 then
+			if self.pathfinding == 2 and mobs_griefing then
 
 				-- is player higher than mob?
 				if s.y < p1.y then
@@ -2849,6 +2856,11 @@ end
 function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 	interval, chance, aoc, min_height, max_height, day_toggle, on_spawn)
 
+	-- Do mobs spawn at all?
+	if not mobs_spawn then
+		return
+	end
+
 	-- chance/spawn number override in minetest.conf for registered mob
 	local numbers = minetest.settings:get(name)
 
@@ -3153,7 +3165,8 @@ end
 -- make explosion with protection and tnt mod check
 function mobs:boom(self, pos, radius)
 
-	if minetest.get_modpath("tnt") and tnt and tnt.boom
+	if mobs_griefing
+	and minetest.get_modpath("tnt") and tnt and tnt.boom
 	and not minetest.is_protected(pos, "") then
 
 		tnt.boom(pos, {
