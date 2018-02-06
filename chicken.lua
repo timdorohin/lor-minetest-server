@@ -287,3 +287,9 @@ minetest.register_craftitem(":mobs:chicken_feather", {
 	description = S("Feather"),
 	inventory_image = "mobs_chicken_feather.png",
 })
+
+minetest.register_craft({
+	type = "fuel",
+	recipe = "mobs:chicken_feather",
+	burntime = 1,
+})

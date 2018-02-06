@@ -156,6 +156,12 @@ minetest.register_craftitem(":mobs:rabbit_hide", {
 })
 
 minetest.register_craft({
+	type = "fuel",
+	recipe = "mobs:rabbit_hide",
+	burntime = 2,
+})
+
+minetest.register_craft({
 	output = "mobs:leather",
 	type = "shapeless",
 	recipe = {
