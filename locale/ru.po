@@ -37,6 +37,19 @@ msgstr "Блок меда"
 msgid "Bunny"
 msgstr "Кролик"
 
+#: bunny.lua
+msgid "Raw Rabbit"
+msgstr "сырой кролик"
+
+#: bunny.lua
+#, fuzzy
+msgid "Cooked Rabbit"
+msgstr "приготовленный кролик"
+
+#: bunny.lua
+msgid "Rabbit Hide"
+msgstr "кролик скрыть"
+
 #: chicken.lua
 msgid "Chicken"
 msgstr "Курица"
@@ -164,6 +177,15 @@ msgstr "Желтый"
 #: sheep.lua
 msgid "@1 Sheep"
 msgstr "@1 Овец"
+
+#: sheep.lua
+msgid "Raw Mutton"
+msgstr "сырой ягненок"
+
+#: sheep.lua
+#, fuzzy
+msgid "Cooked Mutton"
+msgstr "приготовленный ягненок"
 
 #: warthog.lua
 msgid "Warthog"

@@ -38,6 +38,19 @@ msgstr "Blocco di miele"
 msgid "Bunny"
 msgstr "Coniglietto"
 
+#: bunny.lua
+msgid "Raw Rabbit"
+msgstr "Coniglio Crudo"
+
+#: bunny.lua
+#, fuzzy
+msgid "Cooked Rabbit"
+msgstr "Coniglio Cotto"
+
+#: bunny.lua
+msgid "Rabbit Hide"
+msgstr "Pelle di Coniglio"
+
 #: chicken.lua
 msgid "Chicken"
 msgstr "Gallina"
@@ -165,6 +178,15 @@ msgstr "Gialla"
 #: sheep.lua
 msgid "@1 Sheep"
 msgstr "Pecora @1"
+
+#: sheep.lua
+msgid "Raw Mutton"
+msgstr "Montone Crudo"
+
+#: sheep.lua
+#, fuzzy
+msgid "Cooked Mutton"
+msgstr "Montone Cotto"
 
 #: warthog.lua
 msgid "Warthog"
