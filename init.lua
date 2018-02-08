@@ -447,7 +447,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 		minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
-		if not farming.is_creative(placer:get_player_name()) then
+		if not placer or not farming.is_creative(placer:get_player_name()) then
 
 			local name = itemstack:get_name()
 
