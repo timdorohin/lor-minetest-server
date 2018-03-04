@@ -64,6 +64,7 @@ mobs:spawn({
 	min_light = 10,
 	chance = 20000,
 	min_height = 0,
+	max_height = 200,
 	day_toggle = true,
 })
 

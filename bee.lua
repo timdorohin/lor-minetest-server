@@ -50,6 +50,7 @@ mobs:spawn({
 	min_light = 10,
 	chance = 9000,
 	min_height = 0,
+	max_height = 200,
 	day_toggle = true,
 })
 
@@ -93,7 +94,7 @@ minetest.register_node(":mobs:beehive", {
 
 	after_place_node = function(pos, placer, itemstack)
 
-		if placer:is_player() then
+		if placer and placer:is_player() then
 
 			minetest.set_node(pos, {name = "mobs:beehive", param2 = 1})
 
