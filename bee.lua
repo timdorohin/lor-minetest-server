@@ -48,8 +48,8 @@ mobs:spawn({
 	name = "mobs_animal:bee",
 	nodes = {"group:flower"},
 	min_light = 10,
-	chance = 9000,
-	min_height = 0,
+	chance = 5000,
+	min_height = 3,
 	max_height = 200,
 	day_toggle = true,
 })

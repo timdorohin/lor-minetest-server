@@ -53,12 +53,20 @@ stepheight = 0.6,
 })
 
 
+local spawn_on = "default:dirt_with_grass"
+
+if minetest.get_modpath("ethereal") then
+	spawn_on = "ethereal:grove_dirt"
+end
+
+
 mobs:spawn({
 	name = "mobs_animal:kitten",
-	nodes = {"default:dirt_with_grass", "ethereal:grove_dirt"},
+	nodes = {spawn_on},
+	neighbors = {"group:grass"},
 	min_light = 12,
-	chance = 22000,
-	min_height = 0,
+	chance = 10000, -- 22000
+	min_height = 5,
 	max_height = 200,
 	day_toggle = true,
 })
