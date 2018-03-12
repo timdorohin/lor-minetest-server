@@ -24,13 +24,14 @@ minetest.register_node("farming:pineapple", {
 		type = "fixed",
 		fixed = {-0.27, -0.37, -0.27, 0.27, 0.44, 0.27}
 	},
-	groups = {fleshy = 3, dig_immediate = 3, flammable = 2},
+	groups = {food_pineapple = 1, fleshy = 3, dig_immediate = 3, flammable = 2},
 })
 
 -- pineapple
 minetest.register_craftitem("farming:pineapple_ring", {
 	description = S("Pineapple Ring"),
 	inventory_image = "farming_pineapple_ring.png",
+	groups = {food_pineapple_ring = 1, flammable = 2},
 	on_use = minetest.item_eat(1),
 })
 

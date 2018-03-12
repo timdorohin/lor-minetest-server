@@ -14,7 +14,7 @@ minetest.register_node("farming:pumpkin", {
 		"farming_pumpkin_side.png"
 	},
 	groups = {
-		choppy = 1, oddly_breakable_by_hand = 1,
+		food_pumpkin = 1, choppy = 1, oddly_breakable_by_hand = 1,
 		flammable = 2, plant = 1
 	},
 	drop = {
@@ -29,6 +29,7 @@ minetest.register_node("farming:pumpkin", {
 minetest.register_craftitem("farming:pumpkin_slice", {
 	description = S("Pumpkin Slice"),
 	inventory_image = "farming_pumpkin_slice.png",
+	groups = {food_pumpkin_slice = 1, flammable = 2},
 	on_place = function(itemstack, placer, pointed_thing)
 		return farming.place_seed(itemstack, placer, pointed_thing, "farming:pumpkin_1")
 	end,
