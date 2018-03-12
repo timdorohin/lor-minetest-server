@@ -58,7 +58,7 @@ minetest.register_node("farming:coffee_cup", {
 minetest.register_craft( {
 	output = "farming:coffee_cup",
 	recipe = {
-		{"farming:drinking_cup", "farming:coffee_beans","bucket:bucket_water"},
+		{"farming:drinking_cup", "group:food_coffee","bucket:bucket_water"},
 	},
 	replacements = {{"bucket:bucket_water", "bucket:bucket_empty"}}
 })

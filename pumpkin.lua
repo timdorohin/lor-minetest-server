@@ -98,9 +98,8 @@ minetest.register_node("farming:jackolantern_on", {
 minetest.register_craft({
 	output = "farming:jackolantern",
 	recipe = {
-		{"", "", ""},
-		{"", "default:torch", ""},
-		{"", "farming:pumpkin", ""},
+		{"default:torch"},
+		{"group:food_pumpkin"},
 	}
 })
 
@@ -108,7 +107,8 @@ minetest.register_craft({
 minetest.register_craftitem("farming:pumpkin_bread", {
 	description = S("Pumpkin Bread"),
 	inventory_image = "farming_pumpkin_bread.png",
-	on_use = minetest.item_eat(8)
+	on_use = minetest.item_eat(8),
+	groups = {food_bread = 1, flammable = 2},
 })
 
 minetest.register_craftitem("farming:pumpkin_dough", {
@@ -119,7 +119,7 @@ minetest.register_craftitem("farming:pumpkin_dough", {
 minetest.register_craft({
 	output = "farming:pumpkin_dough",
 	type = "shapeless",
-	recipe = {"farming:flour", "farming:pumpkin_slice", "farming:pumpkin_slice"}
+	recipe = {"group:food_flour", "group:food_pumpkin_slice", "group:food_pumpkin_slice"}
 })
 
 minetest.register_craft({

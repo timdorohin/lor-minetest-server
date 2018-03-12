@@ -38,7 +38,7 @@ minetest.register_craftitem("farming:pineapple_ring", {
 minetest.register_craft( {
 	output = "farming:pineapple_ring 5",
 	type = "shapeless",
-	recipe = {"farming:pineapple"},
+	recipe = {"group:food_pineapple"},
 	replacements = {{"farming:pineapple", "farming:pineapple_top"}}
 })
 
@@ -52,8 +52,14 @@ minetest.register_craftitem("farming:pineapple_juice", {
 minetest.register_craft({
 	output = "farming:pineapple_juice",
 	type = "shapeless",
-	recipe = {"vessels:drinking_glass", "farming:pineapple_ring",
-			"farming:pineapple_ring", "farming:pineapple_ring"},
+	recipe = {"vessels:drinking_glass", "group:food_pineapple_ring",
+			"group:food_pineapple_ring", "group:food_pineapple_ring"},
+})
+
+minetest.register_craft({
+	output = "farming:pineapple_juice 2",
+	type = "shapeless",
+	recipe = {"vessels:drinking_glass", "group:food_pineapple"},
 })
 
 -- crop definition

@@ -28,7 +28,7 @@ minetest.register_craft({
 	type = "cooking",
 	cooktime = 10,
 	output = "farming:baked_potato",
-	recipe = "farming:potato"
+	recipe = "group:food_potato"
 })
 
 -- potato definition

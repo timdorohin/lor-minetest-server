@@ -22,9 +22,9 @@ minetest.register_craftitem("farming:rhubarb_pie", {
 minetest.register_craft({
 	output = "farming:rhubarb_pie",
 	recipe = {
-		{"", "farming:sugar", ""},
-		{"farming:rhubarb", "farming:rhubarb", "farming:rhubarb"},
-		{"farming:wheat", "farming:wheat", "farming:wheat"},
+		{"", "group:food_sugar", ""},
+		{"group:food_rhubarb", "group:food_rhubarb", "group:food_rhubarb"},
+		{"group:food_wheat", "group:food_wheat", "group:food_wheat"},
 	}
 })
 

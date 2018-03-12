@@ -28,7 +28,7 @@ minetest.register_craft({
 	type = "cooking",
 	cooktime = 10,
 	output = "farming:corn_cob",
-	recipe = "farming:corn"
+	recipe = "group:food_corn"
 })
 
 -- ethanol (thanks to JKMurray for this idea)
@@ -52,8 +52,8 @@ minetest.register_node("farming:bottle_ethanol", {
 minetest.register_craft( {
 	output = "farming:bottle_ethanol",
 	recipe = {
-		{ "vessels:glass_bottle", "farming:corn", "farming:corn"},
-		{ "farming:corn", "farming:corn", "farming:corn"},
+		{ "vessels:glass_bottle", "group:food_corn", "group:food_corn"},
+		{ "group:food_corn", "group:food_corn", "group:food_corn"},
 	}
 })
 

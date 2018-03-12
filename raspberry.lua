@@ -23,7 +23,7 @@ minetest.register_craft({
 	output = "farming:smoothie_raspberry",
 	recipe = {
 		{"default:snow"},
-		{"farming:raspberries"},
+		{"group:food_raspberries"},
 		{"vessels:drinking_glass"},
 	}
 })

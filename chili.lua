@@ -22,7 +22,10 @@ minetest.register_craftitem("farming:chili_bowl", {
 minetest.register_craft({
 	type = "shapeless",
 	output = "farming:chili_bowl",
-	recipe = {"farming:chili_pepper", "farming:barley", "farming:tomato", "farming:beans"}
+	recipe = {
+		"group:food_chili_pepper", "group:food_barley",
+		"group:food_tomato", "group:food_beans"
+	}
 })
 
 -- chili can be used for red dye

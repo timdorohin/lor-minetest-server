@@ -82,7 +82,7 @@ minetest.register_craftitem("farming:cookie", {
 minetest.register_craft( {
 	output = "farming:cookie 8",
 	recipe = {
-		{ "farming:wheat", "farming:cocoa_beans", "farming:wheat" },
+		{"group:food_wheat", "group:food_cocoa", "group:food_wheat" },
 	}
 })
 
@@ -96,7 +96,7 @@ minetest.register_craftitem("farming:chocolate_dark", {
 minetest.register_craft( {
 	output = "farming:chocolate_dark",
 	recipe = {
-		{ "farming:cocoa_beans", "farming:cocoa_beans", "farming:cocoa_beans" },
+		{"group:food_cocoa", "group:food_cocoa", "group:food_cocoa"},
 	}
 })
 

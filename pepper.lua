@@ -27,7 +27,7 @@ minetest.register_craftitem("farming:pepper", {
 
 minetest.register_craft({
 	type = "shapeless",
-	output = "farming:peppercorn",
+	output = "group:food_peppercorn",
 	recipe = { "farming:pepper" }
 })
 
@@ -53,7 +53,7 @@ minetest.register_node("farming:pepper_ground", {
 minetest.register_craft( {
 	output = "farming:pepper_ground",
 	type = "shapeless",
-	recipe = {"farming:peppercorn", "vessels:glass_bottle"}
+	recipe = {"group:food_peppercorn", "vessels:glass_bottle"}
 })
 
 -- crop definition
