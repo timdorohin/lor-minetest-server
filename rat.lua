@@ -88,6 +88,7 @@ minetest.register_craftitem(":mobs:rat_cooked", {
 	description = S("Cooked Rat"),
 	inventory_image = "mobs_cooked_rat.png",
 	on_use = minetest.item_eat(3),
+	groups = {food_rat = 1, flammable = 2},
 })
 
 minetest.register_craft({

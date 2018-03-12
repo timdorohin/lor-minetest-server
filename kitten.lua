@@ -59,7 +59,6 @@ if minetest.get_modpath("ethereal") then
 	spawn_on = "ethereal:grove_dirt"
 end
 
-
 mobs:spawn({
 	name = "mobs_animal:kitten",
 	nodes = {spawn_on},

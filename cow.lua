@@ -125,6 +125,7 @@ minetest.register_craftitem(":mobs:bucket_milk", {
 	inventory_image = "mobs_bucket_milk.png",
 	stack_max = 1,
 	on_use = minetest.item_eat(8, 'bucket:bucket_empty'),
+	groups = {food_milk = 1, flammable = 3},
 })
 
 -- cheese wedge
@@ -132,6 +133,7 @@ minetest.register_craftitem(":mobs:cheese", {
 	description = S("Cheese"),
 	inventory_image = "mobs_cheese.png",
 	on_use = minetest.item_eat(4),
+	groups = {food_cheese = 1, flammable = 2},
 })
 
 minetest.register_craft({

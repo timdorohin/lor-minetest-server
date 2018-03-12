@@ -241,7 +241,7 @@ minetest.register_node(":mobs:egg", {
 		type = "fixed",
 		fixed = {-0.2, -0.5, -0.2, 0.2, 0, 0.2}
 	},
-	groups = {snappy = 2, dig_immediate = 3},
+	groups = {food_egg = 1, snappy = 2, dig_immediate = 3},
 	after_place_node = function(pos, placer, itemstack)
 		if placer:is_player() then
 			minetest.set_node(pos, {name = "mobs:egg", param2 = 1})
@@ -256,6 +256,7 @@ minetest.register_craftitem(":mobs:chicken_egg_fried", {
 	description = S("Fried Egg"),
 	inventory_image = "mobs_chicken_egg_fried.png",
 	on_use = minetest.item_eat(2),
+	groups = {food_egg_fried = 1, flammable = 2},
 })
 
 minetest.register_craft({
@@ -269,6 +270,7 @@ minetest.register_craftitem(":mobs:chicken_raw", {
 description = S("Raw Chicken"),
 	inventory_image = "mobs_chicken_raw.png",
 	on_use = minetest.item_eat(2),
+	groups = {food_meat_raw = 1, food_chicken_raw = 1, flammable = 2},
 })
 
 -- cooked chicken
@@ -276,6 +278,7 @@ minetest.register_craftitem(":mobs:chicken_cooked", {
 description = S("Cooked Chicken"),
 	inventory_image = "mobs_chicken_cooked.png",
 	on_use = minetest.item_eat(6),
+	groups = {food_meat = 1, food_chicken = 1, flammable = 2},
 })
 
 minetest.register_craft({
@@ -288,6 +291,7 @@ minetest.register_craft({
 minetest.register_craftitem(":mobs:chicken_feather", {
 	description = S("Feather"),
 	inventory_image = "mobs_chicken_feather.png",
+	groups = {flammable = 2},
 })
 
 minetest.register_craft({

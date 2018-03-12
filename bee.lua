@@ -64,6 +64,7 @@ minetest.register_craftitem(":mobs:honey", {
 	description = S("Honey"),
 	inventory_image = "mobs_honey_inv.png",
 	on_use = minetest.item_eat(4),
+	groups = {food_honey = 1, flammable = 1},
 })
 
 -- beehive (when placed spawns bee)
