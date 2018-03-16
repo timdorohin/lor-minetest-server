@@ -1,3 +1,9 @@
+-- add food group to default apple
+minetest.override_item("default:apple", {
+	groups = {food_apple = 1, fleshy = 3, dig_immediate = 3, flammable = 2,
+		leafdecay = 3, leafdecay_drop = 1},
+})
+
 -- is Ethereal mod installed?
 local eth = minetest.get_modpath("ethereal") or nil
 
