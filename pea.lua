@@ -30,7 +30,7 @@ minetest.register_craft({
 minetest.register_craftitem("farming:pea_soup", {
 	description = S("Pea Soup"),
 	inventory_image = "farming_pea_soup.png",
-	groups = {food_peas = 1, flammable = 2},
+	groups = {flammable = 2},
 	on_use = minetest.item_eat(4, "farming:bowl"),
 })
 
