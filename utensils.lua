@@ -86,7 +86,7 @@ minetest.register_craft({
 -- mortar and pestle
 
 minetest.register_craftitem("farming:mortar_pestle", {
-	description = S("Mortal and Pestle"),
+	description = S("Mortar and Pestle"),
 	inventory_image = "farming_mortar_pestle.png",
 	groups = {food_mortar_pestle = 1, flammable = 2},
 })
