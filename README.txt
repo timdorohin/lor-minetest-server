@@ -55,7 +55,7 @@ Changelog:
 0.1 - Fixed growing bug
 0.0 - Initial release
 
-Lucky Blocks: 16
+Lucky Blocks: 25
 
 
 License of media (textures):
