@@ -51,7 +51,7 @@ stepheight = 0.6,
 		jump_height = 6,
 		drops = {
 			{name = "mobs:mutton_raw", chance = 1, min = 1, max = 2},
-			--{name = "wool:"..col[1], chance = 1, min = 1, max = 1},
+			{name = "wool:"..col[1], chance = 1, min = 1, max = 1},
 		},
 		water_damage = 1,
 		lava_damage = 5,
