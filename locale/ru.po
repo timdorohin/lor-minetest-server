@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-08-13 16:00+0200\n"
-"PO-Revision-Date: 2017-08-13 16:00+ZONE\n"
-"Last-Translator: Oleg720 <olegsiriak@yandex.ru>\n"
+"POT-Creation-Date: 2017-08-13 16:00 (UTC+5)\n"
+"PO-Revision-Date: 2018-03-29 18:00 (UTC+5)\n"
+"Last-Translator: Oleg720 <contact@oleg720.ru>\n"
 "Language-Team: 720 Locales <>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Пчела"
 
 #: bee.lua
 msgid "Honey"
-msgstr "Мед"
+msgstr "Мёд"
 
 #: bee.lua
 msgid "Beehive"
@@ -31,7 +31,7 @@ msgstr "Улей"
 
 #: bee.lua
 msgid "Honey Block"
-msgstr "Блок меда"
+msgstr "Блок мёда"
 
 #: bunny.lua
 msgid "Bunny"
@@ -39,16 +39,16 @@ msgstr "Кролик"
 
 #: bunny.lua
 msgid "Raw Rabbit"
-msgstr "сырой кролик"
+msgstr "Сырой кролик"
 
 #: bunny.lua
 #, fuzzy
 msgid "Cooked Rabbit"
-msgstr "приготовленный кролик"
+msgstr "Приготовленный кролик"
 
 #: bunny.lua
 msgid "Rabbit Hide"
-msgstr "кролик скрыть"
+msgstr "Кролик скрыть"
 
 #: chicken.lua
 msgid "Chicken"
