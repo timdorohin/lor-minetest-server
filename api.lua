@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180331"
+mobs.version = "20180406"
 
 
 -- Intllib
@@ -2395,7 +2395,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		end) ]]
 
 		-- knock back effect (only on full punch)
-		if self.knock_back > 0
+		if self.knock_back
 		and tflp >= punch_interval then
 
 			local v = self.object:getvelocity()
