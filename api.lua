@@ -2875,7 +2875,7 @@ minetest.register_entity(name, {
 	attacks_monsters = def.attacks_monsters or false,
 	group_attack = def.group_attack or false,
 	passive = def.passive or false,
-	knock_back = def.knock_back or 3,
+	knock_back = def.knock_back ~= false,
 	blood_amount = def.blood_amount or 5,
 	blood_texture = def.blood_texture or "mobs_blood.png",
 	shoot_offset = def.shoot_offset or 0,
