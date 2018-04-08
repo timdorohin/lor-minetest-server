@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180406"
+mobs.version = "20180408"
 
 
 -- Intllib
@@ -750,9 +750,9 @@ local do_jump = function(self)
 
 			self.object:setvelocity(v)
 
-if get_velocity(self) > 0 then
-			mob_sound(self, self.sounds.jump)
-end
+			if get_velocity(self) > 0 then
+				mob_sound(self, self.sounds.jump)
+			end
 		else
 			self.facing_fence = true
 		end
@@ -1666,14 +1666,14 @@ local do_states = function(self, dtime)
 				self.state = "walk"
 				set_animation(self, "walk")
 
-				-- fly up/down randomly for flying mobs
+				--[[ fly up/down randomly for flying mobs
 				if self.fly and random(1, 100) <= self.walk_chance then
 
 					local v = self.object:getvelocity()
 					local ud = random(-1, 2) / 9
 
 					self.object:setvelocity({x = v.x, y = ud, z = v.z})
-				end
+				end--]]
 			end
 		end
 
@@ -2194,7 +2194,6 @@ local falling = function(self, pos)
 	end
 
 	-- in water then float up
---	if minetest.registered_nodes[node_ok(pos).name].groups.liquid then
 	if minetest.registered_nodes[node_ok(pos).name].groups.water then
 
 		if self.floats == 1 then
