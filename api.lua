@@ -1911,7 +1911,7 @@ local do_states = function(self, dtime)
 					if minetest.find_node_near(pos, 1, {"group:water"})
 					or minetest.is_protected(pos, "") then
 
-						node_break_radius = 0
+						node_break_radius = 1
 					end
 
 					self.object:remove()
