@@ -26,5 +26,8 @@ if minetest.get_modpath("lucky_block") then
 		{"dro", {"farming:cutting_board"}, 1},
 		{"dro", {"farming:juicer"}, 1},
 		{"dro", {"farming:mixing_bowl"}, 1},
+		{"dro", {"farming:hoe_bronze"}, 1},
+		{"dro", {"farming:hoe_mese"}, 1},
+		{"dro", {"farming:hoe_diamond"}, 1},
 	})
 end
