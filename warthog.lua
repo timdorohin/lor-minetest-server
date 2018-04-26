@@ -57,21 +57,25 @@ stepheight = 0.6,
 	end,
 })
 
-
-local spawn_on = "default:dirt_with_grass"
+local spawn_on = {"default:dirt_with_grass"}
 local spawn_by = {"group:grass"}
 
+if minetest.get_mapgen_setting("mg_name") ~= "v6" then
+	spawn_on = {"default:dirt_with_dry_grass"}
+	spawn_by = {"group:dry_grass"}
+end
+
 if minetest.get_modpath("ethereal") then
-	spawn_on = "ethereal:mushroom_dirt"
+	spawn_on = {"ethereal:mushroom_dirt"}
 	spawn_by = {"flowers:mushroom_brown", "flowers:mushroom_brown"}
 end
 
 mobs:spawn({
 	name = "mobs_animal:pumba",
-	nodes = {spawn_on},
+	nodes = spawn_on,
 	neighbors = spawn_by,
 	min_light = 10,
-	chance = 5000, -- 15000
+	chance = 6000, -- 15000
 	min_height = 0,
 	max_height = 200,
 	day_toggle = true,
