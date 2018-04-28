@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180427"
+mobs.version = "20180428"
 
 
 -- Intllib
@@ -763,11 +763,12 @@ local do_jump = function(self)
 			self.object:setvelocity(v)
 
 			-- when in air move forward
-			minetest.after(0.5, function(self, v)
-				self.object:setvelocity({
-					x = v.x * 1.5,
+			minetest.after(0.3, function(self, v)
+--				self.object:setvelocity({
+				self.object:set_acceleration({
+					x = v.x * 2,--1.5,
 					y = 0,
-					z = v.z * 1.5
+					z = v.z * 2,--1.5
 				})
 			end, self, v)
 
