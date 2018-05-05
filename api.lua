@@ -1464,7 +1464,7 @@ local specific_runaway = function(list, what)
 	-- found entity on list to attack?
 	for no = 1, #list do
 
-		if list[no] == what or list[no] == "player" then
+		if list[no] == what then
 			return true
 		end
 	end
