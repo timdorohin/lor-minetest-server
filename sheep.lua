@@ -194,6 +194,7 @@ mobs:spawn({
 	nodes = {"default:dirt_with_grass", "ethereal:green_dirt"},
 	neighbors = {"group:grass"},
 	min_light = 10,
+	interval = 60,
 	chance = 5000, -- 15000
 	min_height = 0,
 	max_height = 200,

@@ -71,6 +71,7 @@ mobs:spawn({
 	name = "mobs_animal:rat",
 	nodes = {"default:stone"},
 	min_light = 3,
+	interval = 60,
 	active_object_count = 2,
 	max_height = 0,
 --	on_spawn = rat_spawn,

@@ -64,6 +64,7 @@ mobs:spawn({
 	nodes = {spawn_on},
 	neighbors = {"group:grass"},
 	min_light = 12,
+	interval = 60,
 	chance = 10000, -- 22000
 	min_height = 5,
 	max_height = 200,

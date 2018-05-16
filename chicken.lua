@@ -97,6 +97,7 @@ mobs:spawn({
 	nodes = {spawn_on},
 	neighbors = {"group:grass"},
 	min_light = 10,
+	interval = 60,
 	chance = 5000, -- 15000
 	active_object_count = 2,
 	min_height = 5,
