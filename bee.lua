@@ -47,9 +47,9 @@ mobs:register_mob("mobs_animal:bee", {
 mobs:spawn({
 	name = "mobs_animal:bee",
 	nodes = {"group:flower"},
-	min_light = 10,
+	min_light = 14,
 	interval = 60,
-	chance = 6000,
+	chance = 7000,
 	min_height = 3,
 	max_height = 200,
 	day_toggle = true,

@@ -96,10 +96,9 @@ mobs:spawn({
 	name = "mobs_animal:chicken",
 	nodes = {spawn_on},
 	neighbors = {"group:grass"},
-	min_light = 10,
+	min_light = 14,
 	interval = 60,
-	chance = 5000, -- 15000
-	active_object_count = 2,
+	chance = 8000, -- 15000
 	min_height = 5,
 	max_height = 200,
 	day_toggle = true,

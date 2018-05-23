@@ -63,7 +63,7 @@ mobs:spawn({
 	name = "mobs_animal:kitten",
 	nodes = {spawn_on},
 	neighbors = {"group:grass"},
-	min_light = 12,
+	min_light = 14,
 	interval = 60,
 	chance = 10000, -- 22000
 	min_height = 5,
