@@ -45,6 +45,10 @@ minetest.register_craft({
 		{"group:food_mortar_pestle", "group:food_corn_cooked", "group:food_baking_tray"},
 		{"", "group:food_bowl", ""},
 	},
+	replacements = {
+		{"farming:mortar_pestle", "farming:mortar_pestle"},
+		{"farming:baking_tray", "farming:baking_tray"},
+	}
 })
 
 -- ethanol (thanks to JKMurray for this idea)
