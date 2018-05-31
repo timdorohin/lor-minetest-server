@@ -92,4 +92,8 @@ minetest.register_craft({
 		{"group:food_sugar", "group:food_rose_water", "group:food_sugar"},
 		{"group:food_cornstarch", "group:food_sugar", "dye:pink"},
 	},
+	replacements = {
+		{"farming:cornstarch", "farming:bowl"},
+		{"farming:rose_water", "vessels:glass_bottle"},
+	},
 })
