@@ -49,7 +49,7 @@ minetest.register_craft({
 minetest.register_node("farming:rose_water", {
 	description = ("Rose Water"),
 	inventory_image = "farming_rose_water.png",
-	wield_image = "farming_rose_Water.png",
+	wield_image = "farming_rose_water.png",
 	drawtype = "plantlike",
 	visual_scale = 0.8,
 	paramtype = "light",
