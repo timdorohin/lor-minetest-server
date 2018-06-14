@@ -51,21 +51,25 @@ minetest.register_craft({
 	}
 })
 
-if stairs and stairs.mod and stairs.mod == "redo" then
+-- check and register stairs
+if minetest.global_exists("stairs") then
 
-stairs.register_all("straw", "farming:straw",
-	{snappy = 3, flammable = 4},
-	{"farming_straw.png"},
-	"Straw",
-	default.node_sound_leaves_defaults())
-else
+	if stairs.mod and stairs.mod == "redo" then
 
-stairs.register_stair_and_slab("straw", "farming:straw",
-	{snappy = 3, flammable = 4},
-	{"farming_straw.png"},
-	"Straw Stair",
-	"Straw Slab",
-	default.node_sound_leaves_defaults())
+		stairs.register_all("straw", "farming:straw",
+			{snappy = 3, flammable = 4},
+			{"farming_straw.png"},
+			"Straw",
+			default.node_sound_leaves_defaults())
+	else
+
+		stairs.register_stair_and_slab("straw", "farming:straw",
+			{snappy = 3, flammable = 4},
+			{"farming_straw.png"},
+			"Straw Stair",
+			"Straw Slab",
+			default.node_sound_leaves_defaults())
+	end
 end
 
 -- flour

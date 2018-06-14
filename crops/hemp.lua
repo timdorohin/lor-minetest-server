@@ -111,21 +111,24 @@ minetest.register_craft( {
 	},
 })
 
--- register stairs
-if stairs and stairs.mod and stairs.mod == "redo" then
+-- check and register stairs
+if minetest.global_exists("stairs") then
 
-stairs.register_all("hemp_block", "farming:hemp_block",
-	{snappy = 1, flammable = 2},
-	{"farming_hemp_block.png"},
-	"Hemp Block",
-	default.node_sound_leaves_defaults())
-else
+	if stairs.mod and stairs.mod == "redo" then
 
-stairs.register_stair_and_slab("hemp_block", "farming:hemp_block",
-	{snappy = 1, flammable = 2},
-	{"farming_hemp_block.png"},
-	"Hemp Block",
-	default.node_sound_leaves_defaults())
+		stairs.register_all("hemp_block", "farming:hemp_block",
+			{snappy = 1, flammable = 2},
+			{"farming_hemp_block.png"},
+			"Hemp Block",
+			default.node_sound_leaves_defaults())
+	else
+
+		stairs.register_stair_and_slab("hemp_block", "farming:hemp_block",
+			{snappy = 1, flammable = 2},
+			{"farming_hemp_block.png"},
+			"Hemp Block",
+			default.node_sound_leaves_defaults())
+	end
 end
 
 -- paper
