@@ -126,7 +126,8 @@ if minetest.global_exists("stairs") then
 		stairs.register_stair_and_slab("hemp_block", "farming:hemp_block",
 			{snappy = 1, flammable = 2},
 			{"farming_hemp_block.png"},
-			"Hemp Block",
+			"Hemp Block Stair",
+			"Hemp Block Slab",
 			default.node_sound_leaves_defaults())
 	end
 end
