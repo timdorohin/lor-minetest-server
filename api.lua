@@ -3270,13 +3270,6 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 				return
 			end
 
-			-- mobs cannot spawn in protected areas when enabled
-			if not spawn_protected
-			and minetest.is_protected(pos, "") then
---print ("--- inside protected area", name)
-				return
-			end
-
 			-- only spawn away from player
 			local objs = minetest.get_objects_inside_radius(pos, 10)
 
@@ -3300,6 +3293,13 @@ function mobs:spawn_specific(name, nodes, neighbors, min_light, max_light,
 --print ("--- inside block", name, node_ok(pos2).name)
 					return
 				end
+			end
+
+			-- mobs cannot spawn in protected areas when enabled
+			if not spawn_protected
+			and minetest.is_protected(pos, "") then
+--print ("--- inside protected area", name)
+				return
 			end
 
 			-- spawn mob half block higher than ground
