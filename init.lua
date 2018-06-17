@@ -7,7 +7,7 @@
 
 farming = {}
 farming.mod = "redo"
-farming.version = "20180609"
+farming.version = "20180617"
 farming.path = minetest.get_modpath("farming")
 farming.select = {
 	type = "fixed",
@@ -301,11 +301,16 @@ function farming.plant_growth_timer(pos, elapsed, node_name)
 		return false
 	end
 
-	if stages.plant_name == "farming:cocoa" then
+	-- custom growth check
+	local chk = minetest.registered_nodes[node_name].growth_check
 
-		if not minetest.find_node_near(pos, 1, {"default:jungletree"}) then
+	if chk then
+
+		if chk(pos, node_name) then
 			return true
 		end
+
+	-- otherwise check for wet soil beneath crop
 	else
 		local under = minetest.get_node({ x = pos.x, y = pos.y - 1, z = pos.z })
 

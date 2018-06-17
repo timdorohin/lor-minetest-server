@@ -124,7 +124,13 @@ local crop_def = {
 		snappy = 3, flammable = 2, plant = 1, growing = 1,
 		not_in_creative_inventory=1, leafdecay = 1, leafdecay_drop = 1
 	},
-	sounds = default.node_sound_leaves_defaults()
+	sounds = default.node_sound_leaves_defaults(),
+	growth_check = function(pos, node_name)
+		if minetest.find_node_near(pos, 1, {"default:jungletree"}) then
+			return false
+		end
+		return true
+	end,
 }
 
 -- stage 1
@@ -146,6 +152,7 @@ minetest.register_node("farming:cocoa_3", table.copy(crop_def))
 -- stage 4 (final)
 crop_def.tiles = {"farming_cocoa_4.png"}
 crop_def.groups.growing = 0
+crop_def.growth_check = nil
 crop_def.drop = {
 	items = {
 		{items = {'farming:cocoa_beans 2'}, rarity = 1},
