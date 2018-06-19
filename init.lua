@@ -419,7 +419,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	-- am I right-clicking on something that has a custom on_place set?
 	-- thanks to Krock for helping with this issue :)
 	local def = minetest.registered_nodes[under.name]
-	if def and def.on_rightclick then
+	if placer and def and def.on_rightclick then
 		return def.on_rightclick(pt.under, under, placer, itemstack)
 	end
 
@@ -444,8 +444,11 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 		return
 	end
 
+	-- is player planting seed?
+	local name = placer:get_player_name() or ""
+
 	-- if not protected then add node and remove 1 item from the itemstack
-	if not minetest.is_protected(pt.above, placer:get_player_name()) then
+	if not minetest.is_protected(pt.above, name) then
 
 		local p2 = minetest.registered_nodes[plantname].place_param2 or 1
 
@@ -455,7 +458,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 
 		minetest.sound_play("default_place_node", {pos = pt.above, gain = 1.0})
 
-		if not placer or not farming.is_creative(placer:get_player_name()) then
+		if placer and not farming.is_creative(placer:get_player_name()) then
 
 			local name = itemstack:get_name()
 

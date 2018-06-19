@@ -40,7 +40,6 @@ The farming API allows you to easily register plants and hoes.
 
 Note: Any crops registered with the above function will use the new growing routines, also if crops are manually added with the {growing=1} group they will also grow.
 
-
 ### Crop functions
 
 If a mod registers nodes to be used as crops using the {growing=1} group then an additional function can be used for custom growth checks instead of the standard 'are we above wet soil'.
