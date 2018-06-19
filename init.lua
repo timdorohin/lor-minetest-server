@@ -445,7 +445,7 @@ function farming.place_seed(itemstack, placer, pointed_thing, plantname)
 	end
 
 	-- is player planting seed?
-	local name = placer:get_player_name() or ""
+	local name = placer and placer:get_player_name() or ""
 
 	-- if not protected then add node and remove 1 item from the itemstack
 	if not minetest.is_protected(pt.above, name) then

@@ -32,7 +32,7 @@ local function place_beans(itemstack, placer, pointed_thing, plantname)
 	end
 
 	-- is player planting crop?
-	local name = placer:get_player_name() or ""
+	local name = placer and placer:get_player_name() or ""
 
 	-- check for protection
 	if minetest.is_protected(pt.under, name) then
