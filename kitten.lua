@@ -7,7 +7,13 @@ local S = mobs.intllib
 mobs:register_mob("mobs_animal:kitten", {
 stepheight = 0.6,
 	type = "animal",
-	passive = true,
+specific_attack = {"mobs_animal:rat"},
+damage = 1,
+attack_type = "dogfight",
+attack_animals = true, -- so it can attack rat
+attack_players = false,
+reach = 1,
+	passive = false,
 	hp_min = 5,
 	hp_max = 10,
 	armor = 200,
