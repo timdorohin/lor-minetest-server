@@ -2430,7 +2430,10 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		end
 
 		if tr then
-			weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
+			if weapon:get_definition()
+			and weapon:get_definition().original_description then
+				weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
+			end
 		else
 			weapon:add_wear(wear)
 		end
