@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180627"
+mobs.version = "20180701"
 
 
 -- Intllib
@@ -2313,6 +2313,9 @@ local falling = function(self, pos)
 end
 
 
+-- is Took Ranks mod active?
+local tr = minetest.get_modpath("toolranks")
+
 -- deal damage and effects when mob punched
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
@@ -2414,7 +2417,24 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	if weapon:get_definition()
 	and weapon:get_definition().tool_capabilities then
 
-		weapon:add_wear(floor((punch_interval / 75) * 9000))
+		-- toolrank support
+		local wear = floor((punch_interval / 75) * 9000)
+
+		if mobs.is_creative(hitter:get_player_name()) then
+
+			if tr then
+				wear = 1
+			else
+				wear = 0
+			end
+		end
+
+		if tr then
+			weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
+		else
+			weapon:add_wear(wear)
+		end
+
 		hitter:set_wielded_item(weapon)
 	end
 
