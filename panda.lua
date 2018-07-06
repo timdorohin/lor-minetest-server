@@ -62,7 +62,7 @@ stepheight = 0.6,
 if minetest.get_modpath("ethereal") then
 
 	mobs:spawn({
-		name = "mobs_animal:pumba",
+		name = "mobs_animal:panda",
 		nodes = {"ethereal:bamboo_dirt"},
 		neighbors = {"group:grass"},
 		min_light = 14,
