@@ -36,6 +36,10 @@ Warthogs unlike pigs defend themselves when hit and give 1-3 raw pork when kille
 These little guys can be found in glacier biomes on top of snow and have the ability to swim if they fall into water.
 
 ---
-*Note: After breeding animals need to rest for 4 minutes, baby animals take 4 minutes to grow up and feeding them helps them grow quicker...*
+### Panda
+These monochrome cuties spawn in Ethereal's bamboo biome and can be tamed with bamboo stalks :)  Remember they have claws though.
+
+---
+*Note: After breeding, animals need to rest for 4 minutes and baby animals take 4 minutes to grow up, also feeding them helps them grow quicker...*
 
 #### Lucky Blocks: 14
