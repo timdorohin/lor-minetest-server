@@ -48,7 +48,7 @@ stepheight = 0.6,
 		walk_start = 10,
 		walk_end = 70,
 		punch_start = 80,
-		punch_end = 270,
+		punch_end = 120,
 		-- 0 = rest, 1 = hiding (covers eyes), 2 = surprised
 	},
 	on_rightclick = function(self, clicker)
