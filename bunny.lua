@@ -74,6 +74,7 @@ stepheight = 0.6,
 
 			self.type = "monster"
 			self.health = 20
+			self.passive = false
 
 			return
 		end
