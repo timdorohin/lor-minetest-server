@@ -53,7 +53,7 @@ stepheight = 0.6,
 	},
 	on_rightclick = function(self, clicker)
 
-		if mobs:feed_tame(self, clicker, 10, true, true) then return end
+		if mobs:feed_tame(self, clicker, 20, true, true) then return end
 		if mobs:protect(self, clicker) then return end
 		if mobs:capture_mob(self, clicker, 0, 5, 50, false, nil) then return end
 	end,
