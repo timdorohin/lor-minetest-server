@@ -3,7 +3,7 @@
 
 mobs = {}
 mobs.mod = "redo"
-mobs.version = "20180710"
+mobs.version = "20180719"
 
 
 -- Intllib
@@ -350,6 +350,11 @@ end
 -- drop items
 local item_drop = function(self, cooked)
 
+	-- check for nil or no drops
+	if not self.drops or #self.drops == 0 then
+		return
+	end
+
 	-- no drops if disabled by setting
 	if not mobs_drop_items then return end
 
@@ -359,13 +364,11 @@ local item_drop = function(self, cooked)
 	local obj, item, num
 	local pos = self.object:get_pos()
 
-	self.drops = self.drops or {} -- nil check
-
 	for n = 1, #self.drops do
 
 		if random(1, self.drops[n].chance) == 1 then
 
-			num = random(self.drops[n].min or 1, self.drops[n].max or 1)
+			num = random(self.drops[n].min or 0, self.drops[n].max or 1)
 			item = self.drops[n].name
 
 			-- cook items when true
