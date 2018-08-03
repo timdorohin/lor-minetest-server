@@ -182,6 +182,12 @@ local set_animation = function(self, anim)
 
 	self.animation.current = self.animation.current or ""
 
+	-- only set different animation
+	if anim ~= "punch" and anim ~= "shoot"
+	and string.find(self.animation.current, anim) then
+		return
+	end
+
 	-- check for more than one animation
 	local num = 0
 
