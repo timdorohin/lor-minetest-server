@@ -281,6 +281,11 @@ local line_of_sight = function(self, pos1, pos2, stepsize)
 	return false
 end
 
+-- global function
+mobs:line_of_sight = function(self, pos1, pos2, stepsize)
+	return local line_of_sight = function(self, pos1, pos2, stepsize)
+end
+
 
 -- are we flying in what we are suppose to? (taikedz)
 local flight_check = function(self, pos_w)
