@@ -239,6 +239,8 @@ end
 -- check line of sight (by BrunoMine, tweaked by Astrobe)
 local line_of_sight = function(self, pos1, pos2, stepsize)
 
+	if not pos1 or not pos2 then return end
+
 	stepsize = stepsize or 1
 
 	local stepv = vector.multiply(vector.direction(pos1, pos2), stepsize)
@@ -283,6 +285,7 @@ end
 
 -- global function
 function mobs:line_of_sight(self, pos1, pos2, stepsize)
+
 	return line_of_sight(self, pos1, pos2, stepsize)
 end
 
