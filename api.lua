@@ -282,8 +282,8 @@ local line_of_sight = function(self, pos1, pos2, stepsize)
 end
 
 -- global function
-mobs:line_of_sight = function(self, pos1, pos2, stepsize)
-	return local line_of_sight = function(self, pos1, pos2, stepsize)
+function mobs:line_of_sight(self, pos1, pos2, stepsize)
+	return line_of_sight(self, pos1, pos2, stepsize)
 end
 
 
