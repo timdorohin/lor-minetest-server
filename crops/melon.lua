@@ -83,4 +83,5 @@ crop_def.groups = {
 	flammable = 2, plant = 1
 }
 --crop_def.drop = "farming:melon_slice 9"
+crop_def.drop = "farming:melon_8"
 minetest.register_node("farming:melon_8", table.copy(crop_def))
