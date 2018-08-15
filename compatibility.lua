@@ -1,19 +1,18 @@
 
--- check for Ethereal mod and add quick alias function
+--= Helpers
+
 local eth = minetest.get_modpath("ethereal")
 local alias = function(orig, new)
 	minetest.register_alias(orig, new)
 end
 
---= Overrides
+--= Overrides (add food_* group to apple and brown mushroom)
 
--- add food_* group to apple
 minetest.override_item("default:apple", {
 	groups = {food_apple = 1, fleshy = 3, dig_immediate = 3, flammable = 2,
 		leafdecay = 3, leafdecay_drop = 1},
 })
 
--- add food_* group to brown mushroom
 if minetest.registered_nodes["flowers:mushroom_brown"] then
 minetest.override_item("flowers:mushroom_brown", {
 	light_source = 1,
@@ -47,8 +46,19 @@ else
 		sounds = default.node_sound_leaves_defaults(),
 	})
 
+	minetest.register_node(":ethereal:bananaleaves", {
+		description = "Banana Leaves",
+		tiles = {"banana_leaf.png"},
+		inventory_image = "banana_leaf.png",
+		wield_image = "banana_leaf.png",
+		paramtype = "light",
+		waving = 1,
+		groups = {snappy = 3, leafdecay = 3, leaves = 1, flammable = 2},
+		sounds = default.node_sound_leaves_defaults(),
+	})
+
 	alias("farming_plus:banana_sapling", "default:sapling")
-	alias("farming_plus:banana_leaves", "default:leaves")
+	alias("farming_plus:banana_leaves", "ethereal:bananaleaves")
 	alias("farming_plus:banana", "ethereal:banana")
 end
 
@@ -149,7 +159,6 @@ else
 	alias("farming_plus:strawberry_3", "farming:raspberry_3")
 	alias("farming_plus:strawberry", "farming:raspberry_4")
 end
-
 
 -- Tomato
 alias("farming_plus:tomato_seed", "farming:tomato")
