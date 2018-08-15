@@ -1,7 +1,4 @@
 
--- wait until mods are finished loading
-minetest.after(0, function()
-
 -- add food group to default apple and brown mushroom
 minetest.override_item("default:apple", {
 	groups = {food_apple = 1, fleshy = 3, dig_immediate = 3, flammable = 2,
@@ -56,7 +53,7 @@ minetest.register_alias("farming_plus:carrot", "farming:carrot_8")
 minetest.register_alias("farming_plus:carrot_item", "farming:carrot")
 
 -- Cocoa
-minetest.register_alias("farming_plus:cocoa_sapling", "farming:cocoa_2")
+minetest.register_alias("farming_plus:cocoa_sapling", "farming:cocoa_beans")
 minetest.register_alias("farming_plus:cocoa_leaves", "default:leaves")
 minetest.register_alias("farming_plus:cocoa", "default:apple")
 minetest.register_alias("farming_plus:cocoa_bean", "farming:cocoa_beans")
@@ -65,7 +62,6 @@ minetest.register_alias("farming_plus:cocoa_bean", "farming:cocoa_beans")
 minetest.register_alias("farming_plus:orange_1", "farming:tomato_1")
 minetest.register_alias("farming_plus:orange_2", "farming:tomato_4")
 minetest.register_alias("farming_plus:orange_3", "farming:tomato_6")
---minetest.register_alias("farming_plus:orange", "farming:tomato_8")
 
 if eth then
 	minetest.register_alias("farming_plus:orange_item", "ethereal:orange")
@@ -108,8 +104,8 @@ minetest.register_alias("farming:pumpkin_face", "farming:jackolantern")
 minetest.register_alias("farming:pumpkin_face_light", "farming:jackolantern_on")
 minetest.register_alias("farming:big_pumpkin", "farming:pumpkin")
 minetest.register_alias("farming:big_pumpkin_side", "air")
-minetest.register_alias("farming:big_pumpkin_corner", "air")
 minetest.register_alias("farming:big_pumpkin_top", "air")
+minetest.register_alias("farming:big_pumpkin_corner", "air")
 minetest.register_alias("farming:scarecrow", "farming:jackolantern")
 minetest.register_alias("farming:scarecrow_light", "farming:jackolantern_on")
 minetest.register_alias("farming:pumpkin_flour", "farming:pumpkin_dough")
@@ -146,8 +142,6 @@ else
 	minetest.register_alias("farming_plus:strawberry", "farming:raspberry_4")
 end
 
-minetest.register_alias("bushes:strawberry", "ethereal:strawberry")
-
 
 -- Tomato
 minetest.register_alias("farming_plus:tomato_seed", "farming:tomato")
@@ -159,18 +153,3 @@ minetest.register_alias("farming_plus:tomato", "farming:tomato_8")
 
 -- Weed
 minetest.register_alias("farming:weed", "default:grass_2")
-
---[[ Classic Bushes compatibility
-if minetest.get_modpath("bushes_classic") then
-
-	if eth then
-		minetest.register_alias("bushes:strawberry", "farming:strawberry")
-	else
-		minetest.register_alias("bushes:strawberry", "farming:raspberries")
-	end
-
-	minetest.register_alias("bushes:blueberry", "farming:blueberries")
-	minetest.register_alias("bushes:raspberry", "farming:raspberries")
-end]]
-
-end)
