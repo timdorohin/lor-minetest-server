@@ -165,7 +165,7 @@ minetest.register_craft({
 -- beehive workings
 minetest.register_abm({
 	nodenames = {"mobs:beehive"},
-	interval = 6,
+	interval = 12,
 	chance = 6,
 	catch_up = false,
 	action = function(pos, node)
