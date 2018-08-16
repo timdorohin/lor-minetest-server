@@ -184,7 +184,7 @@ minetest.register_abm({
 		local honey = inv:get_stack("beehive", 1):get_count()
 
 		-- is hive full?
-		if honey > 19 then
+		if honey > 11 then
 			return
 		end
 
