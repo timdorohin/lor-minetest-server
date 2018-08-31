@@ -126,11 +126,12 @@ mobs:alias_mob("mobs:kitten", "mobs_animal:kitten") -- compatibility
 
 local hairball_items = {
 	"default:stick", "default:coal_lump", "default:dry_shrub", "flowers:rose",
-	"mobs_animal:rat", "default:grass_1", "farming:seed_wheat", "dye:green",
-	"farming:seed_cotton", "default:flint", "default:sapling", "dye:white",
-	"default:clay_lump", "default:paper", "default:dry_grass_1", "dye:red",
-	"farming:string", "mobs:chicken_feather", "default:acacia_bush_sapling",
-	"default:bush_sapling", "default:copper_lump", "default:iron_lump",
+	"mobs_animal:rat", "default:grass_1", "farming:seed_wheat", "dye:green", "",
+	"farming:seed_cotton", "default:flint", "default:sapling", "dye:white", "",
+	"default:clay_lump", "default:paper", "default:dry_grass_1", "dye:red", "",
+	"farming:string", "mobs:chicken_feather", "default:acacia_bush_sapling", "",
+	"default:bush_sapling", "default:copper_lump", "default:iron_lump", "",
+	"dye:black", "dye:brown", "default:obsidian_shard", "default:tin_lump"
 }
 
 minetest.register_craftitem(":mobs:hairball", {
@@ -143,7 +144,9 @@ minetest.register_craftitem(":mobs:hairball", {
 		local newpos = {x = pos.x + dir.x, y = pos.y + dir.y + 1.5, z = pos.z + dir.z}
 		local item = hairball_items[math.random(1, #hairball_items)]
 
-		minetest.add_item(newpos, {name = item})
+		if item ~= "" then
+			minetest.add_item(newpos, {name = item})
+		end
 
 		minetest.sound_play("default_place_node_hard", {
 			pos = newpos,
