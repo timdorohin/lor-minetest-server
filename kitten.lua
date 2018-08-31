@@ -82,7 +82,7 @@ reach = 1,
 		self.hairball_timer = 0
 
 		if self.child
-		or math.random(1, 10) > 1 then
+		or math.random(1, 250) > 1 then
 			return
 		end
 
