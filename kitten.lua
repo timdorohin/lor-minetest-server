@@ -1,6 +1,6 @@
 
 local S = mobs.intllib
-
+local hairball = minetest.settings:get("mobs_hairball")
 
 -- Kitten by Jordach / BFD
 
@@ -74,6 +74,10 @@ reach = 1,
 	end,
 
 	do_custom = function(self, dtime)
+
+		if hairball == "false" then
+			return
+		end
 
 		self.hairball_timer = (self.hairball_timer or 0) + dtime
 		if self.hairball_timer < 10 then
