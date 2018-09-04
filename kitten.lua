@@ -65,6 +65,8 @@ reach = 1,
 
 			if self.order ~= "stand" then
 				self.order = "stand"
+				self.state = "stand"
+				self.object:set_velocity({x = 0, y = 0, z = 0})
 				mobs:set_animation(self, "stand")
 			else
 				self.order = ""
