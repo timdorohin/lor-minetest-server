@@ -146,7 +146,7 @@ functions needed for the mob to work properly which contains the following:
    'drops'     table of items that are dropped when mob is killed, fields are:
       'name'   name of item to drop.
       'chance' chance of drop, 1 for always, 2 for 1-in-2 chance etc.
-      'min'    minimum number of items dropped.
+      'min'    minimum number of items dropped, set to 0 for rare drops.
       'max'    maximum number of items dropped.
 
    'visual'            holds the look of the mob you wish to create:
