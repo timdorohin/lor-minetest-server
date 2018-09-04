@@ -10,4 +10,4 @@
 
 #### Lor ![lor_status](https://img.shields.io/badge/Cтатус:-wip-gray.svg)
 ##### lor.minetestserver.ga:30000
-"Боевой" сервер предоставленный @ravdinve. Роллбек включен, возможность все ломать по-умолчанию отсутствует, чтобы ее получить зайдите в [специальный issue](https://github.com/timdorohin/lor-minetest-server/issues/1), [тему на форуме](https://www.linux.org.ru/forum/games/13503450), или просто достаньте своим нытьем админа (за что я вас забаню :trollface:)
+"Боевой" сервер предоставленный [@ravdinve](https://github.com/ravdinve). Роллбек включен, возможность все ломать по-умолчанию отсутствует, чтобы ее получить зайдите в [специальный issue](https://github.com/timdorohin/lor-minetest-server/issues/1), [тему на форуме](https://www.linux.org.ru/forum/games/13503450), или просто достаньте своим нытьем админа (за что я вас забаню :trollface:)
