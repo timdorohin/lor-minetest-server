@@ -148,6 +148,7 @@ functions needed for the mob to work properly which contains the following:
       'chance' chance of drop, 1 for always, 2 for 1-in-2 chance etc.
       'min'    minimum number of items dropped, set to 0 for rare drops.
       'max'    maximum number of items dropped.
+   Note: If weapon has {fire=1} damage group set then cooked items will drop.
 
    'visual'            holds the look of the mob you wish to create:
       'cube'           looks like a normal node

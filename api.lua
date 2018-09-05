@@ -6,7 +6,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20180904",
+	version = "20180905",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
@@ -2292,19 +2292,16 @@ local tr = minetest.get_modpath("toolranks")
 -- deal damage and effects when mob punched
 local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
-	-- custom punch function
-	if self.do_punch then
-
-		-- when false skip going any further
-		if self.do_punch(self, hitter, tflp, tool_capabilities, dir) == false then
-			return
-		end
+	-- mob health check
+	if self.health <= 0 then
+		return
 	end
 
-	-- mob health check
---	if self.health <= 0 then
---		return
---	end
+	-- custom punch function
+	if self.do_punch
+	and self.do_punch(self, hitter, tflp, tool_capabilities, dir) == false then
+		return
+	end
 
 	-- error checking when mod profiling is enabled
 	if not tool_capabilities then
@@ -2319,9 +2316,8 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		return
 	end
 
-
-	-- weapon wear
 	local weapon = hitter:get_wielded_item()
+	local weapon_def = weapon:get_definition() or {}
 	local punch_interval = 1.4
 
 	-- calculate mob damage
@@ -2356,7 +2352,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 	-- check for tool immunity or special damage
 	for n = 1, #self.immune_to do
 
-		if self.immune_to[n][1] == weapon:get_name() then
+		if self.immune_to[n][1] == weapon_def.name then
 
 			damage = self.immune_to[n][2] or 0
 			break
@@ -2375,67 +2371,57 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 
 --	print ("Mob Damage is", damage)
 
-	if use_cmi then
-
-		local cancel =  cmi.notify_punch(self.object, hitter, tflp, tool_capabilities, dir, damage)
-
-		if cancel then return end
+	if use_cmi
+	and cmi.notify_punch(self.object, hitter, tflp, tool_capabilities, dir, damage) then
+		return
 	end
 
 	-- add weapon wear
-	if tool_capabilities then
-		punch_interval = tool_capabilities.full_punch_interval or 1.4
-	end
+	punch_interval = tool_capabilities.full_punch_interval or 1.4
 
-	if weapon:get_definition()
-	and weapon:get_definition().tool_capabilities then
+	-- toolrank support
+	local wear = floor((punch_interval / 75) * 9000)
 
-		-- toolrank support
-		local wear = floor((punch_interval / 75) * 9000)
-
-		if mobs.is_creative(hitter:get_player_name()) then
-
-			if tr then
-				wear = 1
-			else
-				wear = 0
-			end
-		end
+	if mobs.is_creative(hitter:get_player_name()) then
 
 		if tr then
-			if weapon:get_definition()
-			and weapon:get_definition().original_description then
-				weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
-			end
+			wear = 1
 		else
-			weapon:add_wear(wear)
+			wear = 0
 		end
-
-		hitter:set_wielded_item(weapon)
 	end
+
+	if tr then
+		if weapon_def.original_description then
+			weapon:add_wear(toolranks.new_afteruse(weapon, hitter, nil, {wear = wear}))
+		end
+	else
+		weapon:add_wear(wear)
+	end
+
+	hitter:set_wielded_item(weapon)
 
 	-- only play hit sound and show blood effects if damage is 1 or over
 	if damage >= 1 then
 
 		-- weapon sounds
-		if weapon:get_definition().sounds ~= nil then
+		if weapon_def.sounds then
 
-			local s = random(0, #weapon:get_definition().sounds)
+			local s = random(0, #weapon_def.sounds)
 
-			minetest.sound_play(weapon:get_definition().sounds[s], {
-				object = self.object, --hitter,
+			minetest.sound_play(weapon_def.sounds[s], {
+				object = self.object,
 				max_hear_distance = 8
 			})
 		else
 			minetest.sound_play("default_punch", {
-				object = self.object, --hitter,
+				object = self.object,
 				max_hear_distance = 5
 			})
 		end
 
 		-- blood_particles
-		if self.blood_amount > 0
-		and not disable_blood then
+		if not disable_blood and self.blood_amount > 0 then
 
 			local pos = self.object:get_pos()
 
@@ -2455,17 +2441,13 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		-- do damage
 		self.health = self.health - floor(damage)
 
-		-- exit here if dead, special item check
-		if weapon:get_name() == "mobs:pick_lava" then
-			if check_for_death(self, "hit", {type = "punch",
-					puncher = hitter, hot = true}) then
-				return
-			end
-		else
-			if check_for_death(self, "hit", {type = "punch",
-					puncher = hitter}) then
-				return
-			end
+		-- exit here if dead, check for tools with fire damage
+		local hot = tool_capabilities and tool_capabilities.damage_groups
+				and tool_capabilities.damage_groups.fire
+
+		if check_for_death(self, "hit", {type = "punch",
+				puncher = hitter, hot = hot}) then
+			return
 		end
 
 		--[[ add healthy afterglow when hit (can cause hit lag with larger textures)
@@ -2480,43 +2462,40 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 			end)
 		end) ]]
 
-		-- knock back effect (only on full punch)
-		if self.knock_back
-		and tflp >= punch_interval then
-
-			local v = self.object:get_velocity()
-			local r = 1.4 - min(punch_interval, 1.4)
-			local kb = r * 5
-			local up = 2
-
-			-- if already in air then dont go up anymore when hit
-			if v.y > 0
-			or self.fly then
-				up = 0
-			end
-
-			-- direction error check
-			dir = dir or {x = 0, y = 0, z = 0}
-
-			-- check if tool already has specific knockback value
-			if tool_capabilities.damage_groups["knockback"] then
-				kb = tool_capabilities.damage_groups["knockback"]
-			else
-				kb = kb * 1.5
-			end
-
-			self.object:set_velocity({
-				x = dir.x * kb,
-				y = up,
-				z = dir.z * kb
-			})
-
-			self.pause_timer = 0.25
-		end
 	end -- END if damage
 
+	-- knock back effect (only on full punch)
+	if self.knock_back
+	and tflp >= punch_interval then
+
+		local v = self.object:get_velocity()
+		local kb = damage or 1
+		local up = 2
+
+		-- if already in air then dont go up anymore when hit
+		if v.y > 0
+		or self.fly then
+			up = 0
+		end
+
+		-- direction error check
+		dir = dir or {x = 0, y = 0, z = 0}
+
+		-- use tool knockback value or default
+		kb = tool_capabilities.damage_groups["knockback"] or (kb * 1.5)
+
+		self.object:set_velocity({
+			x = dir.x * kb,
+			y = up,
+			z = dir.z * kb
+		})
+
+		self.pause_timer = 0.25
+	end
+
 	-- if skittish then run away
-	if self.runaway == true then
+	if self.runaway == true
+	and self.order ~= "stand" then
 
 		local lp = hitter:get_pos()
 		local s = self.object:get_pos()
