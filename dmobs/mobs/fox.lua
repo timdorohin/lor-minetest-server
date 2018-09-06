@@ -25,8 +25,8 @@ mobs:register_mob("dmobs:fox", {
 	drops = {
 		{name = "mobs:meat_raw", chance = 1, min = 1, max = 1},
 	},
-	on_activate = function(self)
-		if math.random(1,5) == 1 then
+	on_spawn = function(self)
+		if math.random(1,5) < 2 then
 		self.type = "animal"
 		end
 	end,
