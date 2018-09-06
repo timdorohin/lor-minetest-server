@@ -62,14 +62,14 @@ local mobslist = {
 	"owl",
 	"whale",
 	"badger",
-	"butterfly",
+	--"butterfly",
 	"elephant",
 
 	-- baddies
 	"pig_evil",
 	"fox",
-	"rat",
-	"wasps",
+	--"rat",
+	--"wasps",
 	"treeman",
 	"golem",
 	"skeleton",
