@@ -57,9 +57,11 @@ functions needed for the mob to work properly which contains the following:
    'water_damage'  holds the damage per second infliced to mobs when standing in
                    water.
    'lava_damage'   holds the damage per second inflicted to mobs when standing
-                   in lava or fire.
-   'light_damage'  holds the damage per second inflicted to mobs when it's too
-                   bright (above 13 light).
+                   in lava or fire or an ignition source.
+   'light_damage'  holds the damage per second inflicted to mobs when light
+                   level is between the min and max values below
+   'light_damage_min' minimum light value when mob is affected (default: 14)
+   'light_damage_max' maximum light value when mob is affected (default: 15)
    'suffocation'   when true causes mobs to suffocate inside solid blocks.
    'floats'        when set to 1 mob will float in water, 0 has them sink.
    'follow'        mobs follow player when holding any of the items which appear
