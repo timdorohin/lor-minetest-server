@@ -6,7 +6,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20180907",
+	version = "20180908",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
@@ -2746,15 +2746,8 @@ local mob_activate = function(self, staticdata, def, dtime)
 end
 
 
--- main mob function
-local mob_step = function(self, dtime)
-
-	if use_cmi then
-		cmi.notify_step(self.object, dtime)
-	end
-
-	local pos = self.object:get_pos()
-	local yaw = 0
+-- handle mob lifetimer and expiration
+local mob_expire = function(self, pos, dtime)
 
 	-- when lifetimer expires remove mob (except npc and tamed)
 	if self.type ~= "npc"
@@ -2790,6 +2783,18 @@ local mob_step = function(self, dtime)
 			return
 		end
 	end
+end
+
+
+-- main mob function
+local mob_step = function(self, dtime)
+
+	if use_cmi then
+		cmi.notify_step(self.object, dtime)
+	end
+
+	local pos = self.object:get_pos()
+	local yaw = 0
 
 	-- get node at foot level every quarter second
 	self.node_timer = (self.node_timer or 0) + dtime
@@ -2808,6 +2813,9 @@ local mob_step = function(self, dtime)
 		self.standing_in = node_ok({
 			x = pos.x, y = pos.y + y_level + 0.25, z = pos.z}, "air").name
 --		print ("standing in " .. self.standing_in)
+
+		-- check for mob expiration (0.25 instead of dtime since were in a timer)
+		mob_expire(self, pos, 0.25)
 	end
 
 	-- check if falling, flying, floating
