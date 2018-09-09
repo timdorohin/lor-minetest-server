@@ -396,6 +396,8 @@ This function registers a arrow for mobs with the attack type shoot.
        'rotate'       integer value in degrees to rotate arrow
        'on_step'      is a custom function when arrow is active, nil for
                       default.
+       'on_punch'     is a custom function when arrow is punched, nil by default
+       'collisionbox' is hitbox table for arrow, {0,0,0,0,0,0} by default.
 
 
 Spawn Eggs

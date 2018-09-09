@@ -6,7 +6,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20180908",
+	version = "20180909",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
@@ -3309,7 +3309,7 @@ function mobs:register_arrow(name, def)
 		hit_node = def.hit_node,
 		hit_mob = def.hit_mob,
 		drop = def.drop or false, -- drops arrow as registered item when true
-		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
+		collisionbox = def.collisionbox or {0, 0, 0, 0, 0, 0},
 		timer = 0,
 		switch = 0,
 		owner_id = def.owner_id,
@@ -3318,6 +3318,9 @@ function mobs:register_arrow(name, def)
 			and (def.rotate - (pi / 180)) or false,
 
 		on_activate = def.on_activate,
+
+		on_punch = def.on_punch or function(self, hitter, tflp, tool_capabilities, dir)
+		end,
 
 		on_step = def.on_step or function(self, dtime)
 
