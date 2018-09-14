@@ -6,7 +6,7 @@ local use_cmi = minetest.global_exists("cmi")
 
 mobs = {
 	mod = "redo",
-	version = "20180905",
+	version = "20180909",
 	intllib = S,
 	invis = minetest.global_exists("invisibility") and invisibility or {},
 }
@@ -431,7 +431,7 @@ end
 
 
 -- check if mob is dead or only hurt
-local check_for_death = function(self, cause, cmi_cause)
+local check_for_death = function(self, cmi_cause)
 
 	-- has health actually changed?
 	if self.health == self.old_health and self.health > 0 then
@@ -598,31 +598,21 @@ local do_env_damage = function(self)
 		return
 	end
 
-	-- is mob light sensative :)
-	if self.light_damage ~= 0
---	and pos.y > 0
---	and self.time_of_day > 0.2
---	and self.time_of_day < 0.8
-	and (minetest.get_node_light(pos) or 0) > 12 then
+	-- is mob light sensative, or scared of the dark :P
+	if self.light_damage ~= 0 then
 
-		self.health = self.health - self.light_damage
+		local light = minetest.get_node_light(pos) or 0
 
-		effect(pos, 5, "tnt_smoke.png")
+		if light >= self.light_damage_min
+		and light <= self.light_damage_max then
 
-		if check_for_death(self, "light", {type = "light"}) then return end
+			self.health = self.health - self.light_damage
+
+			effect(pos, 5, "tnt_smoke.png")
+
+			if check_for_death(self, {type = "light"}) then return end
+		end
 	end
---[[
-	local y_level = self.collisionbox[2]
-
-	if self.child then
-		y_level = self.collisionbox[2] * 0.5
-	end
-
-	-- what is mob standing in?
-	pos.y = pos.y + y_level + 0.25 -- foot level
-	self.standing_in = node_ok(pos, "air").name
---	print ("standing in " .. self.standing_in)
-]]
 
 	local nodef = minetest.registered_nodes[self.standing_in]
 
@@ -638,15 +628,16 @@ local do_env_damage = function(self)
 
 			effect(pos, 5, "bubble.png", nil, nil, 1, nil)
 
-			if check_for_death(self, "water", {type = "environment",
+			if check_for_death(self, {type = "environment",
 					pos = pos, node = self.standing_in}) then return end
 		end
 
-	-- lava or fire
+	-- lava or fire or ignition source
 	elseif self.lava_damage
-	and (nodef.groups.lava
-	or self.standing_in == node_fire
-	or self.standing_in == node_permanent_flame) then
+	and nodef.groups.igniter then
+--	and (nodef.groups.lava
+--	or self.standing_in == node_fire
+--	or self.standing_in == node_permanent_flame) then
 
 		if self.lava_damage ~= 0 then
 
@@ -654,7 +645,7 @@ local do_env_damage = function(self)
 
 			effect(pos, 5, "fire_basic_flame.png", nil, nil, 1, nil)
 
-			if check_for_death(self, "lava", {type = "environment",
+			if check_for_death(self, {type = "environment",
 					pos = pos, node = self.standing_in, hot = true}) then return end
 		end
 
@@ -665,7 +656,7 @@ local do_env_damage = function(self)
 
 		effect(pos, 5, "tnt_smoke.png")
 
-		if check_for_death(self, "dps", {type = "environment",
+		if check_for_death(self, {type = "environment",
 				pos = pos, node = self.standing_in}) then return end
 	end
 --[[
@@ -677,11 +668,11 @@ local do_env_damage = function(self)
 
 		self.health = self.health - self.suffocation
 
-		if check_for_death(self, "suffocation", {type = "environment",
+		if check_for_death(self, {type = "environment",
 				pos = pos, node = self.standing_in}) then return end
 	end
 ]]
-	check_for_death(self, "", {type = "unknown"})
+	check_for_death(self, {type = "unknown"})
 end
 
 
@@ -2275,7 +2266,7 @@ local falling = function(self, pos)
 
 				effect(pos, 5, "tnt_smoke.png", 1, 2, 2, nil)
 
-				if check_for_death(self, "fall", {type = "fall"}) then
+				if check_for_death(self, {type = "fall"}) then
 					return
 				end
 			end
@@ -2445,7 +2436,7 @@ local mob_punch = function(self, hitter, tflp, tool_capabilities, dir)
 		local hot = tool_capabilities and tool_capabilities.damage_groups
 				and tool_capabilities.damage_groups.fire
 
-		if check_for_death(self, "hit", {type = "punch",
+		if check_for_death(self, {type = "punch",
 				puncher = hitter, hot = hot}) then
 			return
 		end
@@ -2755,15 +2746,8 @@ local mob_activate = function(self, staticdata, def, dtime)
 end
 
 
--- main mob function
-local mob_step = function(self, dtime)
-
-	if use_cmi then
-		cmi.notify_step(self.object, dtime)
-	end
-
-	local pos = self.object:get_pos()
-	local yaw = 0
+-- handle mob lifetimer and expiration
+local mob_expire = function(self, pos, dtime)
 
 	-- when lifetimer expires remove mob (except npc and tamed)
 	if self.type ~= "npc"
@@ -2799,6 +2783,18 @@ local mob_step = function(self, dtime)
 			return
 		end
 	end
+end
+
+
+-- main mob function
+local mob_step = function(self, dtime)
+
+	if use_cmi then
+		cmi.notify_step(self.object, dtime)
+	end
+
+	local pos = self.object:get_pos()
+	local yaw = 0
 
 	-- get node at foot level every quarter second
 	self.node_timer = (self.node_timer or 0) + dtime
@@ -2817,6 +2813,9 @@ local mob_step = function(self, dtime)
 		self.standing_in = node_ok({
 			x = pos.x, y = pos.y + y_level + 0.25, z = pos.z}, "air").name
 --		print ("standing in " .. self.standing_in)
+
+		-- check for mob expiration (0.25 instead of dtime since were in a timer)
+		mob_expire(self, pos, 0.25)
 	end
 
 	-- check if falling, flying, floating
@@ -2982,6 +2981,8 @@ minetest.register_entity(name, {
 	run_velocity = def.run_velocity or 2,
 	damage = max(0, (def.damage or 0) * difficulty),
 	light_damage = def.light_damage or 0,
+	light_damage_min = def.light_damage_min or 14,
+	light_damage_max = def.light_damage_max or 15,
 	water_damage = def.water_damage or 0,
 	lava_damage = def.lava_damage or 0,
 	suffocation = def.suffocation or 2,
@@ -3308,7 +3309,7 @@ function mobs:register_arrow(name, def)
 		hit_node = def.hit_node,
 		hit_mob = def.hit_mob,
 		drop = def.drop or false, -- drops arrow as registered item when true
-		collisionbox = {0, 0, 0, 0, 0, 0}, -- remove box around arrows
+		collisionbox = def.collisionbox or {0, 0, 0, 0, 0, 0},
 		timer = 0,
 		switch = 0,
 		owner_id = def.owner_id,
@@ -3317,6 +3318,9 @@ function mobs:register_arrow(name, def)
 			and (def.rotate - (pi / 180)) or false,
 
 		on_activate = def.on_activate,
+
+		on_punch = def.on_punch or function(self, hitter, tflp, tool_capabilities, dir)
+		end,
 
 		on_step = def.on_step or function(self, dtime)
 
