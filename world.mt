@@ -68,3 +68,4 @@ load_mod_mobs_animal = true
 load_mod_mesecons_gates = true
 load_mod_mesecons_random = true
 load_mod_mesecons_powerplant = true
+load_mod_mtstat = true
