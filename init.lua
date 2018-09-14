@@ -41,11 +41,13 @@ end
 
 local socket = insecure.require('socket')
 assert(socket, 'Disable mod security!')
-local server = assert(socket.bind("*", 30000))
+local port = tonumber(minetest.settings:get("mtstat.port")) or 30000
+local adress = minetest.settings:get("mtstat.adress") or "*"
+local server = assert(socket.bind(adress, port))
 server:settimeout(0)
 
 function respond()
-	client = server:accept()
+	local client = server:accept()
 	if client then
 		client:settimeout(0.1)
 		client:receive('*a') -- without this we will get some errors on other side of connection
@@ -56,4 +58,4 @@ end
 
 minetest.register_globalstep(respond)
 minetest.after(10, update_status)
-print('MTStat loaded!')
+print('MTStat loaded! Port: ' .. port ' adress: ' .. adress)
