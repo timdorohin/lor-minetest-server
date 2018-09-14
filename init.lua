@@ -28,7 +28,7 @@ function update_status()
 	local total = tonumber(string.match(mems:read(), "%d+"))
 	mems:read()
 	local free = tonumber(string.match(mems:read(), "%d+"))
-	local mem = free/total*100
+	local mem = (total-free)/total*100
 	lavg:seek("set",0) -- return to start of file for next iteration
 	mems:read("*a") -- read to the end of file, otherwise on next iteration data will be old
 	mems:seek("set",0) -- return to start of file for next iteration
