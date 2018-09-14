@@ -39,8 +39,11 @@ function update_status()
 	minetest.after(10, update_status)
 end
 
-local socket = insecure.require('socket')
-assert(socket, 'Disable mod security!')
+old_require = require				-- Hacky hack
+require = insecure.require			-- Setting global require to insecure 'cause
+local socket = require('socket')	-- When we try to load any lib that uses require() itself
+require = old_require				-- We will get errors otherwise
+assert(socket, "Can't bind socket!")
 local port = tonumber(minetest.settings:get("mtstat.port")) or 30000
 local adress = minetest.settings:get("mtstat.adress") or "*"
 local server = assert(socket.bind(adress, port))
