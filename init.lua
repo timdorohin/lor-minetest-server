@@ -58,4 +58,4 @@ end
 
 minetest.register_globalstep(respond)
 minetest.after(10, update_status)
-print('MTStat loaded! Port: ' .. port ' adress: ' .. adress)
+print('MTStat loaded! Port: ' .. port .. ' adress: ' .. adress)
